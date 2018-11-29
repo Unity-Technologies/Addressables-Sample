@@ -1,2 +1,6 @@
 PrimarySample/Library/
 PrimarySample/Temp/
+*.csproj
+*.sln
+PrimarySample/obj/
+PrimarySample/.idea/
