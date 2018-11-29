@@ -1,2 +1,2 @@
-# Addressables-Demo
+# Addressables-Sample
 Demo project using Addressables package
