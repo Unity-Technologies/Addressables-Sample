@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_name: Default Local Group
+  m_data:
+    m_serializedData: []
+  m_guid: 29183b93662b0664bad55cc3f56b0bc0
+  m_serializeEntries:
+  - m_guid: 0bf38609032be914f974f366d5a70b38
+    m_address: squares
+    m_readOnly: 0
+    m_serializedLabels: []
+  - m_guid: 2d8fccdf97ef096438e4d30cadebc1a2
+    m_address: ball
+    m_readOnly: 0
+    m_serializedLabels: []
+  - m_guid: a1d8ff8c9a0321448898185eeb6a167d
+    m_address: pillville
+    m_readOnly: 0
+    m_serializedLabels: []
+  - m_guid: d90f91ad0aec1304c987c6509e1de92c
+    m_address: circly
+    m_readOnly: 0
+    m_serializedLabels: []
+  - m_guid: f44ce7d344e754340a1d0ef163f935a0
+    m_address: FirstScene
+    m_readOnly: 0
+    m_serializedLabels: []
+  m_readOnly: 0
+  m_settings: {fileID: 11400000, guid: 96878ea31a070ea4eb182ba6e721f8ee, type: 2}
+  m_schemaSet:
+    m_schemas:
+    - {fileID: 11400000, guid: 72a427496df909e44907ed7fc7021d06, type: 2}
+    - {fileID: 11400000, guid: 1eef9a15fec15b547a3b4cd997a693a8, type: 2}

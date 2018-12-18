@@ -4,3 +4,13 @@ PrimarySample/Temp/
 *.sln
 PrimarySample/obj/
 PrimarySample/.idea/
+Basic AssetReference/.idea/
+Basic AssetReference/Library/
+Basic AssetReference/Temp/
+Basic AssetReference/obj/
+Basic AssetReference/builds/
+Scene Loading/.idea/
+Scene Loading/Library/
+Scene Loading/Temp/
+Scene Loading/obj/
+Scene Loading/builds/
