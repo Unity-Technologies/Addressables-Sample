@@ -77,13 +77,14 @@ MonoBehaviour:
         PublicKeyToken=null
       m_ClassName: UnityEditor.AddressableAssets.Settings.GroupSchemas.ContentUpdateGroupSchema
   m_InitializationObjects: []
-  m_ActivePlayerDataBuilderIndex: 3
+  m_ActivePlayerDataBuilderIndex: 4
   m_ActivePlayModeDataBuilderIndex: 0
   m_DataBuilders:
   - {fileID: 11400000, guid: 780650a38de7f4942ae2ccc7422e118d, type: 2}
   - {fileID: 11400000, guid: 208117a7f78ec4d4894111e573eb5c7f, type: 2}
   - {fileID: 11400000, guid: 9e704effaf0d33842b66aa25124087a3, type: 2}
   - {fileID: 11400000, guid: 97d5ed5ed5932fb47a70579ebc94e883, type: 2}
+  - {fileID: 11400000, guid: 3036cda87386cf4459da8be8b1f818de, type: 2}
   m_ActiveProfileId: 05ed04ba76c27b64ab91dec1231e2a62
   m_HostingServicesManager:
     m_HostingServiceInfos: []

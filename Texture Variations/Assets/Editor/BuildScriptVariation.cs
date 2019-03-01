@@ -23,7 +23,7 @@ using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.ResourceManagement.Util;
 using Debug = UnityEngine.Debug;
 
-/*
+
     /// <summary>
     /// Build scripts used for player builds and running with bundles in the editor.
     /// </summary>
@@ -167,7 +167,7 @@ using Debug = UnityEngine.Debug;
                 {
                     List<string> bundles;
                     if (aaContext.assetGroupToBundles.TryGetValue(assetGroup, out bundles))
-                        PostProcessBundles(assetGroup, bundles, results, extractData.WriteData, runtimeData, locations);
+                        PostProcessBundles(assetGroup, bundles, results, extractData.WriteData, runtimeData, locations, aaSettings);
                 }
                 foreach (var r in results.WriteResults)
                     linker.AddTypes(r.Value.includedTypes);
@@ -368,13 +368,12 @@ using Debug = UnityEngine.Debug;
             return path.StartsWith("{UnityEngine.AddressableAssets.Addressables.RuntimePath}");
         }
 
-        internal static void PostProcessBundles(AddressableAssetGroup assetGroup, List<string> bundles, IBundleBuildResults buildResult, IWriteData writeData, ResourceManagerRuntimeData runtimeData, List<ContentCatalogDataEntry> locations)
-        {
+        internal static void PostProcessBundles(AddressableAssetGroup assetGroup, List<string> bundles, IBundleBuildResults buildResult, IWriteData writeData, ResourceManagerRuntimeData runtimeData, List<ContentCatalogDataEntry> locations, AddressableAssetSettings aaSettings){
             var schema = assetGroup.GetSchema<BundledAssetGroupSchema>();
             if (schema == null)
                 return;
 
-            var path = schema.BuildPath.GetValue(assetGroup.Settings);
+            var path = schema.BuildPath.GetValue(aaSettings);
             if (string.IsNullOrEmpty(path))
                 return;
 
@@ -408,7 +407,7 @@ using Debug = UnityEngine.Debug;
                 var targetPath = Path.Combine(path, newBundleName);
                 if (!Directory.Exists(Path.GetDirectoryName(targetPath)))
                     Directory.CreateDirectory(Path.GetDirectoryName(targetPath));
-                File.Copy(Path.Combine(assetGroup.Settings.buildSettings.bundleBuildPath, originalBundleName), targetPath, true);
+                File.Copy(Path.Combine(aaSettings.buildSettings.bundleBuildPath, originalBundleName), targetPath, true);
             }
         }
 
@@ -446,4 +445,4 @@ using Debug = UnityEngine.Debug;
 
         }
     }
-*/
+
