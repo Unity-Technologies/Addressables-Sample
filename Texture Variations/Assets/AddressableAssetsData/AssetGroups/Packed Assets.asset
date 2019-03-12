@@ -17,7 +17,7 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: b2f7e00daa5f8af43b16dbbd1ef2c641
   m_SerializeEntries:
-  - m_GUID: 1f70364277b29ef4d9962a8d7c1f0859
+  - m_GUID: 2780bb124964686449b3f7837007bf70
     m_Address: tree
     m_ReadOnly: 0
     m_SerializedLabels:
@@ -28,3 +28,4 @@ MonoBehaviour:
     m_Schemas:
     - {fileID: 11400000, guid: e541b31670b45134d9f8887931058de2, type: 2}
     - {fileID: 11400000, guid: cf2f25db2f1f2ca4cbb8a569429bec76, type: 2}
+    - {fileID: 11400000, guid: fdfae162786f309469abb8828494c36b, type: 2}

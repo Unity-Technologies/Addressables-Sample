@@ -10,6 +10,7 @@ public class VariationController : MonoBehaviour
     void Start()
     {
         m_Mat = GetComponent<MeshRenderer>().material;
+        
     }
 
     public void SwitchToHighDef()

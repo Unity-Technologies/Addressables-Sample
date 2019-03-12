@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.Build.BuildPipelineTasks;
 using UnityEditor.AddressableAssets.Build.DataBuilders;
@@ -22,9 +23,9 @@ using UnityEngine.AddressableAssets.ResourceProviders;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.ResourceManagement.Util;
 using Debug = UnityEngine.Debug;
+using Object = System.Object;
 
-
-    /// <summary>
+/// <summary>
     /// Build scripts used for player builds and running with bundles in the editor.
     /// </summary>
     [CreateAssetMenu(fileName = "BuildScriptVariation.asset", menuName = "Addressable Assets/Data Builders/Packed Variation")]
@@ -65,6 +66,55 @@ using Debug = UnityEngine.Debug;
             var resourceProviderData = new List<ObjectInitializationData>();
             foreach (var assetGroup in aaSettings.groups)
             {
+                if (assetGroup.HasSchema<TextureVariationSchema>())
+                {
+                    var scaler = 0.5f;// assetGroup.GetSchema<TextureVariationSchema>().TextureScale;
+                    List<string> texturePaths = new List<string>();
+
+                    var entries = new List<AddressableAssetEntry>(assetGroup.entries);
+                    foreach (var entry in entries)
+                    {
+                        var entryPath = entry.AssetPath;
+                        if (AssetDatabase.GetMainAssetTypeAtPath(entryPath) == typeof(Texture2D))
+                        {
+//                            var ext = Path.GetExtension(entryPath);
+                            var fileName = Path.GetFileNameWithoutExtension(entryPath);
+                            var newFile = entryPath.Replace(fileName, fileName+"_variationCopy");
+                            newFile = newFile.Replace("Assets/", "Assets/GeneratedTextures/");
+                            texturePaths.Add(newFile);
+//                            textureAddresses.Add(entry.address);
+
+                            if (!Directory.Exists("Assets/GeneratedTextures"))
+                                Directory.CreateDirectory("Assets/GeneratedTextures");
+                            if (!Directory.Exists("Assets/GeneratedTextures/Texture"))
+                                Directory.CreateDirectory("Assets/GeneratedTextures/Texture");
+
+                           
+                            AssetDatabase.CopyAsset(entryPath, newFile);
+                            
+                            var aiSource = AssetImporter.GetAtPath(entryPath) as TextureImporter;
+                            var sourceTex = AssetDatabase.LoadAssetAtPath<Texture2D>(entryPath); 
+                            var aiDest = AssetImporter.GetAtPath(newFile) as TextureImporter;
+
+                            float scaleFactor = 0.05f;
+                       
+                            int maxDim = Math.Max(sourceTex.width, sourceTex.height);
+  
+                            float desiredLimiter = maxDim * scaleFactor;
+                            aiDest.maxTextureSize = NearestPowerOfTwo(desiredLimiter);
+                            
+                            
+                            aiDest.isReadable = true;
+
+                            aiDest.SaveAndReimport();
+                            var newEntry = aaSettings.CreateOrMoveEntry(AssetDatabase.AssetPathToGUID(newFile), assetGroup);
+                            newEntry.address = entry.address;
+                            entry.SetLabel("HD", true);
+                            newEntry.SetLabel("SD", true);
+                        }
+                    }
+                }
+                
                 if (assetGroup.HasSchema<PlayerDataGroupSchema>())
                 {
                     if (CreateLocationsForPlayerData(assetGroup, locations))
@@ -217,6 +267,26 @@ using Debug = UnityEngine.Debug;
                 }
             }
             return opResult;
+        }
+
+        int NearestPowerOfTwo(float desiredLimiter)
+        {
+            float lastDiff = Math.Abs(desiredLimiter);
+            int lastPow = 32;
+            for (int i = 0; i < 9; i++)
+            {
+
+                int powOfTwo = lastPow << 1;
+                float newDiff = Math.Abs(desiredLimiter - powOfTwo);
+                if (newDiff > lastDiff)
+                    return lastPow;
+
+                lastPow = powOfTwo;
+                lastDiff = newDiff;
+
+            }
+
+            return 8192;
         }
 
         internal static void ProcessGroup(AddressableAssetGroup assetGroup, List<AssetBundleBuild> bundleInputDefs, List<ContentCatalogDataEntry> locationData, bool packTogether)
