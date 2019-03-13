@@ -1,8 +1,6 @@
 {
   "dependencies": {
-	"com.unity.addressables": "file:../../../AddressablesDemo_cds/AddressablesDemo/Packages/com.unity.addressables",
-	"com.unity.scriptablebuildpipeline": "file:../../../AddressablesDemo_cds/AddressablesDemo/Packages/com.unity.scriptablebuildpipeline",
-	"com.unity.scriptablebuildpipeline.experimental": "file:../../../AddressablesDemo_cds/AddressablesDemo/Packages/com.unity.scriptablebuildpipeline.experimental",
+	"com.unity.addressables": "0.6.7-preview",
     "com.unity.ads": "2.3.1",
     "com.unity.analytics": "3.2.2",
     "com.unity.collab-proxy": "1.2.15",
@@ -39,6 +37,5 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  },
-  "registry": "https://staging-packages.unity.com"
+  }
 }

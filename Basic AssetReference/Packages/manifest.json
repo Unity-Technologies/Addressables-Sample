@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.unity.addressables": "0.6.7-preview",
     "com.unity.ads": "2.0.8",
     "com.unity.analytics": "2.0.16",
     "com.unity.package-manager-ui": "1.9.11",
@@ -34,7 +35,6 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0",
-	"com.unity.addressables": "0.4.8-preview"
+    "com.unity.modules.xr": "1.0.0"
   }
 }

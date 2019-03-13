@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class ListOfReferences : MonoBehaviour {
 
@@ -46,7 +47,7 @@ public class ListOfReferences : MonoBehaviour {
 	{
 		foreach (var shape in shapes)
 		{
-			shape.ReleaseAsset<GameObject>();
+			shape.ReleaseAsset();
 		}
 	}
 }
