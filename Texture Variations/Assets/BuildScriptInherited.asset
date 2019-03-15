@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e2e0ffa088c91d41a086d0b8cb16bdc, type: 3}
-  m_Name: BuildScriptPackedMode
+  m_Script: {fileID: 11500000, guid: e71e1ced21f118546b84cf15d5c8c54f, type: 3}
+  m_Name: BuildScriptInherited
   m_EditorClassIdentifier: 
   m_InstanceProviderType:
     m_AssemblyName: Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null

@@ -22,9 +22,9 @@ public class VariationController : MonoBehaviour
     {
         Addressables.LoadAssets<Texture2D>(new List<object> { "tree", "SD" }, null, Addressables.MergeMode.Intersection).Completed += TextureLoaded;
     }
-    
-    void TextureLoaded(IAsyncOperation<IList<IAsyncOperation<Texture2D>>> obj)
+
+    void TextureLoaded(AsyncOperationHandle<IList<Texture2D>> obj)
     {
-        m_Mat.mainTexture = obj.Result[0].Result;
+        m_Mat.mainTexture = obj.Result[0];
     }
 }
