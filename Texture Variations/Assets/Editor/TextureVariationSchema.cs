@@ -17,15 +17,18 @@ public class TextureVariationSchema : AddressableAssetGroupSchema
 
     [SerializeField]
     List<ScaleAndLabelPair> m_Variations;
-    public List<ScaleAndLabelPair> Variations { get; set; }
+
+    public List<ScaleAndLabelPair> Variations
+    {
+        get { return m_Variations;}
+        set { m_Variations = value; }
+    }
 
     [Serializable]
     public class ScaleAndLabelPair
     {
-        [SerializeField]
-        float m_TextureScale = 0.5f;
-        [SerializeField]
-        string m_Label;
+        public float textureScale = 0.5f;
+        public string label;
     }
     
 }

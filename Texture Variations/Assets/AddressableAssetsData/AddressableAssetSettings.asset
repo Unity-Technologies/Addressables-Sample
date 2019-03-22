@@ -23,6 +23,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6118cdf1f214c644c8b6f379cf7266f5, type: 2}
   - {fileID: 11400000, guid: ff715b52a28d86f42a54787869c9b972, type: 2}
   - {fileID: 11400000, guid: b4294c2ce8b85014bbccab37fba1eaef, type: 2}
+  - {fileID: 11400000, guid: 574b9115e67213c43bd01d31ad1ba5fd, type: 2}
+  - {fileID: 11400000, guid: 1bfa0b80c12a8264ba2cc88b3cee4471, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -80,6 +82,7 @@ MonoBehaviour:
     - default
     - HD
     - SD
+    - MD
   m_SchemaTemplates:
   - m_DisplayName: Packed Assets
     m_Description: Pack assets into asset bundles.

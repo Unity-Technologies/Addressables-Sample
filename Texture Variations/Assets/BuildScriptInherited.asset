@@ -15,3 +15,13 @@ MonoBehaviour:
   m_InstanceProviderType:
     m_AssemblyName: Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     m_ClassName: UnityEngine.ResourceManagement.ResourceProviders.InstanceProvider
+  m_texturePaths:
+  - Assets/GeneratedTextures/Texture/tree2_variationCopy.png
+  - Assets/GeneratedTextures/Texture/tree2_variationCopy.png
+  - Assets/GeneratedTextures/Texture/tree2_variationCopy_SD.png
+  - Assets/GeneratedTextures/Texture/tree2_variationCopy_MD.png
+  - Assets/GeneratedTextures/Texture/tree2_variationCopy_SD.png
+  - Assets/GeneratedTextures/Texture/tree2_variationCopy_MD.png
+  - Assets/GeneratedTextures/Texture/tree2_variationCopy_SD.png
+  - Assets/GeneratedTextures/Texture/tree2_variationCopy_MD.png
+  - Assets/GeneratedTextures/Texture/tree2_variationCopy_SD.png

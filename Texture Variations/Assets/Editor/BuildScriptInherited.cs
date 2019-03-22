@@ -2,12 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.Build.DataBuilders;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEngine;
 using UnityEngine.ResourceManagement.Util;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "BuildScriptInherited.asset", menuName = "Addressable Assets/Data Builders/Variations")]
 public class BuildScriptInherited : BuildScriptPackedMode
@@ -17,7 +19,16 @@ public class BuildScriptInherited : BuildScriptPackedMode
         get { return "Spice Of Life"; }
     }
 
-    protected override void ProcessGroup(
+    protected override TResult BuildDataInternal<TResult>(IDataBuilderContext context)
+    {
+        var result = base.BuildDataInternal<TResult>(context);
+        
+        AddressableAssetSettings settings = context.GetValue<AddressableAssetSettings>(AddressablesBuildDataBuilderContext.BuildScriptContextConstants.kAddressableAssetSettings);
+        DoCleanup(settings);
+        return result;
+    }
+
+    protected override string ProcessGroup(
         AddressableAssetGroup assetGroup, 
         AddressableAssetsBuildContext aaContext, 
         List<ObjectInitializationData> resourceProviderData, 
@@ -25,63 +36,93 @@ public class BuildScriptInherited : BuildScriptPackedMode
         HashSet<string> createdProviderIds)
     {
         if (assetGroup.HasSchema<TextureVariationSchema>())
-            ProcessTextureScaler(assetGroup.GetSchema<TextureVariationSchema>(), assetGroup, aaContext);
-        
-        
-        base.ProcessGroup(assetGroup, aaContext, resourceProviderData, allBundleInputDefs, createdProviderIds);
+        {
+            var errorString = ProcessTextureScaler(assetGroup.GetSchema<TextureVariationSchema>(), assetGroup, aaContext);
+            if (!string.IsNullOrEmpty(errorString))
+                return errorString;
+        }
+
+        return base.ProcessGroup(assetGroup, aaContext, resourceProviderData, allBundleInputDefs, createdProviderIds);
     }
 
-    void ProcessTextureScaler(
+    List<AddressableAssetGroup> m_SourceGroupList = new List<AddressableAssetGroup>();
+    Dictionary<string, AddressableAssetGroup> m_GeneratedGroups = new Dictionary<string, AddressableAssetGroup>();
+
+    
+    AddressableAssetGroup FindOrCopyGroup(string groupName, AddressableAssetGroup baseGroup, AddressableAssetSettings settings, TextureVariationSchema schema)
+    {
+        AddressableAssetGroup result;
+        if (!m_GeneratedGroups.TryGetValue(groupName, out result))
+        {
+            List<AddressableAssetGroupSchema> schemas = new List<AddressableAssetGroupSchema>(baseGroup.Schemas);
+            schemas.Remove(schema);
+            result = settings.CreateGroup(groupName, false, false, false, schemas);
+            m_GeneratedGroups.Add(groupName, result);
+        }
+
+        return result;
+    }
+    
+    string ProcessTextureScaler(
         TextureVariationSchema schema,
         AddressableAssetGroup assetGroup,
         AddressableAssetsBuildContext aaContext)
     {
-            var scaler = 0.5f;// schema.TextureScale;
-            List<string> texturePaths = new List<string>();
+        m_SourceGroupList.Add(assetGroup);
 
-            var entries = new List<AddressableAssetEntry>(assetGroup.entries);
-            foreach (var entry in entries)
+        var entries = new List<AddressableAssetEntry>(assetGroup.entries);
+        foreach (var entry in entries)
+        {
+            var entryPath = entry.AssetPath;
+            if (AssetDatabase.GetMainAssetTypeAtPath(entryPath) == typeof(Texture2D))
             {
-                var entryPath = entry.AssetPath;
-                if (AssetDatabase.GetMainAssetTypeAtPath(entryPath) == typeof(Texture2D))
+                var fileName = Path.GetFileNameWithoutExtension(entryPath);
+                if(string.IsNullOrEmpty(fileName))
+                    return "Failed to get file name for: " + entryPath;
+                if (!Directory.Exists("Assets/GeneratedTextures"))
+                    Directory.CreateDirectory("Assets/GeneratedTextures");
+                if (!Directory.Exists("Assets/GeneratedTextures/Texture"))
+                    Directory.CreateDirectory("Assets/GeneratedTextures/Texture");
+                
+                var sourceTex = AssetDatabase.LoadAssetAtPath<Texture2D>(entryPath); 
+                var aiSource = AssetImporter.GetAtPath(entryPath) as TextureImporter;
+                int maxDim = Math.Max(sourceTex.width, sourceTex.height);
+
+                foreach (var pair in schema.Variations)
                 {
-                    var fileName = Path.GetFileNameWithoutExtension(entryPath);
-                    var newFile = entryPath.Replace(fileName, fileName+"_variationCopy");
+                    var newGroup = FindOrCopyGroup(assetGroup.Name + "_" + pair.label, assetGroup, aaContext.settings, schema);
+                    var newFile = entryPath.Replace(fileName, fileName+"_variationCopy_" + pair.label);
                     newFile = newFile.Replace("Assets/", "Assets/GeneratedTextures/");
-                    texturePaths.Add(newFile);
 
-                    if (!Directory.Exists("Assets/GeneratedTextures"))
-                        Directory.CreateDirectory("Assets/GeneratedTextures");
-                    if (!Directory.Exists("Assets/GeneratedTextures/Texture"))
-                        Directory.CreateDirectory("Assets/GeneratedTextures/Texture");
-
-                   
                     AssetDatabase.CopyAsset(entryPath, newFile);
-                    
-                    var aiSource = AssetImporter.GetAtPath(entryPath) as TextureImporter;
-                    var sourceTex = AssetDatabase.LoadAssetAtPath<Texture2D>(entryPath); 
+                
                     var aiDest = AssetImporter.GetAtPath(newFile) as TextureImporter;
-
-                    float scaleFactor = 0.05f;
-               
-                    int maxDim = Math.Max(sourceTex.width, sourceTex.height);
+                    if (aiDest == null)
+                    {
+                        var message = "failed to get TextureImporter on new texture asset: " + newFile;
+                        return message;
+                    }
+                    
+                    float scaleFactor = pair.textureScale;
 
                     float desiredLimiter = maxDim * scaleFactor;
                     aiDest.maxTextureSize = NearestMaxTextureSize(desiredLimiter);
-                    
-                    
+
                     aiDest.isReadable = true;
 
                     aiDest.SaveAndReimport();
-                    var newEntry = aaContext.settings.CreateOrMoveEntry(AssetDatabase.AssetPathToGUID(newFile), assetGroup);
+                    var newEntry = aaContext.settings.CreateOrMoveEntry(AssetDatabase.AssetPathToGUID(newFile), newGroup);
                     newEntry.address = entry.address;
-                    entry.SetLabel("HD", true);
-                    newEntry.SetLabel("SD", true);
+                    newEntry.SetLabel(pair.label, true);
                 }
-            }  
+                entry.SetLabel(schema.BaselineLabel, true);
+            }
+        }
+
+        return string.Empty;
     }
-    
-    int NearestMaxTextureSize(float desiredLimiter)
+
+    static int NearestMaxTextureSize(float desiredLimiter)
     {
         float lastDiff = Math.Abs(desiredLimiter);
         int lastPow = 32;
@@ -99,5 +140,34 @@ public class BuildScriptInherited : BuildScriptPackedMode
         }
 
         return 8192;
+    }
+    
+    void DoCleanup(AddressableAssetSettings settings)
+    {
+        foreach (var group in m_GeneratedGroups.Values)
+        {
+            foreach (var entry in group.entries)
+            {
+                var path = entry.AssetPath;
+                File.Delete(path);
+            }
+
+            settings.RemoveGroup(group);
+        }
+        m_GeneratedGroups.Clear();
+
+        foreach (var group in m_SourceGroupList)
+        {
+            var schema = group.GetSchema<TextureVariationSchema>();
+            if (schema == null)
+                continue;
+
+            foreach (var entry in group.entries)
+            {
+                entry.labels.Remove(schema.BaselineLabel);
+            }
+        }
+        
+        m_SourceGroupList.Clear();
     }
 }

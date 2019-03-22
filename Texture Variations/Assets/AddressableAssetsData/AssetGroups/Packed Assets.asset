@@ -22,11 +22,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - HD
-  - m_GUID: 29bc3e0b1d0c85341a74458189e5d629
-    m_Address: tree
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - SD
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 113a3aa53587a374583b738b9413cf4c, type: 2}
   m_SchemaSet:

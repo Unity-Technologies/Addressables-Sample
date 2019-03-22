@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 145b06ff52c949344b58f5c38f38397d, type: 3}
   m_Name: b2f7e00daa5f8af43b16dbbd1ef2c641_TextureVariationSchema
   m_EditorClassIdentifier: 
-  m_Group: {fileID: 0}
+  m_Group: {fileID: 11400000, guid: b4294c2ce8b85014bbccab37fba1eaef, type: 2}
   m_BaselineLabel: HD
-  m_Variations: []
+  m_Variations:
+  - textureScale: 0.05
+    label: SD
+  - textureScale: 0.5
+    label: MD
