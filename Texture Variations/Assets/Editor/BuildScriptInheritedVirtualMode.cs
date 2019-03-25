@@ -8,15 +8,16 @@ using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.Build.DataBuilders;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEngine;
+using UnityEngine.ResourceManagement.ResourceProviders.Simulation;
 using UnityEngine.ResourceManagement.Util;
 using UnityEngine.Serialization;
 
-[CreateAssetMenu(fileName = "BuildScriptInheritedFastMode.asset", menuName = "Addressable Assets/Data Builders/Fast Mode Variations")]
-public class BuildScriptInheritedFastMode : BuildScriptFastMode
+[CreateAssetMenu(fileName = "BuildScriptInheritedVirtualMode.asset", menuName = "Addressable Assets/Data Builders/Virtual Mode Variations")]
+public class BuildScriptInheritedVirtualMode : BuildScriptVirtualMode
 {
     public override string Name
     {
-        get { return "Speedy Spice"; }
+        get { return "Virtual Spice"; }
     }
 
     protected override TResult BuildDataInternal<TResult>(IDataBuilderContext context)
@@ -27,13 +28,17 @@ public class BuildScriptInheritedFastMode : BuildScriptFastMode
         DoCleanup(settings);
         return result;
     }
-
-    protected override void ProcessGroup(AddressableAssetGroup assetGroup, AddressableAssetsBuildContext aaContext, ref bool needsLegacyProvider)
+    protected override void ProcessGroup(AddressableAssetGroup assetGroup, 
+        AddressableAssetsBuildContext aaContext, 
+        List<ObjectInitializationData> resourceProviderData, 
+        List<AssetBundleBuild> allBundleInputDefinitions, 
+        Dictionary<string, VirtualAssetBundleRuntimeData> createdProviderIds, 
+        List<ObjectInitializationData> objectInitializationData)
     {
         if (assetGroup.HasSchema<TextureVariationSchema>())
             ProcessTextureScaler(assetGroup.GetSchema<TextureVariationSchema>(), assetGroup, aaContext);
         
-        base.ProcessGroup(assetGroup, aaContext, ref needsLegacyProvider);
+        base.ProcessGroup(assetGroup, aaContext, resourceProviderData, allBundleInputDefinitions, createdProviderIds, objectInitializationData);
     }
 
     List<AddressableAssetGroup> m_SourceGroupList = new List<AddressableAssetGroup>();

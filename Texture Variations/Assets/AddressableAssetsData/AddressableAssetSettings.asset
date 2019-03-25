@@ -23,8 +23,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6118cdf1f214c644c8b6f379cf7266f5, type: 2}
   - {fileID: 11400000, guid: ff715b52a28d86f42a54787869c9b972, type: 2}
   - {fileID: 11400000, guid: b4294c2ce8b85014bbccab37fba1eaef, type: 2}
-  - {fileID: 11400000, guid: 574b9115e67213c43bd01d31ad1ba5fd, type: 2}
-  - {fileID: 11400000, guid: 1bfa0b80c12a8264ba2cc88b3cee4471, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -95,13 +93,15 @@ MonoBehaviour:
       m_ClassName: UnityEditor.AddressableAssets.Settings.GroupSchemas.ContentUpdateGroupSchema
   m_InitializationObjects: []
   m_ActivePlayerDataBuilderIndex: 4
-  m_ActivePlayModeDataBuilderIndex: 2
+  m_ActivePlayModeDataBuilderIndex: 1
   m_DataBuilders:
   - {fileID: 11400000, guid: 780650a38de7f4942ae2ccc7422e118d, type: 2}
   - {fileID: 11400000, guid: 208117a7f78ec4d4894111e573eb5c7f, type: 2}
   - {fileID: 11400000, guid: 9e704effaf0d33842b66aa25124087a3, type: 2}
   - {fileID: 11400000, guid: 97d5ed5ed5932fb47a70579ebc94e883, type: 2}
   - {fileID: 11400000, guid: da57baf1944b399419f51608d95fb5b4, type: 2}
+  - {fileID: 11400000, guid: 5fabb4418c142c04b8a5a41b795b09ff, type: 2}
+  - {fileID: 11400000, guid: 60fa2cde77605ab4285bf62902b0ff56, type: 2}
   m_ActiveProfileId: 39cd5a96aa0d6ac4d877e81457529167
   m_HostingServicesManager:
     m_HostingServiceInfos: []
