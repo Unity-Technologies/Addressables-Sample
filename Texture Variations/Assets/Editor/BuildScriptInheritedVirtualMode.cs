@@ -17,7 +17,7 @@ public class BuildScriptInheritedVirtualMode : BuildScriptVirtualMode
 {
     public override string Name
     {
-        get { return "Virtual Spice"; }
+        get { return "Virtual Variety"; }
     }
 
     protected override TResult BuildDataImplementation<TResult>(IDataBuilderContext context)

@@ -16,7 +16,7 @@ public class BuildScriptInheritedFastMode : BuildScriptFastMode
 {
     public override string Name
     {
-        get { return "Speedy Spice"; }
+        get { return "Vary Fast"; }
     }
 
     protected override TResult BuildDataImplementation<TResult>(IDataBuilderContext context)

@@ -10,19 +10,24 @@ public class VariationController : MonoBehaviour
     void Start()
     {
         m_Mat = GetComponent<MeshRenderer>().material;
-        
     }
 
     public void SwitchToHighDef()
     {
-        Addressables.LoadAssets<Texture2D>(new List<object> { "tree", "HD" }, null, Addressables.MergeMode.Intersection).Completed += TextureLoaded;
+        LoadTexture("tree", "HD" );
     }
 
     public void SwitchToLowDef()
     {
-        Addressables.LoadAssets<Texture2D>(new List<object> { "tree", "SD" }, null, Addressables.MergeMode.Intersection).Completed += TextureLoaded;
+        LoadTexture("tree", "SD");
     }
 
+    void LoadTexture(string key, string label)
+    {
+        Addressables.LoadAssets<Texture2D>(new List<object> { key, label }, null, Addressables.MergeMode.Intersection).Completed
+            += TextureLoaded;
+    }
+    
     void TextureLoaded(AsyncOperationHandle<IList<Texture2D>> obj)
     {
         m_Mat.mainTexture = obj.Result[0];

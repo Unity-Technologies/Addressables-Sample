@@ -16,7 +16,7 @@ public class BuildScriptInherited : BuildScriptPackedMode
 {
     public override string Name
     {
-        get { return "Spice Of Life"; }
+        get { return "Pack Variations"; }
     }
 
     protected override TResult BuildDataImplementation<TResult>(IDataBuilderContext context)
@@ -146,19 +146,12 @@ public class BuildScriptInherited : BuildScriptPackedMode
             foreach (var entry in entries)
             {
                 var path = entry.AssetPath;
-//                directories.AddRange(Directory.GetDirectories(path));
                 AssetDatabase.DeleteAsset(path);
             }
 
             settings.RemoveGroup(group);
         }
         m_GeneratedGroups.Clear();
-
-//        for (int index = directories.Count - 1; index >= 0; index--)
-//        {
-//            if(Directory.Exists(directories[index]) && !Directory.EnumerateFileSystemEntries(directories[index]).Any())
-//                AssetDatabase.DeleteAsset(directories[index]);
-//        }
 
         foreach (var group in m_SourceGroupList)
         {
