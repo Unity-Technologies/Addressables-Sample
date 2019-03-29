@@ -19,21 +19,21 @@ public class BuildScriptInheritedFastMode : BuildScriptFastMode
         get { return "Speedy Spice"; }
     }
 
-    protected override TResult BuildDataInternal<TResult>(IDataBuilderContext context)
+    protected override TResult BuildDataImplementation<TResult>(IDataBuilderContext context)
     {
-        var result = base.BuildDataInternal<TResult>(context);
+        var result = base.BuildDataImplementation<TResult>(context);
         
         AddressableAssetSettings settings = context.GetValue<AddressableAssetSettings>(AddressablesBuildDataBuilderContext.BuildScriptContextConstants.kAddressableAssetSettings);
         DoCleanup(settings);
         return result;
     }
 
-    protected override void ProcessGroup(AddressableAssetGroup assetGroup, AddressableAssetsBuildContext aaContext, ref bool needsLegacyProvider)
+    protected override string ProcessGroup(AddressableAssetGroup assetGroup, AddressableAssetsBuildContext aaContext)
     {
         if (assetGroup.HasSchema<TextureVariationSchema>())
             ProcessTextureScaler(assetGroup.GetSchema<TextureVariationSchema>(), assetGroup, aaContext);
         
-        base.ProcessGroup(assetGroup, aaContext, ref needsLegacyProvider);
+        return base.ProcessGroup(assetGroup, aaContext);
     }
 
     List<AddressableAssetGroup> m_SourceGroupList = new List<AddressableAssetGroup>();

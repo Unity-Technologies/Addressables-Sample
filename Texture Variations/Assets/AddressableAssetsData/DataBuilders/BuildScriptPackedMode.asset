@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e2e0ffa088c91d41a086d0b8cb16bdc, type: 3}
   m_Name: BuildScriptPackedMode
   m_EditorClassIdentifier: 
-  m_InstanceProviderType:
+  instanceProviderType:
     m_AssemblyName: Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     m_ClassName: UnityEngine.ResourceManagement.ResourceProviders.InstanceProvider
+  sceneProviderType:
+    m_AssemblyName: Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    m_ClassName: UnityEngine.ResourceManagement.ResourceProviders.SceneProvider

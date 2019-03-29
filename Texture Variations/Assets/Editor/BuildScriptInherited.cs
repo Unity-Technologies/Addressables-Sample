@@ -19,21 +19,16 @@ public class BuildScriptInherited : BuildScriptPackedMode
         get { return "Spice Of Life"; }
     }
 
-    protected override TResult BuildDataInternal<TResult>(IDataBuilderContext context)
+    protected override TResult BuildDataImplementation<TResult>(IDataBuilderContext context)
     {
-        var result = base.BuildDataInternal<TResult>(context);
+        var result = base.BuildDataImplementation<TResult>(context);
         
         AddressableAssetSettings settings = context.GetValue<AddressableAssetSettings>(AddressablesBuildDataBuilderContext.BuildScriptContextConstants.kAddressableAssetSettings);
         DoCleanup(settings);
         return result;
     }
 
-    protected override string ProcessGroup(
-        AddressableAssetGroup assetGroup, 
-        AddressableAssetsBuildContext aaContext, 
-        List<ObjectInitializationData> resourceProviderData, 
-        List<AssetBundleBuild> allBundleInputDefs, 
-        HashSet<string> createdProviderIds)
+    protected override string ProcessGroup(AddressableAssetGroup assetGroup, AddressableAssetsBuildContext aaContext)
     {
         if (assetGroup.HasSchema<TextureVariationSchema>())
         {
@@ -42,7 +37,7 @@ public class BuildScriptInherited : BuildScriptPackedMode
                 return errorString;
         }
 
-        return base.ProcessGroup(assetGroup, aaContext, resourceProviderData, allBundleInputDefs, createdProviderIds);
+        return base.ProcessGroup(assetGroup, aaContext);
     }
 
     List<AddressableAssetGroup> m_SourceGroupList = new List<AddressableAssetGroup>();
@@ -144,17 +139,26 @@ public class BuildScriptInherited : BuildScriptPackedMode
     
     void DoCleanup(AddressableAssetSettings settings)
     {
+        List<string> directories = new List<string>();
         foreach (var group in m_GeneratedGroups.Values)
         {
-            foreach (var entry in group.entries)
+            List<AddressableAssetEntry> entries = new List<AddressableAssetEntry>(group.entries);
+            foreach (var entry in entries)
             {
                 var path = entry.AssetPath;
-                File.Delete(path);
+//                directories.AddRange(Directory.GetDirectories(path));
+                AssetDatabase.DeleteAsset(path);
             }
 
             settings.RemoveGroup(group);
         }
         m_GeneratedGroups.Clear();
+
+//        for (int index = directories.Count - 1; index >= 0; index--)
+//        {
+//            if(Directory.Exists(directories[index]) && !Directory.EnumerateFileSystemEntries(directories[index]).Any())
+//                AssetDatabase.DeleteAsset(directories[index]);
+//        }
 
         foreach (var group in m_SourceGroupList)
         {

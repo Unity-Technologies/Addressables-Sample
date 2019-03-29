@@ -12,16 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e71e1ced21f118546b84cf15d5c8c54f, type: 3}
   m_Name: BuildScriptInherited
   m_EditorClassIdentifier: 
-  m_InstanceProviderType:
+  instanceProviderType:
     m_AssemblyName: Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     m_ClassName: UnityEngine.ResourceManagement.ResourceProviders.InstanceProvider
-  m_texturePaths:
-  - Assets/GeneratedTextures/Texture/tree2_variationCopy.png
-  - Assets/GeneratedTextures/Texture/tree2_variationCopy.png
-  - Assets/GeneratedTextures/Texture/tree2_variationCopy_SD.png
-  - Assets/GeneratedTextures/Texture/tree2_variationCopy_MD.png
-  - Assets/GeneratedTextures/Texture/tree2_variationCopy_SD.png
-  - Assets/GeneratedTextures/Texture/tree2_variationCopy_MD.png
-  - Assets/GeneratedTextures/Texture/tree2_variationCopy_SD.png
-  - Assets/GeneratedTextures/Texture/tree2_variationCopy_MD.png
-  - Assets/GeneratedTextures/Texture/tree2_variationCopy_SD.png
+  sceneProviderType:
+    m_AssemblyName: Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    m_ClassName: UnityEngine.ResourceManagement.ResourceProviders.SceneProvider
