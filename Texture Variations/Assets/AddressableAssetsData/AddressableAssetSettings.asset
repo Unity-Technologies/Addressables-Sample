@@ -81,16 +81,9 @@ MonoBehaviour:
     - HD
     - SD
     - MD
-  m_SchemaTemplates:
-  - m_DisplayName: Packed Assets
-    m_Description: Pack assets into asset bundles.
-    m_SchemaTypes:
-    - m_AssemblyName: Unity.Addressables.Editor, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      m_ClassName: UnityEditor.AddressableAssets.Settings.GroupSchemas.BundledAssetGroupSchema
-    - m_AssemblyName: Unity.Addressables.Editor, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      m_ClassName: UnityEditor.AddressableAssets.Settings.GroupSchemas.ContentUpdateGroupSchema
+  m_SchemaTemplates: []
+  m_GroupTemplateObjects:
+  - {fileID: 11400000, guid: 7588a5900f3d07c4f846cf58413bd6ea, type: 2}
   m_InitializationObjects: []
   m_ActivePlayerDataBuilderIndex: 4
   m_ActivePlayModeDataBuilderIndex: 5
