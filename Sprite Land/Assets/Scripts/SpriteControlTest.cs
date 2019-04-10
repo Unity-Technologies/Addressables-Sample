@@ -40,8 +40,8 @@ public class SpriteControlTest : MonoBehaviour
             singleEntry = null;
         }
     }
-
-    void SingleDone(IAsyncOperation<Sprite> op)
+    
+    void SingleDone(AsyncOperationHandle<Sprite> op)
     {
         if (op.Result == null)
         {
@@ -53,7 +53,7 @@ public class SpriteControlTest : MonoBehaviour
         singleEntry = op.Result;
     }
 
-    void SheetDone(IAsyncOperation<IList<Sprite>> op)
+    void SheetDone(AsyncOperationHandle<IList<Sprite>> op)
     {
         if (op.Result == null)
         {

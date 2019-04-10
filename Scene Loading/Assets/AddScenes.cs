@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -13,7 +14,7 @@ public class AddScenes : MonoBehaviour
 	public string addressToAdd;
 	Button m_AddButton;
 	public TMPro.TMP_Text textArea;
-	Scene m_LoadedScene;
+	SceneInstance m_LoadedScene;
 	bool m_ReadyToLoad = true;
 	// Use this for initialization
 	void Start () {
@@ -39,13 +40,13 @@ public class AddScenes : MonoBehaviour
 		}
 	}
 
-	void OnSceneUnloaded(IAsyncOperation<Scene> obj)
+	void OnSceneUnloaded(AsyncOperationHandle<SceneInstance> obj)
 	{
 		if (obj.Status == AsyncOperationStatus.Succeeded)
 		{
 			textArea.text = "Reload " + addressToAdd;
 			m_ReadyToLoad = true;
-			m_LoadedScene = new Scene();
+			m_LoadedScene = new SceneInstance();
 		}
 		else
 		{
@@ -53,7 +54,7 @@ public class AddScenes : MonoBehaviour
 		}
 	}
 
-	void OnSceneLoaded(IAsyncOperation<Scene> obj)
+	void OnSceneLoaded(AsyncOperationHandle<SceneInstance> obj)
 	{
 		if (obj.Status == AsyncOperationStatus.Succeeded)
 		{

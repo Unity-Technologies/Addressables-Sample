@@ -23,7 +23,7 @@ public class ListOfReferences : MonoBehaviour {
 		}
 	}
 
-	void OnShapeLoaded(IAsyncOperation<GameObject> obj)
+	void OnShapeLoaded(AsyncOperationHandle<GameObject> obj)
 	{
 		m_ToLoadCount--;
 		if (m_ToLoadCount <= 0)

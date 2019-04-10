@@ -19,11 +19,11 @@ public class BuildScriptInheritedFastMode : BuildScriptFastMode
         get { return "Vary Fast"; }
     }
 
-    protected override TResult BuildDataImplementation<TResult>(IDataBuilderContext context)
+    protected override TResult BuildDataImplementation<TResult>(AddressablesDataBuilderInput context)
     {
         var result = base.BuildDataImplementation<TResult>(context);
-        
-        AddressableAssetSettings settings = context.GetValue<AddressableAssetSettings>(AddressablesBuildDataBuilderContext.BuildScriptContextConstants.kAddressableAssetSettings);
+
+        AddressableAssetSettings settings = context.AddressableSettings;
         DoCleanup(settings);
         return result;
     }
