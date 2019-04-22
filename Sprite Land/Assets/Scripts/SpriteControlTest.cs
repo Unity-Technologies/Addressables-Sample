@@ -15,19 +15,21 @@ public class SpriteControlTest : MonoBehaviour
     public string spriteSheetAddress;
     Sprite sheetEntry = null;
 
-    int m_Fired = 0;
+    int clickCount = 0;
+    public void OnButtonClick()
+    {
+        
+        clickCount++;
+        if(clickCount == 1)
+            swapToSingle.LoadAsset().Completed += SingleDone;
+        else if(clickCount == 2)
+            Addressables.LoadAsset<IList<Sprite>>(spriteSheetAddress).Completed += SheetDone;
+        
+
+    }
 
     void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
-        {
-            m_Fired++;
-            if(m_Fired == 1)
-                swapToSingle.LoadAsset().Completed += SingleDone;
-            else if(m_Fired == 2)
-                Addressables.LoadAsset<IList<Sprite>>(spriteSheetAddress).Completed += SheetDone;
-        }
-
         if (sheetEntry != null)
         {
             spriteSheetTest.sprite = sheetEntry;
@@ -48,7 +50,7 @@ public class SpriteControlTest : MonoBehaviour
             Debug.LogError("no sheets here.");
             return;
         }
-
+        
         //saving result, and setting on sprite later to work around engine bug :(
         singleEntry = op.Result;
     }
