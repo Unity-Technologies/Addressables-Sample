@@ -1,1 +1,0 @@
-Addressable Assets info placeholder

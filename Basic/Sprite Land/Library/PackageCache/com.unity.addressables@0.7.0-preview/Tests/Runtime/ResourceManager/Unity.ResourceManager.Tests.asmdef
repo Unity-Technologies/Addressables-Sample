@@ -1,9 +1,0 @@
-﻿{
-    "name": "Unity.ResourceManager.Tests",
-    "references": [
-        "Unity.ResourceManager"
-    ],
-    "optionalUnityReferences": [
-        "TestAssemblies"
-    ]
-}
