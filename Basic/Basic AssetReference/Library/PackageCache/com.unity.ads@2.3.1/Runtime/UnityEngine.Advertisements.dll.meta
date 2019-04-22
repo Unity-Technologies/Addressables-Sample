@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: 9f3067aa8ee04870be9df18728a41e82
+PluginImporter:
+  serializedVersion: 1
+  iconMap: {}
+  executionOrder: {}
+  isPreloaded: 0
+  platformData:
+    Any:
+      enabled: 1
+      settings: {}

@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 380537283a194bac9047a69c7d2965e8
+folderAsset: yes
+PluginImporter:
+  serializedVersion: 1
+  platformData:
+    iOS:
+      enabled: 1
+      settings:
+        FrameworkDependencies: AdSupport;CoreTelephony;StoreKit;

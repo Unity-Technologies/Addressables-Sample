@@ -1,0 +1,14 @@
+{
+    "name": "Unity.Addressables",
+    "references": [
+        "Unity.ResourceManager"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Unity.CacheServer.Client.Editor",
+  "includePlatforms": [
+    "Editor"
+  ]
+}

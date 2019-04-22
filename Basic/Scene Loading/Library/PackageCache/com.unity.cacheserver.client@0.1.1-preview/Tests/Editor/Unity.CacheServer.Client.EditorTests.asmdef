@@ -1,0 +1,14 @@
+{
+    "name": "Unity.CacheServer.Client.EditorTests",
+    "references": [
+        "Unity.CacheServer.Client.Editor"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}
