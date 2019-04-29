@@ -33,13 +33,8 @@ The ins and outs of scene loading.
 * Scenes/ItemScenes/*
   * These scenes just contain items with no code.  Their purpose is to be additively loaded by the Foundation scene.
   
-#### *Basic/Sprite Land*
-A scene showing different ways to access sprites.
-* Scenes/SampleScene
-  * After hitting play, clicking on the screen with trigger each sprite swap (one swap per click)
-  * The first sprite swap is a directly referenced sprite.
-  * The second is pulling a sprite out of a sprite sheet.  NOTE: THIS WILL CRASH a standalone player.  We are currently investigating this.
-  * Still to come is working with Sprite Atlas assets.  
+#### ~~Basic/Sprite Land~~
+This has been removed due to an engine bug.  We are investigating, but we are keeping the info here so those overly curious will know they can hunt it down.
   
 #### *Advanced/Texture Variations*
 An example project to show one use case or workflow for creating "variants".  The new build pipeline (Scriptable Build Pipeline) upon which Addressables is built, does not support asset bundle variants.  This old mechanism was useful in many instances, so this sample is meant to show how to accomplish similar results for one of those instances.  There are other purpose for variants not shown here.  Some will be coming in future samples.
