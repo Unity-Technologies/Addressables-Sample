@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -22,10 +23,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: badef295bf5c5e04e8e6ed44b562c51d, type: 2}
   - {fileID: 11400000, guid: c988550c1a7d9d84c91440ac8cbc22af, type: 2}
   m_BuildSettings:
-    m_Compression:
-      compression: 3
-      level: 5
-      blockSize: 131072
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
     m_LogResourceManagerExceptions: 1
@@ -66,16 +63,9 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - default
-  m_SchemaTemplates:
-  - m_DisplayName: Packed Assets
-    m_Description: Pack asset sinto asset bundles.
-    m_SchemaTypes:
-    - m_AssemblyName: Unity.Addressables.Editor, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      m_ClassName: UnityEditor.AddressableAssets.Settings.GroupSchemas.BundledAssetGroupSchema
-    - m_AssemblyName: Unity.Addressables.Editor, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      m_ClassName: UnityEditor.AddressableAssets.Settings.GroupSchemas.ContentUpdateGroupSchema
+  m_SchemaTemplates: []
+  m_GroupTemplateObjects:
+  - {fileID: 11400000, guid: 6662d335f2e064c4e86cf64142f4a628, type: 2}
   m_InitializationObjects: []
   m_ActivePlayerDataBuilderIndex: 2
   m_ActivePlayModeDataBuilderIndex: 0

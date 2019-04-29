@@ -1,6 +1,6 @@
 {
   "dependencies": {
-	"com.unity.addressables": "0.7.0-preview",
+	"com.unity.addressables": "0.7.5-preview",
     "com.unity.ads": "2.3.1",
     "com.unity.analytics": "3.2.2",
     "com.unity.collab-proxy": "1.2.15",
@@ -37,6 +37,5 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  },
-  "registry": "https://staging-packages.unity.com"
+  }
 }

@@ -78,7 +78,8 @@ MonoBehaviour:
     m_LabelNames:
     - default
   m_SchemaTemplates: []
-  m_GroupTemplateObjects: []
+  m_GroupTemplateObjects:
+  - {fileID: 11400000, guid: 57ae3d8ca1637e24187c278664a58155, type: 2}
   m_InitializationObjects: []
   m_ActivePlayerDataBuilderIndex: 3
   m_ActivePlayModeDataBuilderIndex: 2
