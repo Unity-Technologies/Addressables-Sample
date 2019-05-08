@@ -19,6 +19,6 @@ public class AddObject : MonoBehaviour {
     void OnButtonClick()
     {
         var randSpot = new Vector3(Random.Range(-5, 1), Random.Range(-10, 10), Random.Range(0, 100));
-        Addressables.Instantiate("ball", randSpot, Quaternion.identity);
+        Addressables.InstantiateAsync("ball", randSpot, Quaternion.identity);
     }
 }

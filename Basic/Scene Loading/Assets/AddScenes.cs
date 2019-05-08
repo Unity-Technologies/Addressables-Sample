@@ -32,10 +32,10 @@ public class AddScenes : MonoBehaviour
 		else
 		{
 			if (m_ReadyToLoad)
-				Addressables.LoadScene(addressToAdd, LoadSceneMode.Additive).Completed += OnSceneLoaded;
+				Addressables.LoadSceneAsync(addressToAdd, LoadSceneMode.Additive).Completed += OnSceneLoaded;
 			else
 			{
-				Addressables.UnloadScene(m_LoadedScene).Completed += OnSceneUnloaded;
+				Addressables.UnloadSceneAsync(m_LoadedScene).Completed += OnSceneUnloaded;
 			}
 		}
 	}

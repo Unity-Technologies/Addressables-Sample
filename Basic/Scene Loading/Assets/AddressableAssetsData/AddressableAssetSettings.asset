@@ -63,17 +63,13 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - default
-  m_SchemaTemplates:
-  - m_DisplayName: Packed Assets
-    m_Description: Pack asset sinto asset bundles.
-    m_SchemaTypes:
-    - m_AssemblyName: Unity.Addressables.Editor, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      m_ClassName: UnityEditor.AddressableAssets.Settings.GroupSchemas.BundledAssetGroupSchema
-    - m_AssemblyName: Unity.Addressables.Editor, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      m_ClassName: UnityEditor.AddressableAssets.Settings.GroupSchemas.ContentUpdateGroupSchema
+  m_SchemaTemplates: []
+  m_GroupTemplateObjects:
+  - {fileID: 11400000, guid: 03cc2ed6f00c25b4c97e73bad6347b56, type: 2}
   m_InitializationObjects: []
+  m_CertificateHandlerType:
+    m_AssemblyName: 
+    m_ClassName: 
   m_ActivePlayerDataBuilderIndex: 2
   m_ActivePlayModeDataBuilderIndex: 1
   m_DataBuilders:
