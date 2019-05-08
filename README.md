@@ -1,11 +1,11 @@
 # Addressables-Sample
 Demo project using Addressables package
 
-This sample is broken up into projects based on high level functionality.  Each project has multiple scenes as needed to 
+This sample is broken up into projects based on high level functionality.  These are intended as jumping off points for your own development.  
 
 ## Projects
 
-#### *Basic AssetReference*
+#### *Basic/Basic AssetReference*
 Several sample scenes to display functionality surrounding the asset reference class.  
 * Scenes/BasicReference 
   * Simplest example using a refrence to spawn and destroy a game object
@@ -19,9 +19,8 @@ Several sample scenes to display functionality surrounding the asset reference c
   * The manager of these AssetReferences must release them in `OnDestroy` or the ref count will survive the closing of the scene. 
 * Scenes/FilteredReferences
   * Showcases utilizing the various filtering options on the `AssetReference` class.
-  * ...
 
-#### *Scene Loading*
+#### *Basic/Scene Loading*
 The ins and outs of scene loading.
 * Scenes/Bootstrap
   * This is the scene to start with.  From this one you can transition to the other scenes.
@@ -34,12 +33,26 @@ The ins and outs of scene loading.
 * Scenes/ItemScenes/*
   * These scenes just contain items with no code.  Their purpose is to be additively loaded by the Foundation scene.
   
-#### *Sprite Land*
-A scene showing different ways to access sprites.
-* Scenes/SampleScene
-  * After hitting play, clicking on the screen with trigger each sprite swap (one swap per click)
-  * The first sprite swap is a directly referenced sprite.
-  * The second is pulling a sprite out of a sprite sheet.  NOTE: THIS WILL CRASH a standalone player.  We are currently investigating this.
-  * Still to come is working with Sprite Atlas assets.  
+#### ~~Basic/Sprite Land~~
+This has been removed due to an engine bug.  We are investigating, but we are keeping the info here so those overly curious will know they can hunt it down.
   
+#### *Advanced/Texture Variations*
+An example project to show one use case or workflow for creating "variants".  The new build pipeline (Scriptable Build Pipeline) upon which Addressables is built, does not support asset bundle variants.  This old mechanism was useful in many instances, so this sample is meant to show how to accomplish similar results for one of those instances.  There are other purpose for variants not shown here.  Some will be coming in future samples.
+* Scenes/SampleScene
+  * In the scene, there's a prefab with an existing texture that can load alternate textures based on button input.  (VariationController.cs)
+  * The project only has one instance of the texture in question (Texture/tree2.png).  It is marked as addressable, with the address "tree" and no labels
+  * The group containing "tree" has a custom schema added to it (TextureVariationSchema).  This defines the label for the provided texture, and a scale and label for alternate textures.
+  * For "Fast Mode" in the player, run with the play mode script of "Vary Fast".  This will look at all the label variations defined in the schema, and apply all labels to the "tree".  This will then go into play mode in the normal Fast Mode setup of loading from AssetDatabase, but will fake having an "HD", "SD", etc. version of the texture. 
+  * For "Virtual Mode" in the player, run with the play mode script of "Virtual Variety".  This will do the same things as the "Vary Fast" script above.  Note, this is not a very accurate virtual mode right now because it does not emulate the fact that each variety should be in its own bundle. 
+  * With the build script of "Pack Variations" selected, building the player content will:
+    * Find all groups with the TextureVariationSchema
+	* Loop over all size/label pairs, and copy the textures on-disk.
+	* Change the import settings on the created textures so as to scale them.
+	* Build all bundles
+	* Remove the extra files/groups that were created.
+  * After building with "Pack Variations", you can enter play mode using the standard "Packed Play Mode" script.
+ 
+
+
+
   
