@@ -20,6 +20,6 @@ public class BasicReference : MonoBehaviour
 
 	public void SpawnThing()
 	{
-		baseCube.Instantiate();
+		baseCube.InstantiateAsync();
 	}
 }

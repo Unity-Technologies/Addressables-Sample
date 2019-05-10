@@ -24,7 +24,7 @@ public class VariationController : MonoBehaviour
 
     void LoadTexture(string key, string label)
     {
-        Addressables.LoadAssets<Texture2D>(new List<object> { key, label }, null, Addressables.MergeMode.Intersection).Completed
+        Addressables.LoadAssetsAsync<Texture2D>(new List<object> { key, label }, null, Addressables.MergeMode.Intersection).Completed
             += TextureLoaded;
     }
     

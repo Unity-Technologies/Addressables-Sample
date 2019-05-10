@@ -19,6 +19,9 @@ Several sample scenes to display functionality surrounding the asset reference c
   * The manager of these AssetReferences must release them in `OnDestroy` or the ref count will survive the closing of the scene. 
 * Scenes/FilteredReferences
   * Showcases utilizing the various filtering options on the `AssetReference` class.
+  * This scene also shows an alternative loading patter to the one used in other scenes.  It shows how you can utilize the Asset property.  It is recommended that you only use the Asset for ease of load.  You could theoretically also use it to poll completion, but you would never find out about errors in that usage. 
+  * This sample shows loading via the `AssetReference` but instantiating via Unity's built in method.  This will only increment the ref count once (for the load).
+  * Currently, the objects created are being destroyed with Addressables.ReleaseInstance even though they were not created that way.  As of version 0.8, this will throw a warning, but still delete the asset.  In the future, our intent is to make this method not destroy the asset, or print a warning.  Instead it will return a boolean so you can destroy manually if needed. 
 
 #### *Basic/Scene Loading*
 The ins and outs of scene loading.
@@ -51,7 +54,23 @@ An example project to show one use case or workflow for creating "variants".  Th
 	* Build all bundles
 	* Remove the extra files/groups that were created.
   * After building with "Pack Variations", you can enter play mode using the standard "Packed Play Mode" script.
- 
+   
+#### *Advanced/Sync Addressables*
+Synchronous Addressables!  What a crazy thing.  This sample shows how you could set up your project to utilize Addressables, but in a (nearly) completely synchronous way.
+Why don't we put these sync methods in Addressables itself?  The best way to understand that is to look at SyncAddressables/SyncAddressables.cs and search for "throw".  The code is very specific about how it needs to be used, and will cause pain for the caller if not used in the right way at the right time.  That being said, if you want to create a game built on sync interfaces, you can copy this code, and run with it.  If you are using it, all the existing async methods would still work, so you are capable of doing a mix & match in your game, if you are willing to accept the constraints when doing things sync. Note that the group schema is what associates a given asset group with either the sync providers or the regular ones.  So you could not mix & match within a group.
+*Not all play modes done.*  Packed content (for play mode, or the player) needs no custom builders.  Fast mode and Virtual mode on the other hand do.  At this point, we have only implemented a sample script for Fast Mode.  
+* Scenes/SampleScene
+  * This scene waits until the SyncAddressables system has been initialized, and then starts spawning a cube every 60 fixed-update calls. 
+* SyncAddressables code
+  * SyncAddressables.cs - A class that simply calls into Addressables and adds some synchronous guards.  Contains methods for: 
+    * `Ready()` - True if the main addressables has finished initializing.
+	* `LoadAsset<>()` & `Instantiate()` - Calls the addressables version of the method, returning the result if things were ready, throwing exceptions if not.
+  * SyncBundleProvider.cs - Loads the asset bundle into memory using synchronous methods.  If the bundle is online this will fail.  Also note, in it's current form, this will fail on Android as loading there is a little more complex.  It can load sync, we just didn't have time to add that support to this demo.  This is the most likely point in the flow for there to be an issue in the sync process.  If this were used in production, it would probably need much better error checking.
+  * SyncBundledAssetProvider.cs - Loads from an asset bundle using the synchronous methods.  This is unlikely to be a failure point, as it isn't called until the bundle is loaded successfully.
+  * Editor/SyncFastModeBuild.cs - Since fast mode does not load from bundles, the default fast mode script has to inject it's own provider for all assets.  This custom script just replaces that standard provider with a sync one. 
+  * SyncAssetDatabaseProvider.cs - An overriden provider to do asset database loads immediately. 
+  * Not Needed: SyncBuildScriptPackedMode or SyncBuildScriptPackedPlayMode.  Since the group schema allows you to specify provider, the standard build script works as is.
+  * Missing - the two main things missing from this demo are Virtual mode and the ability to load from Resources using the sync interfaces.
 
 
 

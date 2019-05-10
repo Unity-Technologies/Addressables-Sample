@@ -19,7 +19,7 @@ public class ListOfReferences : MonoBehaviour {
 		m_ToLoadCount = shapes.Count;
 		foreach (var shape in shapes)
 		{
-			shape.LoadAsset<GameObject>().Completed += OnShapeLoaded;
+			shape.LoadAssetAsync<GameObject>().Completed += OnShapeLoaded;
 		}
 	}
 
