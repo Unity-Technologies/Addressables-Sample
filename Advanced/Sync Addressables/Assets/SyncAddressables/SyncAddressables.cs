@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.AddressableAssets.ResourceLocators;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public static class SyncAddressables
 {
@@ -15,7 +16,7 @@ public static class SyncAddressables
     [RuntimeInitializeOnLoadMethod]
     static void Init()
     {
-        Addressables.Initialize().Completed += InitDone;
+        Addressables.InitializeAsync().Completed += InitDone;
     }
 
     static void InitDone(AsyncOperationHandle<IResourceLocator> obj)
@@ -28,7 +29,7 @@ public static class SyncAddressables
         if(!s_Initialized)
             throw new Exception("Whoa there friend!  We haven't init'd yet!");
 
-        var op = Addressables.LoadAsset<TObject>(key);        
+        var op = Addressables.LoadAssetAsync<TObject>(key);        
         
         if(!op.IsDone)
             throw new Exception("Sync LoadAsset failed to load in a sync way! " + key);
@@ -50,7 +51,7 @@ public static class SyncAddressables
         if(!s_Initialized)
             throw new Exception("Whoa there friend!  We haven't init'd yet!");
         
-        var op = Addressables.Instantiate(key, parent, instantiateInWorldSpace); 
+        var op = Addressables.InstantiateAsync(key, parent, instantiateInWorldSpace); 
         
         if(!op.IsDone)
             throw new Exception("Sync Instantiate failed to finish! " + key);

@@ -61,7 +61,7 @@ public class SyncFastModeBuild : BuildScriptFastMode
                 }
 
                 var settingsPath = string.Format(pathFormat, "", "settings");
-                WriteFile(settingsPath, JsonUtility.ToJson(aaContext.runtimeData));
+                WriteFile(settingsPath, JsonUtility.ToJson(aaContext.runtimeData), context.Registry);
 
                 //save catalog
                 var catalogData = new ContentCatalogData(aaContext.locations);
@@ -70,7 +70,7 @@ public class SyncFastModeBuild : BuildScriptFastMode
                 catalogData.ResourceProviderData.Add(ObjectInitializationData.CreateSerializedInitializationData<SyncAssetDatabaseProvider>());
                 catalogData.InstanceProviderData = ObjectInitializationData.CreateSerializedInitializationData(instanceProviderType.Value);
                 catalogData.SceneProviderData = ObjectInitializationData.CreateSerializedInitializationData(sceneProviderType.Value);
-                WriteFile(string.Format(pathFormat, "", "catalog"), JsonUtility.ToJson(catalogData));
+                WriteFile(string.Format(pathFormat, "", "catalog"), JsonUtility.ToJson(catalogData), context.Registry);
 
 
                 //inform runtime of the init data path

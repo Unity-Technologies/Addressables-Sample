@@ -67,13 +67,17 @@ MonoBehaviour:
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: b0f1af4a5bb5c3b4aa85ca7214899bd5, type: 2}
   m_InitializationObjects: []
+  m_CertificateHandlerType:
+    m_AssemblyName: 
+    m_ClassName: 
   m_ActivePlayerDataBuilderIndex: 3
-  m_ActivePlayModeDataBuilderIndex: 2
+  m_ActivePlayModeDataBuilderIndex: 4
   m_DataBuilders:
   - {fileID: 11400000, guid: 198a7e84d4d2ef64e8b9c60f96f15d3b, type: 2}
   - {fileID: 11400000, guid: 32dd92e48c14d2c49a48808efbb4b57a, type: 2}
   - {fileID: 11400000, guid: 828f9f6361b8aac4e8265df6fad57a85, type: 2}
   - {fileID: 11400000, guid: d6936fb7fd52aa24fb3fece79a335a41, type: 2}
+  - {fileID: 11400000, guid: 2f50f8ccad1915f4b869fb3fd7d7bf5e, type: 2}
   m_ActiveProfileId: 26ccb8c6f9c4fb04982520046e37a8cb
   m_HostingServicesManager:
     m_HostingServiceInfos: []
