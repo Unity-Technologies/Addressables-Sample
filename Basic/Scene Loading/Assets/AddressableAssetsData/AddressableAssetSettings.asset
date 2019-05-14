@@ -36,7 +36,7 @@ MonoBehaviour:
       - m_Id: df89a4d82c5ce834384acd1bdaf9f91e
         m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
       - m_Id: 6708e003fc49f354db7e9cab228b1393
-        m_Value: Assets/StreamingAssets/com.unity.addressables/[BuildTarget]
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
       - m_Id: d1803f09498a97f4d91e41311c71064d
         m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
       - m_Id: a3035c052f8172c468b9e076d0ddd275
