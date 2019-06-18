@@ -46,7 +46,8 @@ public class SyncFastModeBuild : BuildScriptFastMode
             aaContext.runtimeData.ProfileEvents = context.ProfilerEventsEnabled;
             aaContext.runtimeData.CatalogLocations.Add(new ResourceLocationData(new[] { ResourceManagerRuntimeData.kCatalogAddress },
                 string.Format(pathFormat, "file://{UnityEngine.Application.dataPath}/../", "catalog"),
-                typeof(ContentCatalogProvider)));
+                typeof(ContentCatalogProvider),
+                typeof(ContentCatalogData)));
 
             var errorString = ProcessAllGroups(aaContext);
             if(!string.IsNullOrEmpty(errorString))
@@ -103,7 +104,7 @@ public class SyncFastModeBuild : BuildScriptFastMode
 
         var typeName = typeof(SyncAssetDatabaseProvider).FullName;
         foreach (var a in allEntries)
-            aaContext.locations.Add(new ContentCatalogDataEntry(a.GetAssetLoadPath(true), typeName, a.CreateKeyList()));
+            a.CreateCatalogEntries(aaContext.locations, false, typeName, null, null);
 
         return errorString;
     }

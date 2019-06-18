@@ -74,7 +74,7 @@ Why don't we put these sync methods in Addressables itself?  The best way to und
 
 
 #### *Advanced/Custom Analyze Rule*
-This sample shows how to create custom AnalyzeRules for use within the Analyze window.  Both rules follow the recommended pattern for adding themselves to the UI.
+This sample shows how to create custom AnalyzeRules for use within the Analyze window.  Both rules follow the recommended pattern for adding themselves to the UI.  There are no scenes to look at in this project, just analyze code.
 * Editor/AddressHasC
   * This is a non-fixable rule (meaning it will not fix itself).
   * When run, it checks that all addresses have a capital C in them.  Any that do not are flagged as errors. 
