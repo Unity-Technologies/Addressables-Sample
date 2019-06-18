@@ -1,7 +1,7 @@
 # Addressables-Sample
 Demo project using Addressables package
 
-This sample is broken up into projects based on high level functionality.  These are intended as jumping off points for your own development.  
+These samples are broken up into projects based on high level functionality.  These are intended as jumping off points for your own development.  These have not been tested, and are not guarenteed to work in your situation.  They are just examples, to make some concepts easier to understand, or easier to replicate in your own project.  Use at your own risk. 
 
 ## Projects
 
@@ -56,7 +56,7 @@ An example project to show one use case or workflow for creating "variants".  Th
   * After building with "Pack Variations", you can enter play mode using the standard "Packed Play Mode" script.
    
 #### *Advanced/Sync Addressables*
-Synchronous Addressables!  What a crazy thing.  This sample shows how you could set up your project to utilize Addressables, but in a (nearly) completely synchronous way.
+Synchronous Addressables!  What a crazy thing.  And what a terrible idea.  This sample is not here to show how easy it is to make your project synchronous and encourage people to do so.  You are welcome to use this project as a starting point to make yours synchronous, but this sample is not robust. The purpose of this sample is to show how easy it is to customize addressables for complex workflows, and to show how fragile a synchronous system would be.  
 Why don't we put these sync methods in Addressables itself?  The best way to understand that is to look at SyncAddressables/SyncAddressables.cs and search for "throw".  The code is very specific about how it needs to be used, and will cause pain for the caller if not used in the right way at the right time.  That being said, if you want to create a game built on sync interfaces, you can copy this code, and run with it.  If you are using it, all the existing async methods would still work, so you are capable of doing a mix & match in your game, if you are willing to accept the constraints when doing things sync. Note that the group schema is what associates a given asset group with either the sync providers or the regular ones.  So you could not mix & match within a group.
 *Not all play modes done.*  Packed content (for play mode, or the player) needs no custom builders.  Fast mode and Virtual mode on the other hand do.  At this point, we have only implemented a sample script for Fast Mode.  
 * Scenes/SampleScene
@@ -73,5 +73,15 @@ Why don't we put these sync methods in Addressables itself?  The best way to und
   * Missing - the two main things missing from this demo are Virtual mode and the ability to load from Resources using the sync interfaces.
 
 
+#### *Advanced/Custom Analyze Rule*
+This sample shows how to create custom AnalyzeRules for use within the Analyze window.  Both rules follow the recommended pattern for adding themselves to the UI.  There are no scenes to look at in this project, just analyze code.
+* Editor/AddressHasC
+  * This is a non-fixable rule (meaning it will not fix itself).
+  * When run, it checks that all addresses have a capital C in them.  Any that do not are flagged as errors. 
+  * A rule like this would be useful if your studio enforced some sort of naming convention on addresses. (though it would probably be best if it could fix itself)
+* Editor/PathAddressIsPath
+  * This is a fixable rule.  Running fix on it will change addresses to comply with the rule.
+  * When run, it first identifies all addresses that seem to be paths.  Of those, it makes sure that the address actually matches the path of the asset.  
+  * This would be useful if you primarily left the addresses of your assets as the path (which is the default when marking an asset addressable).  If the asset is moved within the project, then the address no longer maps to where it is. This rule could fix that.
 
   
