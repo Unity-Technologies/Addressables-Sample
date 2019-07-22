@@ -36,7 +36,7 @@ MonoBehaviour:
       - m_Id: b503035f191f63348b0f03fe01eccff6
         m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
       - m_Id: ae4e4f8e82e20434882ff725d4519459
-        m_Value: Assets/StreamingAssets/com.unity.addressables/[BuildTarget]
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
       - m_Id: 1eb742f6f5c8e8c48ac889ea1d5cb570
         m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
       - m_Id: e1b191ddb2f2cbb4c9686cbc9f1a7213
@@ -67,8 +67,11 @@ MonoBehaviour:
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 6662d335f2e064c4e86cf64142f4a628, type: 2}
   m_InitializationObjects: []
+  m_CertificateHandlerType:
+    m_AssemblyName: 
+    m_ClassName: 
   m_ActivePlayerDataBuilderIndex: 2
-  m_ActivePlayModeDataBuilderIndex: 0
+  m_ActivePlayModeDataBuilderIndex: 3
   m_DataBuilders:
   - {fileID: 11400000, guid: d03cb99041348e5459b5eff24ac872cb, type: 2}
   - {fileID: 11400000, guid: 57838613cb4be3349b8411599f96a767, type: 2}

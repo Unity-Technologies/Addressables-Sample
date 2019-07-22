@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 62e2ca8bf40fa9648b9ae593c93adc47
+  m_SerializeEntries:
+  - m_GUID: 46d665cafff744d40ad9c7abf7bca8c9
+    m_Address: Capsule
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: b93c42a0ba47b964798972f62c01ce74
+    m_Address: Assets/Prefabs/Sphere.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: cb840dfcd66ed634cbd4c15f7fb0e53a
+    m_Address: Assets/Prefabs/Cylinder.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: e5272c40977f576419cda2b044d7127b
+    m_Address: Assets/WrongPath/Cube.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: e558d7a74414dba459a247dfcf60e28f, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 8a7b021b8c369fa4998d40be4b9a4ea2, type: 2}
+    - {fileID: 11400000, guid: 5763690efae754d48967fcb9718b844f, type: 2}

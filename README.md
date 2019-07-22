@@ -1,7 +1,7 @@
 # Addressables-Sample
 Demo project using Addressables package
 
-This sample is broken up into projects based on high level functionality.  These are intended as jumping off points for your own development.  
+These samples are broken up into projects based on high level functionality.  These are intended as jumping off points for your own development.  These have not been tested, and are not guarenteed to work in your situation.  They are just examples, to make some concepts easier to understand, or easier to replicate in your own project.  Use at your own risk. 
 
 ## Projects
 
@@ -19,6 +19,9 @@ Several sample scenes to display functionality surrounding the asset reference c
   * The manager of these AssetReferences must release them in `OnDestroy` or the ref count will survive the closing of the scene. 
 * Scenes/FilteredReferences
   * Showcases utilizing the various filtering options on the `AssetReference` class.
+  * This scene also shows an alternative loading patter to the one used in other scenes.  It shows how you can utilize the Asset property.  It is recommended that you only use the Asset for ease of load.  You could theoretically also use it to poll completion, but you would never find out about errors in that usage. 
+  * This sample shows loading via the `AssetReference` but instantiating via Unity's built in method.  This will only increment the ref count once (for the load).
+  * Currently, the objects created are being destroyed with Addressables.ReleaseInstance even though they were not created that way.  As of version 0.8, this will throw a warning, but still delete the asset.  In the future, our intent is to make this method not destroy the asset, or print a warning.  Instead it will return a boolean so you can destroy manually if needed. 
 
 #### *Basic/Scene Loading*
 The ins and outs of scene loading.
@@ -33,13 +36,8 @@ The ins and outs of scene loading.
 * Scenes/ItemScenes/*
   * These scenes just contain items with no code.  Their purpose is to be additively loaded by the Foundation scene.
   
-#### *Basic/Sprite Land*
-A scene showing different ways to access sprites.
-* Scenes/SampleScene
-  * After hitting play, clicking on the screen with trigger each sprite swap (one swap per click)
-  * The first sprite swap is a directly referenced sprite.
-  * The second is pulling a sprite out of a sprite sheet.  NOTE: THIS WILL CRASH a standalone player.  We are currently investigating this.
-  * Still to come is working with Sprite Atlas assets.  
+#### ~~Basic/Sprite Land~~
+This has been removed due to an engine bug.  We are investigating, but we are keeping the info here so those overly curious will know they can hunt it down.
   
 #### *Advanced/Texture Variations*
 An example project to show one use case or workflow for creating "variants".  The new build pipeline (Scriptable Build Pipeline) upon which Addressables is built, does not support asset bundle variants.  This old mechanism was useful in many instances, so this sample is meant to show how to accomplish similar results for one of those instances.  There are other purpose for variants not shown here.  Some will be coming in future samples.
@@ -56,8 +54,34 @@ An example project to show one use case or workflow for creating "variants".  Th
 	* Build all bundles
 	* Remove the extra files/groups that were created.
   * After building with "Pack Variations", you can enter play mode using the standard "Packed Play Mode" script.
- 
+   
+#### *Advanced/Sync Addressables*
+Synchronous Addressables!  What a crazy thing.  And what a terrible idea.  This sample is not here to show how easy it is to make your project synchronous and encourage people to do so.  You are welcome to use this project as a starting point to make yours synchronous, but this sample is not robust. The purpose of this sample is to show how easy it is to customize addressables for complex workflows, and to show how fragile a synchronous system would be.  
+Why don't we put these sync methods in Addressables itself?  The best way to understand that is to look at SyncAddressables/SyncAddressables.cs and search for "throw".  The code is very specific about how it needs to be used, and will cause pain for the caller if not used in the right way at the right time.  That being said, if you want to create a game built on sync interfaces, you can copy this code, and run with it.  If you are using it, all the existing async methods would still work, so you are capable of doing a mix & match in your game, if you are willing to accept the constraints when doing things sync. Note that the group schema is what associates a given asset group with either the sync providers or the regular ones.  So you could not mix & match within a group.
+*Not all play modes done.*  Packed content (for play mode, or the player) needs no custom builders.  Fast mode and Virtual mode on the other hand do.  At this point, we have only implemented a sample script for Fast Mode.  
+* Scenes/SampleScene
+  * This scene waits until the SyncAddressables system has been initialized, and then starts spawning a cube every 60 fixed-update calls. 
+* SyncAddressables code
+  * SyncAddressables.cs - A class that simply calls into Addressables and adds some synchronous guards.  Contains methods for: 
+    * `Ready()` - True if the main addressables has finished initializing.
+	* `LoadAsset<>()` & `Instantiate()` - Calls the addressables version of the method, returning the result if things were ready, throwing exceptions if not.
+  * SyncBundleProvider.cs - Loads the asset bundle into memory using synchronous methods.  If the bundle is online this will fail.  Also note, in it's current form, this will fail on Android as loading there is a little more complex.  It can load sync, we just didn't have time to add that support to this demo.  This is the most likely point in the flow for there to be an issue in the sync process.  If this were used in production, it would probably need much better error checking.
+  * SyncBundledAssetProvider.cs - Loads from an asset bundle using the synchronous methods.  This is unlikely to be a failure point, as it isn't called until the bundle is loaded successfully.
+  * Editor/SyncFastModeBuild.cs - Since fast mode does not load from bundles, the default fast mode script has to inject it's own provider for all assets.  This custom script just replaces that standard provider with a sync one. 
+  * SyncAssetDatabaseProvider.cs - An overriden provider to do asset database loads immediately. 
+  * Not Needed: SyncBuildScriptPackedMode or SyncBuildScriptPackedPlayMode.  Since the group schema allows you to specify provider, the standard build script works as is.
+  * Missing - the two main things missing from this demo are Virtual mode and the ability to load from Resources using the sync interfaces.
 
 
+#### *Advanced/Custom Analyze Rule*
+This sample shows how to create custom AnalyzeRules for use within the Analyze window.  Both rules follow the recommended pattern for adding themselves to the UI.  There are no scenes to look at in this project, just analyze code.
+* Editor/AddressHasC
+  * This is a non-fixable rule (meaning it will not fix itself).
+  * When run, it checks that all addresses have a capital C in them.  Any that do not are flagged as errors. 
+  * A rule like this would be useful if your studio enforced some sort of naming convention on addresses. (though it would probably be best if it could fix itself)
+* Editor/PathAddressIsPath
+  * This is a fixable rule.  Running fix on it will change addresses to comply with the rule.
+  * When run, it first identifies all addresses that seem to be paths.  Of those, it makes sure that the address actually matches the path of the asset.  
+  * This would be useful if you primarily left the addresses of your assets as the path (which is the default when marking an asset addressable).  If the asset is moved within the project, then the address no longer maps to where it is. This rule could fix that.
 
   

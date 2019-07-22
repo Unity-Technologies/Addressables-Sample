@@ -20,7 +20,7 @@ public class NextScene : MonoBehaviour
 
 	void OnButtonClick()
 	{
-		Addressables.LoadScene(NextSceneAddress);
+		Addressables.LoadSceneAsync(NextSceneAddress);
 	}
 
 	// Update is called once per frame
