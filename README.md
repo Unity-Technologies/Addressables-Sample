@@ -36,6 +36,19 @@ The ins and outs of scene loading.
 * Scenes/ItemScenes/*
   * These scenes just contain items with no code.  Their purpose is to be additively loaded by the Foundation scene.
   
+#### *Basic/ComponentReference*
+This example creates an AssetReference that is restricted to having a specific Component.  As of now, this only affects assignment, not loading or instantiating.  Loading or Instantiating this ComponentReference will return you a GameObject.  You will then have to use GetComponent to retrieve the desired component.  We intend to build that into the demo code at some point.
+* Scenes/SampleScene
+  * This scene has a Spawner game object that alternates between spawning a direct reference prefab and an addressable one.  
+  * Both the direct reference and the addressable ComponentReference can only be set to one of the prefabs with the component ColorChanger on it.
+* Scripts/ComponentReference - ComponentReference<TComponent>
+  * This is the class that inhertits from AssetReference.  It is generic and does not specify which Components it might care about.
+  * It validates that the asset set on it is a GameObject with the requried Component. 
+  * It does not yet do a load or instantiate returning the component type, but could.
+* Scripts/ColorChanger -  ColorChanger & ComponentReferenceColorChanger
+  * The component type we chose to care about.
+  * Note that this file includes a concrete version of the ComponentReference.  This is needed because if your game code just specified a ComponentReference<ColorChanger> it could not serialize or show up in the inspector.  This ComponentReferenceColorChanger is what makes the UI work.
+  
 #### ~~Basic/Sprite Land~~
 This has been removed due to an engine bug.  We are investigating, but we are keeping the info here so those overly curious will know they can hunt it down.
   
