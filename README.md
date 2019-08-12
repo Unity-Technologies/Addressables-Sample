@@ -35,8 +35,21 @@ The ins and outs of scene loading.
   * "Unload *" buttons will unload scenes that have been additively loaded.
 * Scenes/ItemScenes/*
   * These scenes just contain items with no code.  Their purpose is to be additively loaded by the Foundation scene.
+
+#### *Basic/ComponentReference*
+This example creates an AssetReference that is restricted to having a specific Component.  As of now, this only affects assignment, not loading or instantiating.  Loading or Instantiating this ComponentReference will return you a GameObject.  You will then have to use GetComponent to retrieve the desired component.  We intend to build that into the demo code at some point.
+* Scenes/SampleScene
+  * This scene has a Spawner game object that alternates between spawning a direct reference prefab and an addressable one.  
+  * Both the direct reference and the addressable ComponentReference can only be set to one of the prefabs with the component ColorChanger on it.
+* Scripts/ComponentReference - ComponentReference<TComponent>
+  * This is the class that inhertits from AssetReference.  It is generic and does not specify which Components it might care about.
+  * It validates that the asset set on it is a GameObject with the requried Component. 
+  * It does not yet do a load or instantiate returning the component type, but could.
+* Scripts/ColorChanger -  ColorChanger & ComponentReferenceColorChanger
+  * The component type we chose to care about.
+  * Note that this file includes a concrete version of the ComponentReference.  This is needed because if your game code just specified a ComponentReference<ColorChanger> it could not serialize or show up in the inspector.  This ComponentReferenceColorChanger is what makes the UI work.
   
-#### Basic/Sprite Land
+#### *Basic/Sprite Land*
 *2019.3.0a11+* - Sprite demo is back.  There was an engine bug causing a crash when loading out of sprite sheets that caused us to remove this demo.  This is in 2019.3 alpha, and is being backported to 2019.2 and 2018.4.  If you use this demo, and your game crashes, or you get warnings about "gfx" not on main thread, you don't have a fixed vesrion of the platform. 
 There are three sprite access methods currently demo'd in this sample.  The on-screen button will change functionality with each click, so you can demo the methods in order.  We have some additional mechanisms coming in Addressables 1.2+.  We will update this demo once that is out. 
 * Scenes/SampleScene 
