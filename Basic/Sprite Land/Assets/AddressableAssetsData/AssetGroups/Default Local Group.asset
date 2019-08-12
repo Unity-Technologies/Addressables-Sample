@@ -21,6 +21,10 @@ MonoBehaviour:
     m_Address: tree
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: c1e44e91bbff34e41b5a4373d74e5f41
+    m_Address: BattleAtlas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   - m_GUID: fbe1e7b94bb1a4a099d5bcb15a00141c
     m_Address: sheet
     m_ReadOnly: 0

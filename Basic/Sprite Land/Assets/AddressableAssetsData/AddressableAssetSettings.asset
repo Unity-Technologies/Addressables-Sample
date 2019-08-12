@@ -81,8 +81,10 @@ MonoBehaviour:
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 57ae3d8ca1637e24187c278664a58155, type: 2}
   m_InitializationObjects: []
+  m_CertificateHandlerType:
+    m_AssemblyName: 
+    m_ClassName: 
   m_ActivePlayerDataBuilderIndex: 3
-  m_ActivePlayModeDataBuilderIndex: 2
   m_DataBuilders:
   - {fileID: 11400000, guid: 6e69544d21d0be0479557f4abab36890, type: 2}
   - {fileID: 11400000, guid: 8f8684f2b37a2e7479f893ade01ea799, type: 2}
