@@ -12,12 +12,22 @@ public class ComponentReference<TComponent> : AssetReference
     {
     }
 
-    //Ideally Load and Instantiate would return the component type.  we plan to add that to this demo at some point.
-    public AsyncOperationHandle<GameObject> LoadAssetAsync()
+    //these are not named InstantiateAsync/LoadAssetAsync because in addressables 1.1.x the base methods not virtual.  They will be in 1.2+.  So this demo needs updating post 1.2.x
+    public AsyncOperationHandle<TComponent> InstantiateComponentAsync(Transform parent = null, bool instantiateInWorldSpace = false)
     {
-        return LoadAssetAsync<GameObject>();
+        return Addressables.ResourceManager.CreateChainOperation<TComponent, GameObject>(this.InstantiateAsync(), GameObjectReady);
     }
-    
+    public AsyncOperationHandle<TComponent> LoadComponentAsync()
+    {
+        return Addressables.ResourceManager.CreateChainOperation<TComponent, GameObject>(this.LoadAssetAsync<GameObject>(), GameObjectReady);
+    }
+
+    AsyncOperationHandle<TComponent> GameObjectReady(AsyncOperationHandle<GameObject> arg)
+    {
+        var comp = arg.Result.GetComponent<TComponent>();
+        return Addressables.ResourceManager.CreateCompletedOperation<TComponent>(comp, string.Empty);
+    }
+
     public override bool ValidateAsset(Object obj)
     {
         var go = obj as GameObject;
@@ -36,3 +46,4 @@ public class ComponentReference<TComponent> : AssetReference
     }
     
 }
+

@@ -7,31 +7,48 @@ public class Spawner : MonoBehaviour
     public ComponentReferenceColorChanger ColorShifterReference;
     public ColorChanger ColorShifterDirect;
 
-    int counter = 10000;
+    int m_Counter = 10000;
 
     void FixedUpdate()
     {
-        counter++;
-        if (counter == 15)
+        m_Counter++;
+        if (m_Counter == 15)
         {
-            ColorShifterReference.InstantiateAsync().Completed += SpawnDone;
+            //note that this could work as an Instantiate or a Load. 
+            //ColorShifterReference.LoadComponentAsync().Completed += LoadDone;
+            ColorShifterReference.InstantiateComponentAsync().Completed += InstantiateDone;
         }
-        else if (counter > 30)
+        else if (m_Counter > 30)
         {
             ColorChanger changer = Instantiate(ColorShifterDirect);
-            changer.SetColor(new Color(UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f)));
-            counter = 0;
+            changer.SetColor(RandomColor());
+            m_Counter = 0;
         }
     }
 
-    void SpawnDone(AsyncOperationHandle<GameObject> obj)
+    //if using the LoadComponentAsync version above...
+    void LoadDone(AsyncOperationHandle<ColorChanger> obj)
     {
         if (obj.Result != null)
         {
-            var changer = obj.Result.GetComponent<ColorChanger>();
-            if(changer != null)
-                changer.SetColor(new Color(UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f)));
+            ColorChanger changer = Instantiate(obj.Result);
+            changer.SetColor(RandomColor());
         }
     }
+
+    //if using the InstantiateComponentAsync version above...
+    void InstantiateDone(AsyncOperationHandle<ColorChanger> obj)
+    {
+        if(obj.Result != null)
+            obj.Result.SetColor(RandomColor());
+    }
+
+    
+    
+    Color RandomColor()
+    {
+        return new Color(UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f));
+    }
+
 }
 
