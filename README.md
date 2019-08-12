@@ -35,7 +35,7 @@ The ins and outs of scene loading.
   * "Unload *" buttons will unload scenes that have been additively loaded.
 * Scenes/ItemScenes/*
   * These scenes just contain items with no code.  Their purpose is to be additively loaded by the Foundation scene.
-  
+
 #### *Basic/ComponentReference*
 This example creates an AssetReference that is restricted to having a specific Component.  As of now, this only affects assignment, not loading or instantiating.  Loading or Instantiating this ComponentReference will return you a GameObject.  You will then have to use GetComponent to retrieve the desired component.  We intend to build that into the demo code at some point.
 * Scenes/SampleScene
@@ -49,8 +49,14 @@ This example creates an AssetReference that is restricted to having a specific C
   * The component type we chose to care about.
   * Note that this file includes a concrete version of the ComponentReference.  This is needed because if your game code just specified a ComponentReference<ColorChanger> it could not serialize or show up in the inspector.  This ComponentReferenceColorChanger is what makes the UI work.
   
-#### ~~Basic/Sprite Land~~
-This has been removed due to an engine bug.  We are investigating, but we are keeping the info here so those overly curious will know they can hunt it down.
+#### *Basic/Sprite Land*
+*2019.3.0a11+* - Sprite demo is back.  There was an engine bug causing a crash when loading out of sprite sheets that caused us to remove this demo.  This is in 2019.3 alpha, and is being backported to 2019.2 and 2018.4.  If you use this demo, and your game crashes, or you get warnings about "gfx" not on main thread, you don't have a fixed vesrion of the platform. 
+There are three sprite access methods currently demo'd in this sample.  The on-screen button will change functionality with each click, so you can demo the methods in order.  We have some additional mechanisms coming in Addressables 1.2+.  We will update this demo once that is out. 
+* Scenes/SampleScene 
+  * First is having an AssetReference directly to a single sprite.  Since this sprite is a single entry, we can reference the asset directly and get the sprite.  This is the most simple case. 
+  * Second is accessing a sprite from within a sprite sheet. This is the one that was causing a crash, but should be fixed now.  Here we load the sprite sheet asset as type IList<Sprite>.  This tells addressables to load all the sub-objects that are sprites, and return them as a list.  
+  * Third is accessing a sprite from within an atals. In this case, you have to use addressables to load the sprite atlas, then use the normal atlas API to load a given sprite from it.  This example also shows extending the AssetReference<T> to provide a typed refernce that Addressables doesn't come with (AssetReferenceT<SpriteAtlas> in this case).  
+* All code is in Scripts/SpriteControlTest.cs  
   
 #### *Advanced/Texture Variations*
 An example project to show one use case or workflow for creating "variants".  The new build pipeline (Scriptable Build Pipeline) upon which Addressables is built, does not support asset bundle variants.  This old mechanism was useful in many instances, so this sample is meant to show how to accomplish similar results for one of those instances.  There are other purpose for variants not shown here.  Some will be coming in future samples.
