@@ -75,22 +75,27 @@ An example project to show one use case or workflow for creating "variants".  Th
   * After building with "Pack Variations", you can enter play mode using the standard "Packed Play Mode" script.
    
 #### *Advanced/Sync Addressables*
-Synchronous Addressables!  What a crazy thing.  And what a terrible idea.  This sample is not here to show how easy it is to make your project synchronous and encourage people to do so.  You are welcome to use this project as a starting point to make yours synchronous, but this sample is not robust. The purpose of this sample is to show how easy it is to customize addressables for complex workflows, and to show how fragile a synchronous system would be.  
+Synchronous Addressables!  What a crazy thing.  The value of exploring this demo can be broken into two categories.  One is looking at what would be involved in making addressables synchronous.  The other is looking at creating custom providers.
+On the synchronous front, this can be used as a starting point for making your own project support synchronous loading.  As you can see in the code, there are a lot of fail cases, but if you can know that things are on-device and ready to go, it should work.  
+For custom providers, this project has a couple examples.  Custom providers are a really good way to extend addressables.  They are relatively easy to create and set up, but open up a lot of opportunity to inject logic during your load or instantiate. 
+
 Why don't we put these sync methods in Addressables itself?  The best way to understand that is to look at SyncAddressables/SyncAddressables.cs and search for "throw".  The code is very specific about how it needs to be used, and will cause pain for the caller if not used in the right way at the right time.  That being said, if you want to create a game built on sync interfaces, you can copy this code, and run with it.  If you are using it, all the existing async methods would still work, so you are capable of doing a mix & match in your game, if you are willing to accept the constraints when doing things sync. Note that the group schema is what associates a given asset group with either the sync providers or the regular ones.  So you could not mix & match within a group.
+
+One common workflow not shown here would have been to set things up to support async loading, but sync instantiation.  This would only work if the game always instantiated after loading was complete. That complicates the game-code, but is a simplified version of this demo from the addressables standpoint.
+
 *Not all play modes done.*  Packed content (for play mode, or the player) needs no custom builders.  Fast mode and Virtual mode on the other hand do.  At this point, we have only implemented a sample script for Fast Mode.  
 * Scenes/SampleScene
   * This scene waits until the SyncAddressables system has been initialized, and then starts spawning a cube every 60 fixed-update calls. 
 * SyncAddressables code
   * SyncAddressables.cs - A class that simply calls into Addressables and adds some synchronous guards.  Contains methods for: 
     * `Ready()` - True if the main addressables has finished initializing.
-	* `LoadAsset<>()` & `Instantiate()` - Calls the addressables version of the method, returning the result if things were ready, throwing exceptions if not.
-  * SyncBundleProvider.cs - Loads the asset bundle into memory using synchronous methods.  If the bundle is online this will fail.  Also note, in it's current form, this will fail on Android as loading there is a little more complex.  It can load sync, we just didn't have time to add that support to this demo.  This is the most likely point in the flow for there to be an issue in the sync process.  If this were used in production, it would probably need much better error checking.
+    * `LoadAsset<>()` & `Instantiate()` - Calls the addressables version of the method, returning the result if things were ready, throwing exceptions if not.
+  * SyncBundleProvider.cs - Loads the asset bundle into memory using synchronous methods.  If the bundle is online this will fail.  Also note, in it's current form, this will fail on Android as loading there is a little more complex.  It can load sync, we just didn't have time to add that support to this demo.  This is the most likely point in the flow for there to be an issue in the sync process.  If this were used in production, it would probably need extended error checking.
   * SyncBundledAssetProvider.cs - Loads from an asset bundle using the synchronous methods.  This is unlikely to be a failure point, as it isn't called until the bundle is loaded successfully.
   * Editor/SyncFastModeBuild.cs - Since fast mode does not load from bundles, the default fast mode script has to inject it's own provider for all assets.  This custom script just replaces that standard provider with a sync one. 
   * SyncAssetDatabaseProvider.cs - An overriden provider to do asset database loads immediately. 
-  * Not Needed: SyncBuildScriptPackedMode or SyncBuildScriptPackedPlayMode.  Since the group schema allows you to specify provider, the standard build script works as is.
+  * No Change Needed: SyncBuildScriptPackedMode or SyncBuildScriptPackedPlayMode.  Since the group schema allows you to specify provider, the standard build script works as is.
   * Missing - the two main things missing from this demo are Virtual mode and the ability to load from Resources using the sync interfaces.
-
 
 #### *Advanced/Custom Analyze Rule*
 This sample shows how to create custom AnalyzeRules for use within the Analyze window.  Both rules follow the recommended pattern for adding themselves to the UI.  There are no scenes to look at in this project, just analyze code.
