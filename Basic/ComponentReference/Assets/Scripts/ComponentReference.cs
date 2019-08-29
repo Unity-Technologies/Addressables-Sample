@@ -11,15 +11,19 @@ public class ComponentReference<TComponent> : AssetReference
     public ComponentReference(string guid) : base(guid)
     {
     }
-
-    //these are not named InstantiateAsync/LoadAssetAsync because in addressables 1.1.x the base methods not virtual.  They will be in 1.2+.  So this demo needs updating post 1.2.x
-    public AsyncOperationHandle<TComponent> InstantiateComponentAsync(Transform parent = null, bool instantiateInWorldSpace = false)
+    
+    public new AsyncOperationHandle<TComponent> InstantiateAsync(Vector3 position, Quaternion rotation, Transform parent = null)
     {
-        return Addressables.ResourceManager.CreateChainOperation<TComponent, GameObject>(this.InstantiateAsync(), GameObjectReady);
+        return Addressables.ResourceManager.CreateChainOperation<TComponent, GameObject>(base.InstantiateAsync(position, Quaternion.identity, parent), GameObjectReady);
     }
-    public AsyncOperationHandle<TComponent> LoadComponentAsync()
+   
+    public new AsyncOperationHandle<TComponent> InstantiateAsync(Transform parent = null, bool instantiateInWorldSpace = false)
     {
-        return Addressables.ResourceManager.CreateChainOperation<TComponent, GameObject>(this.LoadAssetAsync<GameObject>(), GameObjectReady);
+        return Addressables.ResourceManager.CreateChainOperation<TComponent, GameObject>(base.InstantiateAsync(parent, instantiateInWorldSpace), GameObjectReady);
+    }
+    public AsyncOperationHandle<TComponent> LoadAssetAsync()
+    {
+        return Addressables.ResourceManager.CreateChainOperation<TComponent, GameObject>(base.LoadAssetAsync<GameObject>(), GameObjectReady);
     }
 
     AsyncOperationHandle<TComponent> GameObjectReady(AsyncOperationHandle<GameObject> arg)

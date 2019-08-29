@@ -16,7 +16,7 @@ public class Spawner : MonoBehaviour
         {
             //note that this could work as an Instantiate or a Load. 
             //ColorShifterReference.LoadComponentAsync().Completed += LoadDone;
-            ColorShifterReference.InstantiateComponentAsync().Completed += InstantiateDone;
+            ColorShifterReference.InstantiateAsync().Completed += InstantiateDone;
         }
         else if (m_Counter > 30)
         {
