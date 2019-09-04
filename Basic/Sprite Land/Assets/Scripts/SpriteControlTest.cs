@@ -9,14 +9,15 @@ using UnityEngine.UI;
 
 public class SpriteControlTest : MonoBehaviour
 {
-    public SpriteRenderer singleSpriteTest;
     public AssetReferenceSprite singleSpriteReference;
-
-    public SpriteRenderer spriteSheetTest;
     public AssetReference spriteSheetReference;
-
-    public SpriteRenderer spriteAtlasTest;
     public AssetReferenceAtlas spriteAtlasReference;
+    public AssetReferenceSprite spriteSubAssetReference;
+    public AssetReference atlasSubAssetReference;
+    public string spriteSubAddressSyntax;
+    public string atlasSubAddressSyntax;
+
+    public List<SpriteRenderer> spritesToChange;
 
     public Button button;
     public Text buttonText;
@@ -40,11 +41,22 @@ public class SpriteControlTest : MonoBehaviour
                 spriteAtlasReference.LoadAssetAsync().Completed += AtlasDone;
                 break;
             case 4:
+                spriteSubAssetReference.LoadAssetAsync().Completed += SheetSubDone;
+                break;
+            case 5:
+                atlasSubAssetReference.LoadAssetAsync<Sprite>().Completed += AtlasSubDone;
+                break;
+            case 6:
+                Addressables.LoadAssetAsync<Sprite>(spriteSubAddressSyntax).Completed += SheetNameSubDone;
+                break;
+            case 7:
+                Addressables.LoadAssetAsync<Sprite>(atlasSubAddressSyntax).Completed += AtlasNameSubDone;
                 break;
         }
         
 
     }
+
     void SingleDone(AsyncOperationHandle<Sprite> op)
     {
         if (op.Result == null)
@@ -53,7 +65,7 @@ public class SpriteControlTest : MonoBehaviour
             return;
         }
         
-        singleSpriteTest.sprite = op.Result;
+        spritesToChange[0].sprite = op.Result;
         
         button.interactable = true;
         buttonText.text = "Change with sheet list";
@@ -67,7 +79,7 @@ public class SpriteControlTest : MonoBehaviour
             return;
         }
 
-        spriteSheetTest.sprite = op.Result[3];
+        spritesToChange[1].sprite = op.Result[3];
         
         button.interactable = true;
         buttonText.text = "Change with atlas";
@@ -81,9 +93,65 @@ public class SpriteControlTest : MonoBehaviour
             return;
         }
 
-        spriteAtlasTest.sprite = op.Result.GetSprite("battle_1");
+        spritesToChange[2].sprite = op.Result.GetSprite("battle_1");
         
-        buttonText.text = "More options coming with 1.2";
+        button.interactable = true;
+        buttonText.text = "Change with sprite sub-object ref";
+    }
+
+    void SheetSubDone(AsyncOperationHandle<Sprite> op)
+    {
+        if (op.Result == null)
+        {
+            Debug.LogError("no sprite in sheet here.");
+            return;
+        }
+
+        spritesToChange[3].sprite = op.Result;
+        
+        button.interactable = true;
+        buttonText.text = "Change with atlas sub-object ref";
+    }
+
+    void AtlasSubDone(AsyncOperationHandle<Sprite> op)
+    {
+        if (op.Result == null)
+        {
+            Debug.LogError("no sprite in atlas here.");
+            return;
+        }
+
+        spritesToChange[4].sprite = op.Result;
+        
+        button.interactable = true;
+        buttonText.text = "Change with sprite[name]";
+    }
+
+    void SheetNameSubDone(AsyncOperationHandle<Sprite> op)
+    {
+        if (op.Result == null)
+        {
+            Debug.LogError("no sprite in sheet here.");
+            return;
+        }
+
+        spritesToChange[5].sprite = op.Result;
+        
+        button.interactable = true;
+        buttonText.text = "Change with atlas[name]";
+    }
+
+    void AtlasNameSubDone(AsyncOperationHandle<Sprite> op)
+    {
+        if (op.Result == null)
+        {
+            Debug.LogError("no sprite in atlas here.");
+            return;
+        }
+
+        spritesToChange[6].sprite = op.Result;
+        
+        buttonText.text = "The End";
     }
 
 }
