@@ -17,10 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 343343c768be4204fa80566cd8e6aed5
   m_SerializeEntries:
-  - m_GUID: 6dd5c43c86a5215499abeb3baa302b57
-    m_Address: video
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: d6cf7ed2faf3b47eb8f72eaa9c1a495a
     m_Address: SpaceShooter
     m_ReadOnly: 0

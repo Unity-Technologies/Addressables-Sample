@@ -20,7 +20,6 @@ MonoBehaviour:
     m_Id: 7d773352dd6649b4d92fa280a9cb419b
   m_overridePlayerVersion: 
   m_GroupAssets:
-  - {fileID: 11400000, guid: bd2312728c037c54080c878407906d89, type: 2}
   - {fileID: 11400000, guid: 7c540df9c6f10bd4bb99e12371105b20, type: 2}
   - {fileID: 11400000, guid: c7fabf19878698c4db628b554ba7bbd8, type: 2}
   - {fileID: 11400000, guid: 8d0ce99f2938de445b410a8fd9eb119b, type: 2}
@@ -117,7 +116,6 @@ MonoBehaviour:
     m_AssemblyName: 
     m_ClassName: 
   m_ActivePlayerDataBuilderIndex: 2
-  m_ActivePlayModeDataBuilderIndex: 3
   m_DataBuilders:
   - {fileID: 11400000, guid: 9a009b20252a3b94db78504e5c736ff3, type: 2}
   - {fileID: 11400000, guid: 85e1649f06ecc66439fb6b7532bfc768, type: 2}
@@ -135,7 +133,7 @@ MonoBehaviour:
           m_Key: HostingServicePort
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.String
-          m_Data: Library/com.unity.addressables/StreamingAssetsCopy/aa/OSX/StandaloneOSX
+          m_Data: Library/com.unity.addressables/StreamingAssetsCopy/aa/Windows/StandaloneWindows64
           m_Key: ContentRoot
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.Boolean
