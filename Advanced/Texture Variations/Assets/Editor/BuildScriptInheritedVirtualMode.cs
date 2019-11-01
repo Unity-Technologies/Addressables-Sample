@@ -12,7 +12,7 @@ using UnityEngine.ResourceManagement.ResourceProviders.Simulation;
 using UnityEngine.ResourceManagement.Util;
 using UnityEngine.Serialization;
 
-[CreateAssetMenu(fileName = "BuildScriptInheritedVirtualMode.asset", menuName = "Addressable Assets/Data Builders/Virtual Mode Variations")]
+[CreateAssetMenu(fileName = "BuildScriptInheritedVirtualMode.asset", menuName = "Addressables/Custom Build/Virtual Mode Variations")]
 public class BuildScriptInheritedVirtualMode : BuildScriptVirtualMode
 {
     public override string Name
