@@ -17,15 +17,19 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 5f11d531a74e99045ae790b673d9bcff
   m_SerializeEntries:
-  - m_GUID: bdabfba8e8bf6b745b4d7265d036252d
-    m_Address: tree
+  - m_GUID: 5ee168b29f6a534489df46d598cc66f7
+    m_Address: line
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 90b92e3917db495478199e9a1045eb45
+    m_Address: Assets/Scenes/SampleScene.unity
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: c1e44e91bbff34e41b5a4373d74e5f41
-    m_Address: BattleAtlas
+    m_Address: Atlas
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: fbe1e7b94bb1a4a099d5bcb15a00141c
+  - m_GUID: d798e7df01851a24a8d23a794faa4550
     m_Address: sheet
     m_ReadOnly: 0
     m_SerializedLabels: []

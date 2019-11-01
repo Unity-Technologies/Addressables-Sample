@@ -1,31 +1,25 @@
 fileFormatVersion: 2
-guid: 49b10422eec3af641ae66eb5762edc78
+guid: d798e7df01851a24a8d23a794faa4550
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 852928365244996250
-    second: battle_0
+      213: -9115938624207856695
+    second: sprite_sheet_0
   - first:
-      213: -8535890137706973220
-    second: battle_1
+      213: -8198574232401945530
+    second: sprite_sheet_1
   - first:
-      213: 7470135753743222746
-    second: battle_2
+      213: 7710496705314228017
+    second: sprite_sheet_2
   - first:
-      213: 2912466386053076139
-    second: battle_3
+      213: -5321099399631716182
+    second: sprite_sheet_3
   - first:
-      213: -6880092237543570034
-    second: battle_4
+      213: -1793167431768321461
+    second: sprite_sheet_4
   - first:
-      213: 7004263096289705663
-    second: battle_5
-  - first:
-      213: 6511700055902537943
-    second: battle_6
-  - first:
-      213: -5019009259014938786
-    second: battle_7
+      213: -6949385356650754131
+    second: sprite_sheet_5
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -55,7 +49,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: -1
     aniso: -1
     mipBias: -100
     wrapU: 1
@@ -69,8 +63,8 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 16
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 1504, z: 1024, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -110,169 +104,127 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: battle_0
+      name: sprite_sheet_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 29
-        height: 32
+        y: 1504
+        width: 1024
+        height: 544
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d383c9f7b6e74a744b7e5f3047e8bac2
-      internalID: 852928365244996250
+      spriteID: 7aa92c97a8355ef48a11fd85b4e60eb4
+      internalID: -9115938624207856695
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: battle_1
+      name: sprite_sheet_1
       rect:
         serializedVersion: 2
-        x: 34
-        y: 0
-        width: 29
-        height: 32
+        x: 1024
+        y: 1504
+        width: 1024
+        height: 544
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f234a63390b6c7543b8bef2e766bb250
-      internalID: -8535890137706973220
+      spriteID: 0151edc4567e67a46aa5a5fac039491a
+      internalID: -8198574232401945530
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: battle_2
+      name: sprite_sheet_2
       rect:
         serializedVersion: 2
-        x: 64
-        y: 0
-        width: 28
-        height: 32
+        x: 0
+        y: 960
+        width: 1024
+        height: 544
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 695229ec2256263408ff139f405ed23b
-      internalID: 7470135753743222746
+      spriteID: f301bbcba890bb34f97bd2d0e05c5b5c
+      internalID: 7710496705314228017
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: battle_3
+      name: sprite_sheet_3
       rect:
         serializedVersion: 2
-        x: 97
-        y: 0
-        width: 28
-        height: 31
+        x: 1024
+        y: 960
+        width: 1024
+        height: 544
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 955f882244e1ef94cabb026049d8028c
-      internalID: 2912466386053076139
+      spriteID: f425f84e3b178274cbfc3452a9b6fbcb
+      internalID: -5321099399631716182
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: battle_4
+      name: sprite_sheet_4
       rect:
         serializedVersion: 2
-        x: 128
-        y: 0
-        width: 31
-        height: 32
+        x: 0
+        y: 416
+        width: 1024
+        height: 544
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f043eeeb6711e124180cb4e9539e5cfd
-      internalID: -6880092237543570034
+      spriteID: 7ffeb7eaa0373b2438d2f1f4ef716891
+      internalID: -1793167431768321461
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: battle_5
+      name: sprite_sheet_5
       rect:
         serializedVersion: 2
-        x: 163
-        y: 0
-        width: 28
-        height: 31
+        x: 1024
+        y: 416
+        width: 1024
+        height: 544
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a9eb2354427fa694db184f00e79bf22a
-      internalID: 7004263096289705663
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: battle_6
-      rect:
-        serializedVersion: 2
-        x: 194
-        y: 0
-        width: 28
-        height: 31
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 186d30bf1c57bef48a73fe647633892b
-      internalID: 6511700055902537943
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: battle_7
-      rect:
-        serializedVersion: 2
-        x: 226
-        y: 0
-        width: 29
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 44f3bca8108c15b48a36e8b9d45d7086
-      internalID: -5019009259014938786
+      spriteID: 466e8bd77638f484aaac75c424257325
+      internalID: -6949385356650754131
       vertices: []
       indices: 
       edges: []
