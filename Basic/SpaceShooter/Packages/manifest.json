@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.unity.addressables": "0.8.4-preview",
+    "com.unity.addressables": "1.3.3",
     "com.unity.ads": "2.0.8",
     "com.unity.package-manager-ui": "2.0.7",
     "com.unity.modules.ai": "1.0.0",
@@ -33,8 +33,5 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  },
-  "testables": [
-    "com.unity.scriptablebuildpipeline"
-  ]
+  }
 }
