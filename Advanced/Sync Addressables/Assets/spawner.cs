@@ -2,7 +2,6 @@
 
 public class spawner : MonoBehaviour
 {
-
     int m_Counter = 0;
     void FixedUpdate()
     {
@@ -11,10 +10,10 @@ public class spawner : MonoBehaviour
         
         m_Counter++;
 
-        if (m_Counter == 1)
+        if (m_Counter == 10)
         {
             var go = SyncAddressables.Instantiate("Cube");
-            go.transform.forward = new Vector3(Random.Range(0,180), Random.Range(0,180), Random.Range(0,180));
+            go.transform.forward = new Vector3(Random.Range(0, 180), Random.Range(0, 180), Random.Range(0, 180));
         }
 
         if (m_Counter >= 60)

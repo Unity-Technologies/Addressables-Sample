@@ -94,17 +94,17 @@ public class SyncFastModeBuild : BuildScriptFastMode
         PlayerDataGroupSchema playerSchema = assetGroup.GetSchema<PlayerDataGroupSchema>();
         if (playerSchema != null)
         {
-            m_legacy = CreateLocationsForPlayerData(playerSchema, assetGroup, aaContext.locations);
+            m_legacy = CreateLocationsForPlayerData(playerSchema, assetGroup, aaContext.locations, aaContext.providerTypes);
             return errorString;
         }
 
         var allEntries = new List<AddressableAssetEntry>();
         foreach (var a in assetGroup.entries)
-            a.GatherAllAssets(allEntries, true, true);
+            a.GatherAllAssets(allEntries, true, true, true);
 
         var typeName = typeof(SyncAssetDatabaseProvider).FullName;
         foreach (var a in allEntries)
-            a.CreateCatalogEntries(aaContext.locations, false, typeName, null, null);
+            a.CreateCatalogEntries(aaContext.locations, false, typeName, null, null, aaContext.providerTypes);
 
         return errorString;
     }
