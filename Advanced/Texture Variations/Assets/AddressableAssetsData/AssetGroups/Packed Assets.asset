@@ -20,7 +20,8 @@ MonoBehaviour:
   - m_GUID: 2780bb124964686449b3f7837007bf70
     m_Address: tree
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - HD
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 113a3aa53587a374583b738b9413cf4c, type: 2}
   m_SchemaSet:

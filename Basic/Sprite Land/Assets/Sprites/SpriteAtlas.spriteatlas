@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SpriteAtlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 0
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: 6b5344b54805a1d4fa5106f611c2c66a, type: 3}
+    - {fileID: 2800000, guid: 47bdf0f8992e62c45aaf57f6cf75ee6d, type: 3}
+    - {fileID: 2800000, guid: 00c43bfb25f70154c97485c2949b4a47, type: 3}
+    - {fileID: 2800000, guid: f034d7a4871c23746b025d9dc2b8af64, type: 3}
+    - {fileID: 2800000, guid: 1e77eaeb246528c47a8d7cab461ebfa6, type: 3}
+    - {fileID: 2800000, guid: ef98e1d8ff8890a4ca3104ae7ab72551, type: 3}
+    - {fileID: 2800000, guid: 6b4da60b62a55c847bfb6727e18c2976, type: 3}
+    totalSpriteSurfaceArea: 3899392
+    bindAsDefault: 1
+    storedHash:
+      serializedVersion: 2
+      Hash: 00000000000000000000000000000000
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: f034d7a4871c23746b025d9dc2b8af64, type: 3}
+  - {fileID: 21300000, guid: 6b5344b54805a1d4fa5106f611c2c66a, type: 3}
+  - {fileID: 21300000, guid: ef98e1d8ff8890a4ca3104ae7ab72551, type: 3}
+  - {fileID: 21300000, guid: 47bdf0f8992e62c45aaf57f6cf75ee6d, type: 3}
+  - {fileID: 21300000, guid: 6b4da60b62a55c847bfb6727e18c2976, type: 3}
+  - {fileID: 21300000, guid: 1e77eaeb246528c47a8d7cab461ebfa6, type: 3}
+  - {fileID: 21300000, guid: 00c43bfb25f70154c97485c2949b4a47, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - u4
+  - u1
+  - u6
+  - u2
+  - u7
+  - u5
+  - u3
+  m_Tag: SpriteAtlas
+  m_IsVariant: 0

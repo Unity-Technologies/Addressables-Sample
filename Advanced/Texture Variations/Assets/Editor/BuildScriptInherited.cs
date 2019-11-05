@@ -11,12 +11,12 @@ using UnityEngine;
 using UnityEngine.ResourceManagement.Util;
 using UnityEngine.Serialization;
 
-[CreateAssetMenu(fileName = "BuildScriptInherited.asset", menuName = "Addressable Assets/Data Builders/Variations")]
+[CreateAssetMenu(fileName = "BuildScriptInherited.asset", menuName = "Addressables/Custom Build/Packed Variations")]
 public class BuildScriptInherited : BuildScriptPackedMode
 {
     public override string Name
     {
-        get { return "Pack Variations"; }
+        get { return "Packed Variations"; }
     }
 
     protected override TResult BuildDataImplementation<TResult>(AddressablesDataBuilderInput context)

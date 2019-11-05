@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.ResourceManagement.ResourceProviders;
 
+[DisplayName("Sync Bundle Provider")]
 public class SyncBundleProvider : AssetBundleProvider
 {
 

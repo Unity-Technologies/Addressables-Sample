@@ -11,7 +11,7 @@ using UnityEngine;
 using UnityEngine.ResourceManagement.Util;
 using UnityEngine.Serialization;
 
-[CreateAssetMenu(fileName = "BuildScriptInheritedFastMode.asset", menuName = "Addressable Assets/Data Builders/Fast Mode Variations")]
+[CreateAssetMenu(fileName = "BuildScriptInheritedFastMode.asset", menuName = "Addressables/Custom Build/Fast Mode Variations")]
 public class BuildScriptInheritedFastMode : BuildScriptFastMode
 {
     public override string Name
