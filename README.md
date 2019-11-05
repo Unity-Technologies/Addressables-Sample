@@ -58,6 +58,9 @@ There are three sprite access methods currently demo'd in this sample.  The on-s
   * Third is accessing a sprite from within an atals. In this case, you have to use addressables to load the sprite atlas, then use the normal atlas API to load a given sprite from it.  This example also shows extending the AssetReference<T> to provide a typed refernce that Addressables doesn't come with (AssetReferenceT<SpriteAtlas> in this case).  
 * All code is in Scripts/SpriteControlTest.cs  
   
+#### *Basic/Space Shooter*
+A very simple Unity tutorial that we converted to use addressables.  The main code file to look at would be Done_GameController.cs, but in general, this is just meant as a simple project to explore. 
+
 #### *Advanced/Texture Variations*
 An example project to show one use case or workflow for creating "variants".  The new build pipeline (Scriptable Build Pipeline) upon which Addressables is built, does not support asset bundle variants.  This old mechanism was useful in many instances, so this sample is meant to show how to accomplish similar results for one of those instances.  There are other purpose for variants not shown here.  Some will be coming in future samples.
 * Scenes/SampleScene
