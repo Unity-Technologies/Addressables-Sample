@@ -1,0 +1,35 @@
+{
+  "webgl-basic-assetreference": {
+    "unity": {
+      "runUnitTests": false,
+      "runEditModeTests": false,
+      "runPlayModeTests": false,
+      "failedUnitTestFailsBuild": false,
+      "playerExporter": {
+        "export": true,
+        "buildOptions": [
+          "None"
+        ],
+        "sceneList": [
+        ]
+      },
+      "editorUserBuildSettings": {
+      },
+      "playerSettings": {
+        "bundleIdentifier": null
+      },
+      "unitTestMethod": "",
+      "preExportMethod": "",
+      "postExportMethod": "",
+      "addressables": {
+        "buildAddressables": true,
+        "uploadAddressables": true
+      }
+    },
+    "platform": "webgl",
+    "projectid": "unity_nvajzctjxqiubg/addressables-sample",
+    "executablename": "WebGL Basic AssetReference",
+    "buildtargetid": "webgl-basic-assetreference",
+    "bundleid": null
+  }
+}
