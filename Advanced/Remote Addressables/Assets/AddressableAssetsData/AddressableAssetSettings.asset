@@ -38,11 +38,11 @@ MonoBehaviour:
       - m_Id: 6708e003fc49f354db7e9cab228b1393
         m_Value: GithubServerData/[BuildTarget]
       - m_Id: d1803f09498a97f4d91e41311c71064d
-        m_Value: https://raw.githubusercontent.com/markmssd/Addressables-Sample/feature/remote-addressables/Advanced/Remote%20Addressables/GithubServerData
+        m_Value: https://raw.githubusercontent.com/markmssd/Addressables-Sample/feature/remote-addressables/Advanced/Remote%20Addressables/GithubServerData/[BuildTarget]
       - m_Id: a3035c052f8172c468b9e076d0ddd275
         m_Value: GithubServerData/[BuildTarget]
       - m_Id: e66ef533112994d478a92abfbe310cd0
-        m_Value: https://raw.githubusercontent.com/markmssd/Addressables-Sample/feature/remote-addressables/Advanced/Remote%20Addressables/GithubServerData
+        m_Value: https://raw.githubusercontent.com/markmssd/Addressables-Sample/feature/remote-addressables/Advanced/Remote%20Addressables/GithubServerData/[BuildTarget]
     m_ProfileEntryNames:
     - m_Id: df89a4d82c5ce834384acd1bdaf9f91e
       m_Name: BuildTarget
