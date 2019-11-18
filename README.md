@@ -119,7 +119,8 @@ This sample shows how to add Remote Addressables.  They could be hosted on Googl
   * Note that the loaded scenes are marked as Addressables, each given a different Addressable Id (respectively `circly`, `squares`, and `pillville`).
 * Assets/AddScenes.cs
   * Loads the scenes asynchronously, using the Scenes' Addressable Id (not the Scenes' name).
-* Addressables Configurations
+* Addressables Configurations:
+
   `Github Group` settings are set as:
 ```
       Build Path: RemoteBuildPath
