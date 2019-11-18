@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: AddressableAssetSettings
   m_EditorClassIdentifier: 
   m_DefaultGroup: 15d36314358339341a29b7fb282e19f5
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
+  m_UniqueBundleIds: 0
   m_RemoteCatalogBuildPath:
-    m_Id: 
+    m_Id: 0b311e8210a39f64eac74d432e4d15de
   m_RemoteCatalogLoadPath:
-    m_Id: 
+    m_Id: 366b06dd7f560c341a648dd618a61225
   m_overridePlayerVersion: 
   m_GroupAssets:
   - {fileID: 11400000, guid: e83ebe238aae2c04abf9fe016e90bbf4, type: 2}
@@ -41,6 +42,20 @@ MonoBehaviour:
         m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
       - m_Id: 0b311e8210a39f64eac74d432e4d15de
         m_Value: ServerData/[BuildTarget]
+      - m_Id: 366b06dd7f560c341a648dd618a61225
+        m_Value: http://localhost/[BuildTarget]
+    - m_InheritedParent: 
+      m_Id: 7ab4d73e7216248839d4f8661c8a722b
+      m_ProfileName: Github
+      m_Values:
+      - m_Id: eb3727cde47e14e46b7bf2d6e02a70d9
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
+      - m_Id: 1244768cbfc67854aa04427c3ee8b872
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+      - m_Id: 6eed8f945f06b8742b5dd6b224432347
+        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+      - m_Id: 0b311e8210a39f64eac74d432e4d15de
+        m_Value: GithubServerData/[BuildTarget]
       - m_Id: 366b06dd7f560c341a648dd618a61225
         m_Value: http://localhost/[BuildTarget]
     m_ProfileEntryNames:
@@ -77,7 +92,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 828f9f6361b8aac4e8265df6fad57a85, type: 2}
   - {fileID: 11400000, guid: d6936fb7fd52aa24fb3fece79a335a41, type: 2}
   - {fileID: 11400000, guid: 2f50f8ccad1915f4b869fb3fd7d7bf5e, type: 2}
-  m_ActiveProfileId: 26ccb8c6f9c4fb04982520046e37a8cb
+  m_ActiveProfileId: 7ab4d73e7216248839d4f8661c8a722b
   m_HostingServicesManager:
     m_HostingServiceInfos: []
     m_Settings: {fileID: 11400000}
