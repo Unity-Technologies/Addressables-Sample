@@ -31,7 +31,7 @@ QualitySettings:
     maximumLODLevel: 0
     particleRaycastBudget: 4
     asyncUploadTimeSlice: 2
-    asyncUploadBufferSize: 16
+    asyncUploadBufferSize: 4
     resolutionScalingFixedDPIFactor: 1
     excludedTargetPlatforms: []
   - serializedVersion: 2
@@ -59,7 +59,7 @@ QualitySettings:
     maximumLODLevel: 0
     particleRaycastBudget: 16
     asyncUploadTimeSlice: 2
-    asyncUploadBufferSize: 16
+    asyncUploadBufferSize: 4
     resolutionScalingFixedDPIFactor: 1
     excludedTargetPlatforms: []
   - serializedVersion: 2
@@ -87,7 +87,7 @@ QualitySettings:
     maximumLODLevel: 0
     particleRaycastBudget: 64
     asyncUploadTimeSlice: 2
-    asyncUploadBufferSize: 16
+    asyncUploadBufferSize: 4
     resolutionScalingFixedDPIFactor: 1
     excludedTargetPlatforms: []
   - serializedVersion: 2
@@ -115,7 +115,7 @@ QualitySettings:
     maximumLODLevel: 0
     particleRaycastBudget: 256
     asyncUploadTimeSlice: 2
-    asyncUploadBufferSize: 16
+    asyncUploadBufferSize: 4
     resolutionScalingFixedDPIFactor: 1
     excludedTargetPlatforms: []
   - serializedVersion: 2
@@ -143,7 +143,7 @@ QualitySettings:
     maximumLODLevel: 0
     particleRaycastBudget: 1024
     asyncUploadTimeSlice: 2
-    asyncUploadBufferSize: 16
+    asyncUploadBufferSize: 4
     resolutionScalingFixedDPIFactor: 1
     excludedTargetPlatforms: []
   - serializedVersion: 2
@@ -171,7 +171,7 @@ QualitySettings:
     maximumLODLevel: 0
     particleRaycastBudget: 4096
     asyncUploadTimeSlice: 2
-    asyncUploadBufferSize: 16
+    asyncUploadBufferSize: 4
     resolutionScalingFixedDPIFactor: 1
     excludedTargetPlatforms: []
   m_PerPlatformDefaultQuality:

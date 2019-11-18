@@ -13,11 +13,25 @@ MonoBehaviour:
   m_Name: Packed Assets
   m_EditorClassIdentifier: 
   m_SchemaObjects:
-  - {fileID: 114832084983339380}
-  - {fileID: 114959403309226386}
-  m_Description: Pack assets into asset bundles.
+  - {fileID: 114614376047301298}
+  - {fileID: 114491949195525888}
+  m_Description: Pack asset sinto asset bundles.
   m_Settings: {fileID: 0}
---- !u!114 &114832084983339380
+--- !u!114 &114491949195525888
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5834b5087d578d24c926ce20cd31e6d6, type: 3}
+  m_Name: ContentUpdateGroupSchema
+  m_EditorClassIdentifier: 
+  m_Group: {fileID: 0}
+  m_StaticContent: 0
+--- !u!114 &114614376047301298
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -33,8 +47,8 @@ MonoBehaviour:
   m_Compression: 1
   m_IncludeInBuild: 1
   m_BundledAssetProviderType:
-    m_AssemblyName: 
-    m_ClassName: 
+    m_AssemblyName: Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    m_ClassName: UnityEngine.ResourceManagement.ResourceProviders.BundledAssetProvider
   m_ForceUniqueProvider: 0
   m_UseAssetBundleCache: 1
   m_UseAssetBundleCrc: 1
@@ -48,19 +62,5 @@ MonoBehaviour:
     m_Id: 
   m_BundleMode: 0
   m_AssetBundleProviderType:
-    m_AssemblyName: 
-    m_ClassName: 
---- !u!114 &114959403309226386
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5834b5087d578d24c926ce20cd31e6d6, type: 3}
-  m_Name: ContentUpdateGroupSchema
-  m_EditorClassIdentifier: 
-  m_Group: {fileID: 0}
-  m_StaticContent: 0
+    m_AssemblyName: Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    m_ClassName: UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider
