@@ -1,6 +1,7 @@
 */*/*.csproj
 */*/*.sln
 */*/.idea/
+*/*/.vs/
 */*/Library/
 */*/Temp/
 */*/obj/
