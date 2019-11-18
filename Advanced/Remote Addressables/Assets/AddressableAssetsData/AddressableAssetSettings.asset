@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: AddressableAssetSettings
   m_EditorClassIdentifier: 
   m_DefaultGroup: 29183b93662b0664bad55cc3f56b0bc0
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_RemoteCatalogBuildPath:
-    m_Id: 
+    m_Id: a3035c052f8172c468b9e076d0ddd275
   m_RemoteCatalogLoadPath:
-    m_Id: 
+    m_Id: e66ef533112994d478a92abfbe310cd0
   m_overridePlayerVersion: 
   m_GroupAssets:
   - {fileID: 11400000, guid: 734ca5e64e23cca4bb6f6166a90e6e2e, type: 2}
