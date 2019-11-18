@@ -126,6 +126,7 @@ This sample shows how to add Remote Addressables.  They could be hosted on Googl
       Build Path: RemoteBuildPath
       Load Path: RemoteLoadPath
 ```
+
   `Github Profile` settings are set as:
 ```
        RemoteBuildPath: GithubServerData/[BuildTarget]
