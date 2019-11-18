@@ -111,4 +111,28 @@ This sample shows how to create custom AnalyzeRules for use within the Analyze w
   * When run, it first identifies all addresses that seem to be paths.  Of those, it makes sure that the address actually matches the path of the asset.  
   * This would be useful if you primarily left the addresses of your assets as the path (which is the default when marking an asset addressable).  If the asset is moved within the project, then the address no longer maps to where it is. This rule could fix that.
 
-  
+#### *Advanced/Remote Addressables*
+This sample shows how to add Remote Addressables.  They could be hosted on Google Cloud Storage, AWS S3, etc.  In this example, they are hosted on Github and used through Github's `raw` API.  This setup is not recommended in production, but makes it easier to demo the feature as it's already "setup".  Note that there is no changes in the scripts, but only in the Addressables configurations.
+
+* Scenes/Foundation
+  * This scene contains only a Plane and 3 buttons (`Load squares`, `Load circly`, `Add pillville`). Clicking on them will load the corresponding scenes (`balls`, `boxes`, and `pills` found in `/Assets/Scenes/ItemScenes/`).
+  * Note that the loaded scenes are marked as Addressables, each given a different Addressable Id (respectively `circly`, `squares`, and `pillville`).
+* Assets/AddScenes.cs
+  * Loads the scenes asynchronously, using the Scenes' Addressable Id (not the Scenes' name).
+* Addressables Configurations:
+
+  `Github Group` settings are set as:
+```
+      Build Path: RemoteBuildPath
+      Load Path: RemoteLoadPath
+```
+
+  `Github Profile` settings are set as:
+```
+       RemoteBuildPath: GithubServerData/[BuildTarget]
+       RemoteLoadPath: https://raw.githubusercontent.com/Unity-Technologies/Addressables-Sample/master/Advanced/Remote%20Addressables/GithubServerData/[BuildTarget]
+```
+   Note that if you fork this project, you should change `RemoteLoadPath` to match your Github account:
+```
+  https://raw.githubusercontent.com/<username>/<repo>/<branch>/Advanced/Remote%20Addressables/GithubServerData/[BuildTarget]
+```
