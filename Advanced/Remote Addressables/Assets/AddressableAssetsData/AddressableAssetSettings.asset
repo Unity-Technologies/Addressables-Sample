@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AddressableAssetSettings
   m_EditorClassIdentifier: 
   m_DefaultGroup: 29183b93662b0664bad55cc3f56b0bc0
-  m_BuildRemoteCatalog: 1
+  m_BuildRemoteCatalog: 0
   m_RemoteCatalogBuildPath:
     m_Id: a3035c052f8172c468b9e076d0ddd275
   m_RemoteCatalogLoadPath:
@@ -35,22 +35,36 @@ MonoBehaviour:
       m_Values:
       - m_Id: df89a4d82c5ce834384acd1bdaf9f91e
         m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
-      - m_Id: 6708e003fc49f354db7e9cab228b1393
-        m_Value: GithubServerData/[BuildTarget]
-      - m_Id: d1803f09498a97f4d91e41311c71064d
-        m_Value: https://raw.githubusercontent.com/markmssd/Addressables-Sample/feature/remote-addressables/Advanced/Remote%20Addressables/GithubServerData/[BuildTarget]
       - m_Id: a3035c052f8172c468b9e076d0ddd275
         m_Value: GithubServerData/[BuildTarget]
       - m_Id: e66ef533112994d478a92abfbe310cd0
         m_Value: https://raw.githubusercontent.com/markmssd/Addressables-Sample/feature/remote-addressables/Advanced/Remote%20Addressables/GithubServerData/[BuildTarget]
+      - m_Id: a4af05577592c468eb84f2f601aceaa1
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+      - m_Id: 95ae3498bc791492d864a966d4618087
+        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+    - m_InheritedParent: 
+      m_Id: 76cb5128d2ef0483697348b363da0e5e
+      m_ProfileName: Github Profile
+      m_Values:
+      - m_Id: df89a4d82c5ce834384acd1bdaf9f91e
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
+      - m_Id: a3035c052f8172c468b9e076d0ddd275
+        m_Value: GithubServerData/[BuildTarget]
+      - m_Id: e66ef533112994d478a92abfbe310cd0
+        m_Value: https://raw.githubusercontent.com/markmssd/Addressables-Sample/feature/remote-addressables/Advanced/Remote%20Addressables/GithubServerData/[BuildTarget]
+      - m_Id: a4af05577592c468eb84f2f601aceaa1
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+      - m_Id: 95ae3498bc791492d864a966d4618087
+        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
     m_ProfileEntryNames:
     - m_Id: df89a4d82c5ce834384acd1bdaf9f91e
       m_Name: BuildTarget
       m_InlineUsage: 0
-    - m_Id: 6708e003fc49f354db7e9cab228b1393
+    - m_Id: a4af05577592c468eb84f2f601aceaa1
       m_Name: LocalBuildPath
       m_InlineUsage: 0
-    - m_Id: d1803f09498a97f4d91e41311c71064d
+    - m_Id: 95ae3498bc791492d864a966d4618087
       m_Name: LocalLoadPath
       m_InlineUsage: 0
     - m_Id: a3035c052f8172c468b9e076d0ddd275
