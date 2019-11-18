@@ -120,17 +120,17 @@ This sample shows how to add Remote Addressables.  They could be hosted on Googl
 * Assets/AddScenes.cs
   * Loads the scenes asynchronously, using the Scenes' Addressable Id (not the Scenes' name).
 * Addressables Configurations
-  * `Github Group` settings are set as:
+  `Github Group` settings are set as:
 ```
       Build Path: RemoteBuildPath
       Load Path: RemoteLoadPath
 ```
-  * `Github Profile` settings are set as:
+  `Github Profile` settings are set as:
 ```
        RemoteBuildPath: GithubServerData/[BuildTarget]
        RemoteLoadPath: https://raw.githubusercontent.com/Unity-Technologies/Addressables-Sample/master/Advanced/Remote%20Addressables/GithubServerData/[BuildTarget]
 ```
-    * Note that if you fork this project, you should change `RemoteLoadPath` to match your Github account:
+   Note that if you fork this project, you should change `RemoteLoadPath` to match your Github account:
 ```
   https://raw.githubusercontent.com/<username>/<repo>/<branch>/Advanced/Remote%20Addressables/GithubServerData/[BuildTarget]
 ```
