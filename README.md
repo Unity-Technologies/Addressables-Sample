@@ -48,6 +48,7 @@ This example creates an AssetReference that is restricted to having a specific C
 * Scripts/ColorChanger -  ColorChanger & ComponentReferenceColorChanger
   * The component type we chose to care about.
   * Note that this file includes a concrete version of the ComponentReference.  This is needed because if your game code just specified a ComponentReference<ColorChanger> it could not serialize or show up in the inspector.  This ComponentReferenceColorChanger is what makes serialization and the inspector UI work.
+  * Releasing a ComponentReference<TComponent> requires special work if not done through `ReleaseInstance()` in the ComponentReference<TComponent> class.
   
 #### *Basic/Sprite Land*
 *2019.3.0a11+* - Sprite demo is back.  There was an engine bug causing a crash when loading out of sprite sheets that caused us to remove this demo.  This is in 2019.3 alpha, and is being backported to 2019.2 and 2018.4.  If you use this demo, and your game crashes, or you get warnings about "gfx" not on main thread, you don't have a fixed vesrion of the platform. 

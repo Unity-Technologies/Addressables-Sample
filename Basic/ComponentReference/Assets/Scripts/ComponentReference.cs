@@ -48,6 +48,19 @@ public class ComponentReference<TComponent> : AssetReference
             return false;
 #endif
     }
-    
+
+    public void ReleaseInstance(AsyncOperationHandle<TComponent> op)
+    {
+        // Release the instance
+        var component = op.Result as Component;
+        if (component != null)
+        {
+            Addressables.ReleaseInstance(component.gameObject);
+        }
+
+        // Release the handle
+        Addressables.Release(op);
+    }
+
 }
 
