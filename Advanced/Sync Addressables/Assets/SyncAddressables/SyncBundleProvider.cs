@@ -54,8 +54,6 @@ public class SyncBundleProvider : AssetBundleProvider
         if (bundle != null)
         {
             bundle.Unload();
-            return;
         }
-        return;
     }
 }
