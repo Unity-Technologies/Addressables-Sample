@@ -1,20 +1,20 @@
 # Addressables-Sample
 Demo project using Addressables package
 
-These samples are broken up into projects based on high level functionality.  These are intended as jumping off points for your own development.  These have not been tested, and are not guarenteed to work in your situation.  They are just examples, to make some concepts easier to understand, or easier to replicate in your own project.  Use at your own risk. 
+These samples are broken up into projects based on high level functionality.  These are intended as jumping off points for your own development.  These have not been tested, and are not guaranteed to work in your situation.  They are just examples, to make some concepts easier to understand, or easier to replicate in your own project.  Use at your own risk. 
 
 ## Projects
 
 #### *Basic/Basic AssetReference*
 Several sample scenes to display functionality surrounding the asset reference class.  
 * Scenes/BasicReference 
-  * Simplest example using a refrence to spawn and destroy a game object
+  * Simplest example using a reference to spawn and destroy a game object
   * Each object is instantiated directly via the `AssetReference` which will increment the ref count.
   * Each object spawned has a script on it that will cause it to release itself after a certain amount of time. This destroys the object and decrements the ref count.
   * Any instances still around when the scene closes will automatically be released (decrementing ref count) by the scene closing process (even if their self-destruct script were disabled).
 * Scenes/ListOfReferences
   * Showcases using references within a list.  
-  * Key feature: once an `AssetReference` is loaded it keeps a member callled `.Asset`.  In this example, you would not want to use the on-complete callback to save off the asset as the loads may not complete in the same order as they were triggered. Thus it's useful that the reference keeps up with its own loaded asset.
+  * Key feature: once an `AssetReference` is loaded it keeps a member called `.Asset`.  In this example, you would not want to use the on-complete callback to save off the asset as the loads may not complete in the same order as they were triggered. Thus, it's useful that the reference keeps up with its own loaded asset.
   * Here the objects are instantiated via the traditional `GameObject.Instantiate` which will not increment the Addressables ref count.  These objects still call into Addressables to release themselves, but since they were not instantiated via Addressables, the release only destroys the object, and does not decrement the ref count.
   * The manager of these AssetReferences must release them in `OnDestroy` or the ref count will survive the closing of the scene. 
 * Scenes/FilteredReferences
@@ -42,21 +42,21 @@ This example creates an AssetReference that is restricted to having a specific C
   * This scene has a Spawner game object that alternates between spawning a direct reference prefab and an addressable one.  
   * Both the direct reference and the addressable ComponentReference can only be set to one of the prefabs with the component ColorChanger on it.
 * Scripts/ComponentReference - ComponentReference<TComponent>
-  * This is the class that inhertits from AssetReference.  It is generic and does not specify which Components it might care about.  A concrete child of this class is required for serialization to work. 
-  * At edit-time it validates that the asset set on it is a GameObject with the requried Component. 
+  * This is the class that inherits from AssetReference.  It is generic and does not specify which Components it might care about.  A concrete child of this class is required for serialization to work. 
+  * At edit-time it validates that the asset set on it is a GameObject with the required Component. 
   * At runtime it can load/instantiate the GameObject, then return the desired component.  API matches base class (LoadAssetAsync & InstantiateAsync).
-* Scripts/ColorChanger -  ColorChanger & ComponentReferenceColorChanger
+* Scripts/ColorChanger - ColorChanger & ComponentReferenceColorChanger
   * The component type we chose to care about.
   * Note that this file includes a concrete version of the ComponentReference.  This is needed because if your game code just specified a ComponentReference<ColorChanger> it could not serialize or show up in the inspector.  This ComponentReferenceColorChanger is what makes serialization and the inspector UI work.
   * Releasing a ComponentReference<TComponent> should be done through `ReleaseInstance()` in the ComponentReference<TComponent> class. To release an instance directly, see our implementation of ReleaseInstance to understand the requirements.
   
 #### *Basic/Sprite Land*
-*2019.3.0a11+* - Sprite demo is back.  There was an engine bug causing a crash when loading out of sprite sheets that caused us to remove this demo.  This is in 2019.3 alpha, and is being backported to 2019.2 and 2018.4.  If you use this demo, and your game crashes, or you get warnings about "gfx" not on main thread, you don't have a fixed vesrion of the platform. 
+*2019.3.0a11+* - Sprite demo is back.  There was an engine bug causing a crash when loading out of sprite sheets that caused us to remove this demo.  This is in 2019.3 alpha, and is being backported to 2019.2 and 2018.4.  If you use this demo, and your game crashes, or you get warnings about "gfx" not on main thread, you don't have a fixed version of the platform. 
 There are three sprite access methods currently demo'd in this sample.  The on-screen button will change functionality with each click, so you can demo the methods in order.  We have some additional mechanisms coming in Addressables 1.2+.  We will update this demo once that is out. 
 * Scenes/SampleScene 
   * First is having an AssetReference directly to a single sprite.  Since this sprite is a single entry, we can reference the asset directly and get the sprite.  This is the most simple case. 
   * Second is accessing a sprite from within a sprite sheet. This is the one that was causing a crash, but should be fixed now.  Here we load the sprite sheet asset as type IList<Sprite>.  This tells addressables to load all the sub-objects that are sprites, and return them as a list.  
-  * Third is accessing a sprite from within an atals. In this case, you have to use addressables to load the sprite atlas, then use the normal atlas API to load a given sprite from it.  This example also shows extending the AssetReference<T> to provide a typed refernce that Addressables doesn't come with (AssetReferenceT<SpriteAtlas> in this case).  
+  * Third is accessing a sprite from within an atlas. In this case, you have to use addressables to load the sprite atlas, then use the normal atlas API to load a given sprite from it.  This example also shows extending the AssetReference<T> to provide a typed reference that Addressables doesn't come with (AssetReferenceT<SpriteAtlas> in this case).  
 * All code is in Scripts/SpriteControlTest.cs  
   
 #### *Basic/Space Shooter*
@@ -97,7 +97,7 @@ One common workflow not shown here would have been to set things up to support a
   * SyncBundleProvider.cs - Loads the asset bundle into memory using synchronous methods.  If the bundle is online this will fail.  Also note, in it's current form, this will fail on Android as loading there is a little more complex.  It can load sync, we just didn't have time to add that support to this demo.  This is the most likely point in the flow for there to be an issue in the sync process.  If this were used in production, it would probably need extended error checking.
   * SyncBundledAssetProvider.cs - Loads from an asset bundle using the synchronous methods.  This is unlikely to be a failure point, as it isn't called until the bundle is loaded successfully.
   * Editor/SyncFastModeBuild.cs - Since fast mode does not load from bundles, the default fast mode script has to inject it's own provider for all assets.  This custom script just replaces that standard provider with a sync one. 
-  * SyncAssetDatabaseProvider.cs - An overriden provider to do asset database loads immediately. 
+  * SyncAssetDatabaseProvider.cs - An overridden provider to do asset database loads immediately. 
   * No Change Needed: SyncBuildScriptPackedMode or SyncBuildScriptPackedPlayMode.  Since the group schema allows you to specify provider, the standard build script works as is.
   * Missing - the two main things missing from this demo are Virtual mode and the ability to load from Resources using the sync interfaces.
 
@@ -111,5 +111,3 @@ This sample shows how to create custom AnalyzeRules for use within the Analyze w
   * This is a fixable rule.  Running fix on it will change addresses to comply with the rule.
   * When run, it first identifies all addresses that seem to be paths.  Of those, it makes sure that the address actually matches the path of the asset.  
   * This would be useful if you primarily left the addresses of your assets as the path (which is the default when marking an asset addressable).  If the asset is moved within the project, then the address no longer maps to where it is. This rule could fix that.
-
-  
