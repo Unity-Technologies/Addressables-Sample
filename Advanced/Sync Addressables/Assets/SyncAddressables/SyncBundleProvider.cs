@@ -50,10 +50,7 @@ public class SyncBundleProvider : AssetBundleProvider
             Debug.LogWarningFormat("Releasing null asset bundle from location {0}.  This is an indication that the bundle failed to load.", location);
             return;
         }
-        var bundle = asset as SyncAssetBundleResource;
-        if (bundle != null)
-        {
-            bundle.Unload();
-        }
+        if (asset is SyncAssetBundleResource syncResource)
+            syncResource.Unload();
     }
 }

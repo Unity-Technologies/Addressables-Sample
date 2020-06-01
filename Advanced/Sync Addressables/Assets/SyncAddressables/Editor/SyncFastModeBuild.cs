@@ -36,7 +36,7 @@ public class SyncFastModeBuild : BuildScriptFastMode
             //create runtime data
             var aaContext = new AddressableAssetsBuildContext
             {
-                settings = aaSettings,
+                Settings = aaSettings,
                 runtimeData = new ResourceManagerRuntimeData(),
                 bundleToAssetGroup = null,
                 locations = new List<ContentCatalogDataEntry>()
