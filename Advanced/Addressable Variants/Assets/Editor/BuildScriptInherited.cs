@@ -97,10 +97,6 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
 
             foreach (var variant in baseEntry.VariantEntries)
             {
-                Material mat = null;
-                Texture2D texture = null;
-                GameObject gameObject = null;
-
                 string groupDirectory = Path.Combine(m_BaseDirectory, $"{group.Name}-{Path.GetFileNameWithoutExtension(mainEntry.address)}").Replace('\\', '/');
                 string variantDirectory = Path.Combine(groupDirectory, variant.Label).Replace('\\', '/');
                 m_DirectoriesInUse.Add(groupDirectory);
@@ -118,23 +114,12 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
                 {
                     if (AssetDatabase.GetMainAssetTypeAtPath(dependency) == typeof(GameObject))
                     {
-                        gameObject = AssetDatabase.LoadAssetAtPath<GameObject>(dependency);
-                        var meshRenderer = gameObject.GetComponent<MeshRenderer>();
-                        if (meshRenderer != null && meshRenderer.sharedMaterial != null)
-                        {
-                            mat = CreateOrGetVariantMaterial(meshRenderer.sharedMaterial, variantDirectory, variant.Label, assetHashChanged);
-                            texture = CreateOrGetVariantTexture(meshRenderer.sharedMaterial.mainTexture,
-                                variantDirectory, variant.Label, variant.TextureScale, assetHashChanged);
-                        }
+                        var gameObject = AssetDatabase.LoadAssetAtPath<GameObject>(dependency);
+                        foreach (var childRender in gameObject.GetComponentsInChildren<MeshRenderer>())
+                            ConvertToVariant(childRender, variantDirectory, variant, assetHashChanged);
                     }
                 }
 
-                if (mat == null || texture == null)
-                    continue;
-
-                mat.mainTexture = texture;
-                gameObject.GetComponent<MeshRenderer>().material = mat;
-                AssetDatabase.SaveAssets();
                 var entry = settings.CreateOrMoveEntry(AssetDatabase.AssetPathToGUID(newPrefabPath), variantGroup, false, false);
                 entry.address = mainEntry.address;
                 entry.SetLabel(variant.Label, true, true, false);
@@ -142,6 +127,20 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
         }
 
         return string.Empty;
+    }
+
+    void ConvertToVariant(MeshRenderer meshRenderer, string variantDirectory, PrefabTextureVariantSchema.VariantLabelPair variant, bool assetHashChanged)
+    {
+        if (meshRenderer != null && meshRenderer.sharedMaterial != null)
+        {
+            var mat = CreateOrGetVariantMaterial(meshRenderer.sharedMaterial, variantDirectory, variant.Label, assetHashChanged);
+            var texture = CreateOrGetVariantTexture(meshRenderer.sharedMaterial.mainTexture,
+                variantDirectory, variant.Label, variant.TextureScale, assetHashChanged);
+
+            mat.mainTexture = texture;
+            meshRenderer.material = mat;
+            AssetDatabase.SaveAssets();
+        }
     }
 
     AddressableAssetGroup CreateTemporaryGroupCopy(string groupName, List<AddressableAssetGroupSchema> schemas, AddressableAssetSettings settings)
@@ -157,6 +156,9 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
     Material CreateOrGetVariantMaterial(Material baseMaterial, string variantDirectory, string label, bool assetHashChanged)
     {
         string assetPath = AssetDatabase.GetAssetPath(baseMaterial);
+        if(assetPath.StartsWith(variantDirectory))
+            return AssetDatabase.LoadAssetAtPath<Material>(assetPath);
+
         string matFileName = Path.GetFileNameWithoutExtension(assetPath);
         string path = assetPath.Replace("Assets/", variantDirectory + '/').Replace(matFileName, $"{matFileName}_{label}");
         if (assetHashChanged || !File.Exists(path))
@@ -173,6 +175,9 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
     Texture2D CreateOrGetVariantTexture(Texture baseTexture, string variantDirectory, string label, float scale, bool assetHashChanged)
     {
         string assetPath = AssetDatabase.GetAssetPath(baseTexture);
+        if (assetPath.StartsWith(variantDirectory))
+            return AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath);
+
         string textureFileName = Path.GetFileNameWithoutExtension(assetPath);
         string path = assetPath.Replace("Assets/", variantDirectory + '/').Replace(textureFileName, $"{textureFileName}_{label}");
 
