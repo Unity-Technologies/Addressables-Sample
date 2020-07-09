@@ -62,14 +62,14 @@ There are three sprite access methods currently demo'd in this sample.  The on-s
 #### *Basic/Space Shooter*
 A very simple Unity tutorial that we converted to use addressables.  The main code file to look at would be Done_GameController.cs, but in general, this is just meant as a simple project to explore. 
 
-#### *Advanced/Texture Variations*
-An example project to show one use case or workflow for creating "variants".  The new build pipeline (Scriptable Build Pipeline) upon which Addressables is built, does not support asset bundle variants.  This old mechanism was useful in many instances, so this sample is meant to show how to accomplish similar results for one of those instances.  There are other purpose for variants not shown here.  Some will be coming in future samples.
-* Scenes/SampleScene
+#### *Advanced/Addressables Variants*
+An example project to show two use cases or workflows for creating "variants".  The new build pipeline (Scriptable Build Pipeline) upon which Addressables is built, does not support asset bundle variants.  This old mechanism was useful in many instances, so this sample is meant to show how to accomplish similar results for one of those instances.  There are other purpose for variants not shown here.  Some will be coming in future samples.
+* Scenes/TextureScalerScene
   * In the scene, there's a prefab with an existing texture that can load alternate textures based on button input.  (VariationController.cs)
   * The project only has one instance of the texture in question (Texture/tree2.png).  It is marked as addressable, with the address "tree" and no labels
   * The group containing "tree" has a custom schema added to it (TextureVariationSchema).  This defines the label for the provided texture, and a scale and label for alternate textures.
-  * For "Fast Mode" in the player, run with the play mode script of "Vary Fast".  This will look at all the label variations defined in the schema, and apply all labels to the "tree".  This will then go into play mode in the normal Fast Mode setup of loading from AssetDatabase, but will fake having an "HD", "SD", etc. version of the texture. 
-  * For "Virtual Mode" in the player, run with the play mode script of "Virtual Variety".  This will do the same things as the "Vary Fast" script above.  Note, this is not a very accurate virtual mode right now because it does not emulate the fact that each variety should be in its own bundle. 
+  * For "Fast Mode" in the player, run with the play mode script of "Variant Fast Mode".  This will look at all the label variations defined in the schema, and apply all labels to the "tree".  This will then go into play mode in the normal Fast Mode setup of loading from AssetDatabase, but will fake having an "HD", "SD", etc. version of the texture. 
+  * For "Virtual Mode" in the player, run with the play mode script of "Variant Virtual Mode".  This will do the same things as the "Variant Fast Mode" script above.  Note, this is not a very accurate virtual mode right now because it does not emulate the fact that each variety should be in its own bundle. 
   * With the build script of "Pack Variations" selected, building the player content will:
     * Find all groups with the TextureVariationSchema
 	* Loop over all size/label pairs, and copy the textures on-disk.
@@ -77,7 +77,21 @@ An example project to show one use case or workflow for creating "variants".  Th
 	* Build all bundles
 	* Remove the extra files/groups that were created.
   * After building with "Pack Variations", you can enter play mode using the standard "Packed Play Mode" script.
-   
+* Scenes/PrefabTextureScalerScene
+    * In this scene an Addressable prefab that gets duplicated with variant textures.
+    * The project only has one instance of the prefab (Assets/Cube.prefab).  This prefab has a Material that references a texture in the project.
+    * The group containing the prefab has a custom schema attached to it (PrefabTextureVariantSchema.cs).  This schema defines the label for the provided prefab as well as labels and texture scales for the variant prefabs and their textures.
+    * For "Fast Mode" in the player, run with the play mode script of "Variant Fast Mode".  This will look at all the label variations defined in the schema, and apply all labels to the "Prefab".  This will then go into play mode in the normal Fast Mode setup of loading from AssetDatabase, but will fake having an "LowRes", "MediumRes", etc. version of the prefab. 
+    * For "Virtual Mode" in the player, run with the play mode script of "Variant Virtual Mode".  This will do the same things as the "Variant Fast Mode" script above.  Note, this is not a very accurate virtual mode right now because it does not emulate the fact that each variety should be in its own bundle. 
+    * With the build script of "Pack Variations" selected, building the player content will:
+        * Find all groups with the PrefabTextureVariantSchema.
+        * Iterate through the group and duplicate any GameObjects into an "AddressablesGenerated" folder on-disk and mark the duplicates as Addressables.
+        * Iterate through each label/scale pair and create on-disk copies of the materials and textures for each of those GameObjects.
+        * Change the import settings on the created textures so as to scale them accordingly.
+        * Build the AssetBundles.
+        * Remove the extra groups that were created.
+    * After building with "Pack Variations", you can enter play mode using the standard "Packed Play Mode" script.
+    
 #### *Advanced/Sync Addressables*
 Synchronous Addressables!  What a crazy thing.  The value of exploring this demo can be broken into two categories.  One is looking at what would be involved in making addressables synchronous.  The other is looking at creating custom providers.
 On the synchronous front, this can be used as a starting point for making your own project support synchronous loading.  As you can see in the code, there are a lot of fail cases, but if you can know that things are on-device and ready to go, it should work.  
