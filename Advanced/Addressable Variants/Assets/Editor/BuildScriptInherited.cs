@@ -77,11 +77,14 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
         var settings = context.settings;
         Directory.CreateDirectory(m_BaseDirectory);
 
-        foreach (var baseEntry in schema.Variants)
+        var entries = new List<AddressableAssetEntry>(group.entries);
+        foreach (var mainEntry in entries)
         {
-            var mainEntry = settings.FindAssetEntry(baseEntry.MainEntry.AssetGUID);
+            if (AssetDatabase.GetMainAssetTypeAtPath(mainEntry.AssetPath) != typeof(GameObject))
+                continue;
+
             string fileName = Path.GetFileNameWithoutExtension(mainEntry.AssetPath);
-            mainEntry.SetLabel(baseEntry.DefaultLabel, true, true);
+            mainEntry.SetLabel(schema.DefaultLabel, true, true);
             
             string mainAssetPath = AssetDatabase.GUIDToAssetPath(mainEntry.guid);
             Hash128 assetHash = AssetDatabase.GetAssetDependencyHash(mainAssetPath);
@@ -95,7 +98,7 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
                 m_AssetPathToHashCode[mainAssetPath] = assetHash;
             }
 
-            foreach (var variant in baseEntry.VariantEntries)
+            foreach (var variant in schema.Variants)
             {
                 string groupDirectory = Path.Combine(m_BaseDirectory, $"{group.Name}-{Path.GetFileNameWithoutExtension(mainEntry.address)}").Replace('\\', '/');
                 string variantDirectory = Path.Combine(groupDirectory, variant.Label).Replace('\\', '/');
@@ -138,7 +141,7 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
                 variantDirectory, variant.Label, variant.TextureScale, assetHashChanged);
 
             mat.mainTexture = texture;
-            meshRenderer.material = mat;
+            meshRenderer.sharedMaterial = mat;
             AssetDatabase.SaveAssets();
         }
     }

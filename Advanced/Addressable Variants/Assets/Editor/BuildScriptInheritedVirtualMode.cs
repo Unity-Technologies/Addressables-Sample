@@ -62,14 +62,13 @@ public class BuildScriptInheritedVirtualMode : BuildScriptVirtualMode
     {
         m_SourceGroupList.Add(group);
 
-        foreach (var baseEntry in schema.Variants)
+        var entries = new List<AddressableAssetEntry>(group.entries);
+        foreach (var entry in entries)
         {
-            var entry = group.GetAssetEntry(baseEntry.MainEntry.AssetGUID);
-            entry.SetLabel(baseEntry.DefaultLabel, true, true, false);
-            foreach (var variant in baseEntry.VariantEntries)
-            {
+            entry.SetLabel(schema.DefaultLabel, true, true, false);
+
+            foreach (var variant in schema.Variants)
                 entry.SetLabel(variant.Label, true, true, false);
-            }
         }
     }
 
@@ -94,11 +93,10 @@ public class BuildScriptInheritedVirtualMode : BuildScriptVirtualMode
             if (group.HasSchema<PrefabTextureVariantSchema>())
             {
                 var schema = group.GetSchema<PrefabTextureVariantSchema>();
-                foreach (var baseEntry in schema.Variants)
+                foreach (var entry in group.entries)
                 {
-                    var entry = group.GetAssetEntry(baseEntry.MainEntry.AssetGUID);
-                    entry.labels.Remove(baseEntry.DefaultLabel);
-                    foreach (var variant in baseEntry.VariantEntries)
+                    entry.labels.Remove(schema.DefaultLabel);
+                    foreach (var variant in schema.Variants)
                         entry.labels.Remove(variant.Label);
                 }
             }

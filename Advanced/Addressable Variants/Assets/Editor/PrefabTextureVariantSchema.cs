@@ -15,13 +15,6 @@ public class PrefabTextureVariantSchema : AddressableAssetGroupSchema
         public string Label;
     }
 
-    [Serializable]
-    public struct Variant
-    {
-        public AssetReference MainEntry;
-        public string DefaultLabel;
-        public List<VariantLabelPair> VariantEntries;
-    }
-
-    [SerializeField] public List<Variant> Variants;
+    [SerializeField] public string DefaultLabel;
+    [SerializeField] public List<VariantLabelPair> Variants;
 }
