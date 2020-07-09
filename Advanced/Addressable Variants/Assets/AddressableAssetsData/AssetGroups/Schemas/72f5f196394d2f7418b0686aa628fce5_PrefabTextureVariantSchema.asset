@@ -17,7 +17,7 @@ MonoBehaviour:
   - MainEntry:
       m_AssetGUID: 94ed1c7bb1938f44bbb02760709efbdd
       m_SubObjectName: 
-    DefaultLabel: Default
+    DefaultLabel: default
     VariantEntries:
     - TextureScale: 0.3
       Label: LowRes

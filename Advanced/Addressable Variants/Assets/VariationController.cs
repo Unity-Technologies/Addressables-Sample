@@ -22,7 +22,7 @@ public class VariationController : MonoBehaviour
 
     public void LoadDefaultPrefab()
     {
-        LoadPrefab("Prefab", "Default");
+        LoadPrefab("Prefab", "default");
 
     }
 

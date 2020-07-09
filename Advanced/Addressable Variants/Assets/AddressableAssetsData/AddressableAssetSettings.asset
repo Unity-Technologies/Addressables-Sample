@@ -82,16 +82,6 @@ MonoBehaviour:
     - HD
     - SD
     - MD
-    - Medium
-    - Large
-    - Small
-    - Default
-    - MedDef
-    - LowDef
-    - MediumRes
-    - LowRes
-    - Med
-    - MedRes
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 7588a5900f3d07c4f846cf58413bd6ea, type: 2}
