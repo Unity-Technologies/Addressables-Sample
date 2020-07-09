@@ -80,16 +80,18 @@ An example project to show two use cases or workflows for creating "variants".  
 * Scenes/PrefabTextureScalerScene
     * In this scene an Addressable prefab that gets duplicated with variant textures.
     * The project only has one instance of the prefab (Assets/Cube.prefab).  This prefab has a Material that references a texture in the project.
-    * The group containing the prefab has a custom schema attached to it (PrefabTextureVariantSchema.cs).  This schema defines the label for the provided prefab as well as labels and texture scales for the variant prefabs and their textures.
+    * The group containing the prefab has a custom schema attached to it (PrefabTextureVariantSchema.cs).  This schema defines the label for the default prefab as well as labels and texture scales for the variant prefabs and their textures.  PrefabTextureVariantSchema will only iterate over GameObjects that have a MeshRenderer with a valid material and texture assigned to it.
     * For "Fast Mode" in the player, run with the play mode script of "Variant Fast Mode".  This will look at all the label variations defined in the schema, and apply all labels to the "Prefab".  This will then go into play mode in the normal Fast Mode setup of loading from AssetDatabase, but will fake having an "LowRes", "MediumRes", etc. version of the prefab. 
     * For "Virtual Mode" in the player, run with the play mode script of "Variant Virtual Mode".  This will do the same things as the "Variant Fast Mode" script above.  Note, this is not a very accurate virtual mode right now because it does not emulate the fact that each variety should be in its own bundle. 
     * With the build script of "Pack Variations" selected, building the player content will:
         * Find all groups with the PrefabTextureVariantSchema.
         * Iterate through the group and duplicate any GameObjects into an "AddressablesGenerated" folder on-disk and mark the duplicates as Addressables.
+		* Check if the asset hash for an entry has changed and only create new variants whose source has a new asset hash.
         * Iterate through each label/scale pair and create on-disk copies of the materials and textures for each of those GameObjects.
         * Change the import settings on the created textures so as to scale them accordingly.
         * Build the AssetBundles.
         * Remove the extra groups that were created.
+		* Removed unused variant assets.
     * After building with "Pack Variations", you can enter play mode using the standard "Packed Play Mode" script.
     
 #### *Advanced/Sync Addressables*
