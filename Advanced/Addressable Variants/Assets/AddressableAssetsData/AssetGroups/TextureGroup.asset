@@ -22,10 +22,13 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - HD
+    - SD
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 113a3aa53587a374583b738b9413cf4c, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 0310adbd42ffbf447aa3a8f73e67c7b1, type: 2}
-    - {fileID: 11400000, guid: 15701e0942bf2384f8dbcbf25331a959, type: 2}
-    - {fileID: 11400000, guid: 5a85aa11a77054041b3b775818440a6c, type: 2}
+    - {fileID: 11400000, guid: a8643d44bcf8fb449b652b4bcc424c0f, type: 2}
+    - {fileID: 11400000, guid: 4addd7cc34845a5429d9c4ebd7edfd3c, type: 2}
+    - {fileID: 11400000, guid: 6dca519e34491ea4fb71bfe16ac0d06b, type: 2}
