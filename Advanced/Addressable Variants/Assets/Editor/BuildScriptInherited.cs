@@ -74,7 +74,7 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
         AddressableAssetGroup group,
         AddressableAssetsBuildContext context)
     {
-        var settings = context.settings;
+        var settings = context.Settings;
         Directory.CreateDirectory(m_BaseDirectory);
 
         var entries = new List<AddressableAssetEntry>(group.entries);
@@ -234,7 +234,7 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
 
                 foreach (var pair in schema.Variations)
                 {
-                    var newGroup = FindOrCopyGroup(assetGroup.Name + "_" + pair.label, assetGroup, aaContext.settings, schema);
+                    var newGroup = FindOrCopyGroup(assetGroup.Name + "_" + pair.label, assetGroup, aaContext.Settings, schema);
                     var newFile = entryPath.Replace(fileName, fileName+"_variationCopy_" + pair.label);
                     newFile = newFile.Replace("Assets/", "Assets/GeneratedTextures/");
                    
@@ -255,7 +255,7 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
                     aiDest.isReadable = true;
 
                     aiDest.SaveAndReimport();
-                    var newEntry = aaContext.settings.CreateOrMoveEntry(AssetDatabase.AssetPathToGUID(newFile), newGroup);
+                    var newEntry = aaContext.Settings.CreateOrMoveEntry(AssetDatabase.AssetPathToGUID(newFile), newGroup);
                     newEntry.address = entry.address;
                     newEntry.SetLabel(pair.label, true);
                 }

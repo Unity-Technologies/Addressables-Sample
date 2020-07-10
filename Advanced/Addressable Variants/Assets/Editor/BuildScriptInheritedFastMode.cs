@@ -11,21 +11,41 @@ using UnityEngine;
 using UnityEngine.ResourceManagement.Util;
 using UnityEngine.Serialization;
 
+[InitializeOnLoad]
 [CreateAssetMenu(fileName = "BuildScriptInheritedFastMode.asset", menuName = "Addressables/Custom Build/Fast Mode Variations")]
 public class BuildScriptInheritedFastMode : BuildScriptFastMode
 {
+    BuildScriptInheritedFastMode()
+    {
+        EditorApplication.playModeStateChanged -= PlayModeStateChanged;
+        EditorApplication.playModeStateChanged += PlayModeStateChanged;
+    }
+
     public override string Name
     {
         get { return "Variant Fast Mode"; }
     }
 
+    private bool m_UsingVariantFastMode = false;
+    private AddressableAssetSettings m_Settings;
     protected override TResult BuildDataImplementation<TResult>(AddressablesDataBuilderInput context)
     {
-        var result = base.BuildDataImplementation<TResult>(context);
+        m_Settings = context.AddressableSettings;
+        foreach (var group in m_Settings.groups)
+            ProcessGroup(group, null);
 
-        AddressableAssetSettings settings = context.AddressableSettings;
-        DoCleanup(settings);
+        var result = base.BuildDataImplementation<TResult>(context);
+        m_UsingVariantFastMode = true;
         return result;
+    }
+
+    void PlayModeStateChanged(PlayModeStateChange state)
+    {
+        if (state == PlayModeStateChange.ExitingPlayMode && m_UsingVariantFastMode)
+        {
+            DoCleanup(m_Settings);
+            m_UsingVariantFastMode = false;
+        }
     }
 
     protected override string ProcessGroup(AddressableAssetGroup assetGroup, AddressableAssetsBuildContext aaContext)
