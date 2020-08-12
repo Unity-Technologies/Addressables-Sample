@@ -39,6 +39,7 @@ public class SyncFastModeBuild : BuildScriptFastMode
                 Settings = aaSettings,
                 runtimeData = new ResourceManagerRuntimeData(),
                 bundleToAssetGroup = null,
+                providerTypes=new HashSet<Type>(),
                 locations = new List<ContentCatalogDataEntry>()
             };
             aaContext.runtimeData.BuildTarget = context.Target.ToString();
