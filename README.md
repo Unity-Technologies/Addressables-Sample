@@ -21,7 +21,6 @@ Several sample scenes to display functionality surrounding the asset reference c
   * Showcases utilizing the various filtering options on the `AssetReference` class.
   * This scene also shows an alternative loading patter to the one used in other scenes.  It shows how you can utilize the Asset property.  It is recommended that you only use the Asset for ease of load.  You could theoretically also use it to poll completion, but you would never find out about errors in that usage. 
   * This sample shows loading via the `AssetReference` but instantiating via Unity's built in method.  This will only increment the ref count once (for the load).
-  * Currently, the objects created are being destroyed with Addressables.ReleaseInstance even though they were not created that way.  As of version 0.8, this will throw a warning, but still delete the asset.  In the future, our intent is to make this method not destroy the asset, or print a warning.  Instead it will return a boolean so you can destroy manually if needed. 
 
 #### *Basic/Scene Loading*
 The ins and outs of scene loading.
@@ -52,7 +51,7 @@ This example creates an AssetReference that is restricted to having a specific C
   
 #### *Basic/Sprite Land*
 *2019.3.0a11+* - Sprite demo is back.  There was an engine bug causing a crash when loading out of sprite sheets that caused us to remove this demo.  This is in 2019.3 alpha, and is being backported to 2019.2 and 2018.4.  If you use this demo, and your game crashes, or you get warnings about "gfx" not on main thread, you don't have a fixed version of the platform. 
-There are three sprite access methods currently demo'd in this sample.  The on-screen button will change functionality with each click, so you can demo the methods in order.  We have some additional mechanisms coming in Addressables 1.2+.  We will update this demo once that is out. 
+There are three sprite access methods currently demo'd in this sample.  The on-screen button will change functionality with each click, so you can demo the methods in order.
 * Scenes/SampleScene 
   * First is having an AssetReference directly to a single sprite.  Since this sprite is a single entry, we can reference the asset directly and get the sprite.  This is the most simple case. 
   * Second is accessing a sprite from within a sprite sheet. This is the one that was causing a crash, but should be fixed now.  Here we load the sprite sheet asset as type IList<Sprite>.  This tells addressables to load all the sub-objects that are sprites, and return them as a list.  
@@ -63,20 +62,20 @@ There are three sprite access methods currently demo'd in this sample.  The on-s
 A very simple Unity tutorial that we converted to use addressables.  The main code file to look at would be Done_GameController.cs, but in general, this is just meant as a simple project to explore. 
 
 #### *Advanced/Texture Variations*
-An example project to show one use case or workflow for creating "variants".  The new build pipeline (Scriptable Build Pipeline) upon which Addressables is built, does not support asset bundle variants.  This old mechanism was useful in many instances, so this sample is meant to show how to accomplish similar results for one of those instances.  There are other purpose for variants not shown here.  Some will be coming in future samples.
+An example project to show one use case or workflow for creating "variants".  The new build pipeline (Scriptable Build Pipeline) upon which Addressables is built, does not support asset bundle variants.  This old mechanism was useful in many instances, so this sample is meant to show how to accomplish similar results for one of those instances.  There are other purposes for variants not shown here.
 * Scenes/SampleScene
   * In the scene, there's a prefab with an existing texture that can load alternate textures based on button input.  (VariationController.cs)
   * The project only has one instance of the texture in question (Texture/tree2.png).  It is marked as addressable, with the address "tree" and no labels
   * The group containing "tree" has a custom schema added to it (TextureVariationSchema).  This defines the label for the provided texture, and a scale and label for alternate textures.
-  * For "Fast Mode" in the player, run with the play mode script of "Vary Fast".  This will look at all the label variations defined in the schema, and apply all labels to the "tree".  This will then go into play mode in the normal Fast Mode setup of loading from AssetDatabase, but will fake having an "HD", "SD", etc. version of the texture. 
-  * For "Virtual Mode" in the player, run with the play mode script of "Virtual Variety".  This will do the same things as the "Vary Fast" script above.  Note, this is not a very accurate virtual mode right now because it does not emulate the fact that each variety should be in its own bundle. 
+  * For "Use Asset Database (fastest)" in the player, run with the play mode script of "Vary Fast".  This will look at all the label variations defined in the schema, and apply all labels to the "tree".  This will then go into play mode in the normal Fast Mode setup of loading from AssetDatabase, but will fake having an "HD", "SD", etc. version of the texture. 
+  * For "Simulate Groups (advanced)" in the player, run with the play mode script of "Virtual Variety".  This will do the same things as the "Vary Fast" script above.  Note, this is not a very accurate "Simulate Groups (advanced)" mode right now because it does not emulate the fact that each variety should be in its own bundle. 
   * With the build script of "Pack Variations" selected, building the player content will:
     * Find all groups with the TextureVariationSchema
 	* Loop over all size/label pairs, and copy the textures on-disk.
 	* Change the import settings on the created textures so as to scale them.
 	* Build all bundles
 	* Remove the extra files/groups that were created.
-  * After building with "Pack Variations", you can enter play mode using the standard "Packed Play Mode" script.
+  * After building with "Pack Variations", you can enter play mode using the standard "Use Existing Build (requires built groups)" script.
    
 #### *Advanced/Sync Addressables*
 Synchronous Addressables!  What a crazy thing.  The value of exploring this demo can be broken into two categories.  One is looking at what would be involved in making addressables synchronous.  The other is looking at creating custom providers.
@@ -87,7 +86,7 @@ Why don't we put these sync methods in Addressables itself?  The best way to und
 
 One common workflow not shown here would have been to set things up to support async loading, but sync instantiation.  This would only work if the game always instantiated after loading was complete. That complicates the game-code, but is a simplified version of this demo from the addressables standpoint.
 
-*Not all play modes done.*  Packed content (for play mode, or the player) needs no custom builders.  Fast mode and Virtual mode on the other hand do.  At this point, we have only implemented a sample script for Fast Mode.  
+*Not all play modes done.*  Packed content (for play mode, or the player) needs no custom builders.  "Use Asset Database (fastest)" mode and "Simulate Groups (advanced)" mode on the other hand do.  At this point, we have only implemented a sample script for "Use Asset Database (fastest)" Mode.  
 * Scenes/SampleScene
   * This scene waits until the SyncAddressables system has been initialized, and then starts spawning a cube every 60 fixed-update calls. 
 * SyncAddressables code
@@ -96,7 +95,7 @@ One common workflow not shown here would have been to set things up to support a
     * `LoadAsset<>()` & `Instantiate()` - Calls the addressables version of the method, returning the result if things were ready, throwing exceptions if not.
   * SyncBundleProvider.cs - Loads the asset bundle into memory using synchronous methods.  If the bundle is online this will fail.  Also note, in it's current form, this will fail on Android as loading there is a little more complex.  It can load sync, we just didn't have time to add that support to this demo.  This is the most likely point in the flow for there to be an issue in the sync process.  If this were used in production, it would probably need extended error checking.
   * SyncBundledAssetProvider.cs - Loads from an asset bundle using the synchronous methods.  This is unlikely to be a failure point, as it isn't called until the bundle is loaded successfully.
-  * Editor/SyncFastModeBuild.cs - Since fast mode does not load from bundles, the default fast mode script has to inject it's own provider for all assets.  This custom script just replaces that standard provider with a sync one. 
+  * Editor/SyncFastModeBuild.cs - Since "Use Asset Database (fastest)" mode does not load from bundles, the default "Use Asset Database (fastest)" mode script has to inject it's own provider for all assets.  This custom script just replaces that standard provider with a sync one. 
   * SyncAssetDatabaseProvider.cs - An overridden provider to do asset database loads immediately. 
   * No Change Needed: SyncBuildScriptPackedMode or SyncBuildScriptPackedPlayMode.  Since the group schema allows you to specify provider, the standard build script works as is.
   * Missing - the two main things missing from this demo are Virtual mode and the ability to load from Resources using the sync interfaces.
