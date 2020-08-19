@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.GUI;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
@@ -68,6 +69,6 @@ class RegisterPathAddressIsPath
 {
     static RegisterPathAddressIsPath()
     {
-        AnalyzeWindow.RegisterNewRule<PathAddressIsPath>();
+        AnalyzeSystem.RegisterNewRule<PathAddressIsPath>();
     }
 }

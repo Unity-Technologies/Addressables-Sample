@@ -85,7 +85,7 @@ public class BuildScriptInherited : BuildScriptPackedMode
 
                 foreach (var pair in schema.Variations)
                 {
-                    var newGroup = FindOrCopyGroup(assetGroup.Name + "_" + pair.label, assetGroup, aaContext.settings, schema);
+                    var newGroup = FindOrCopyGroup(assetGroup.Name + "_" + pair.label, assetGroup, aaContext.Settings, schema);
                     var newFile = entryPath.Replace(fileName, fileName+"_variationCopy_" + pair.label);
                     newFile = newFile.Replace("Assets/", "Assets/GeneratedTextures/");
 
@@ -106,7 +106,7 @@ public class BuildScriptInherited : BuildScriptPackedMode
                     aiDest.isReadable = true;
 
                     aiDest.SaveAndReimport();
-                    var newEntry = aaContext.settings.CreateOrMoveEntry(AssetDatabase.AssetPathToGUID(newFile), newGroup);
+                    var newEntry = aaContext.Settings.CreateOrMoveEntry(AssetDatabase.AssetPathToGUID(newFile), newGroup);
                     newEntry.address = entry.address;
                     newEntry.SetLabel(pair.label, true);
                 }
