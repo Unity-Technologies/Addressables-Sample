@@ -25,7 +25,7 @@ Several sample scenes to display functionality surrounding the asset reference c
 * Scenes/SubobjectReference
   * Showcases using references with sub objects.
   * An `AssetReference` contains an main asset (`editorAsset`) and an optional sub object. Certain reference types (for example, references to sprite sheets and sprite atlases) can use sub objects. If the reference uses a sub object, then it will load the main asset during edit mode and load the sub object during runtime. 
-  * This scene shows loading a sprite from a sprite sheet (main asset) and loading a sprite as a sub object.
+  * This scene shows loading a sprite from a sprite sheet (main asset) and loading a sprite as a sub object during runtime.
 
 #### *Basic/Scene Loading*
 The ins and outs of scene loading.
