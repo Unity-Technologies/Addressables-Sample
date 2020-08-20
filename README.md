@@ -22,6 +22,10 @@ Several sample scenes to display functionality surrounding the asset reference c
   * This scene also shows an alternative loading patter to the one used in other scenes.  It shows how you can utilize the Asset property.  It is recommended that you only use the Asset for ease of load.  You could theoretically also use it to poll completion, but you would never find out about errors in that usage. 
   * This sample shows loading via the `AssetReference` but instantiating via Unity's built in method.  This will only increment the ref count once (for the load).
   * Currently, the objects created are being destroyed with Addressables.ReleaseInstance even though they were not created that way.  As of version 0.8, this will throw a warning, but still delete the asset.  In the future, our intent is to make this method not destroy the asset, or print a warning.  Instead it will return a boolean so you can destroy manually if needed. 
+* Scenes/SubobjectReference
+  * Showcases using references with sub objects.
+  * An `AssetReference` contains an main asset (`editorAsset`) and an optional sub object. Certain reference types (for example, references to sprite sheets and sprite atlases) can use sub objects. If the reference uses a sub object, then it will load the main asset during edit mode and load the sub object during runtime. 
+  * This scene shows loading a sprite from a sprite sheet (main asset) and loading a sprite as a sub object.
 
 #### *Basic/Scene Loading*
 The ins and outs of scene loading.
