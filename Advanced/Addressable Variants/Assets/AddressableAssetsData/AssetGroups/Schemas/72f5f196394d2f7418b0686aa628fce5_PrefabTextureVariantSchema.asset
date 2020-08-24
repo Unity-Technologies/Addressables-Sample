@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31c73914900e81a4a84446fcf6393bbe, type: 3}
+  m_Name: 72f5f196394d2f7418b0686aa628fce5_PrefabTextureVariantSchema
+  m_EditorClassIdentifier: 
+  m_Group: {fileID: 11400000, guid: 760c82ba27a2fd24f8e058a22ed2d0d7, type: 2}
+  Variants:
+  - MainEntry:
+      m_AssetGUID: 94ed1c7bb1938f44bbb02760709efbdd
+      m_SubObjectName: 
+    DefaultLabel: default
+    VariantEntries:
+    - TextureScale: 0.3
+      Label: LowRes
+    - TextureScale: 0.6
+      Label: MediumRes
