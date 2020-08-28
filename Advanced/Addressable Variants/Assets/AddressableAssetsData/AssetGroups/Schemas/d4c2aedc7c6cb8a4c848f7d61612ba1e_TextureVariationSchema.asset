@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 145b06ff52c949344b58f5c38f38397d, type: 3}
+  m_Name: d4c2aedc7c6cb8a4c848f7d61612ba1e_TextureVariationSchema
+  m_EditorClassIdentifier: 
+  m_Group: {fileID: 11400000, guid: bac4dc0ea5af4fe47b04555b9b99b764, type: 2}
+  m_BaselineLabel: HD
+  m_Variations:
+  - textureScale: 0.3
+    label: SD
+  - textureScale: 1
+    label: HD

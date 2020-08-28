@@ -21,6 +21,11 @@ Several sample scenes to display functionality surrounding the asset reference c
   * Showcases utilizing the various filtering options on the `AssetReference` class.
   * This scene also shows an alternative loading patter to the one used in other scenes.  It shows how you can utilize the Asset property.  It is recommended that you only use the Asset for ease of load.  You could theoretically also use it to poll completion, but you would never find out about errors in that usage. 
   * This sample shows loading via the `AssetReference` but instantiating via Unity's built in method.  This will only increment the ref count once (for the load).
+  * Currently, the objects created are being destroyed with Addressables.ReleaseInstance even though they were not created that way.  As of version 0.8, this will throw a warning, but still delete the asset.  In the future, our intent is to make this method not destroy the asset, or print a warning.  Instead it will return a boolean so you can destroy manually if needed. 
+* Scenes/SubobjectReference
+  * Showcases using references with sub objects.
+  * An `AssetReference` contains an main asset (`editorAsset`) and an optional sub object. Certain reference types (for example, references to sprite sheets and sprite atlases) can use sub objects. If the reference uses a sub object, then it will load the main asset during edit mode and load the sub object during runtime. 
+  * This scene shows loading a sprite from a sprite sheet (main asset) and loading a sprite as a sub object during runtime.
 
 #### *Basic/Scene Loading*
 The ins and outs of scene loading.
@@ -61,22 +66,38 @@ There are three sprite access methods currently demo'd in this sample.  The on-s
 #### *Basic/Space Shooter*
 A very simple Unity tutorial that we converted to use addressables.  The main code file to look at would be Done_GameController.cs, but in general, this is just meant as a simple project to explore. 
 
-#### *Advanced/Texture Variations*
-An example project to show one use case or workflow for creating "variants".  The new build pipeline (Scriptable Build Pipeline) upon which Addressables is built, does not support asset bundle variants.  This old mechanism was useful in many instances, so this sample is meant to show how to accomplish similar results for one of those instances.  There are other purposes for variants not shown here.
-* Scenes/SampleScene
+#### *Advanced/Addressables Variants*
+An example project to show two use cases or workflows for creating "variants".  The new build pipeline (Scriptable Build Pipeline) upon which Addressables is built, does not support asset bundle variants.  This old mechanism was useful in many instances, so this sample is meant to show how to accomplish similar results for one of those instances.  There are other purpose for variants not shown here.  Some will be coming in future samples.
+* Scenes/TextureScalerScene
   * In the scene, there's a prefab with an existing texture that can load alternate textures based on button input.  (VariationController.cs)
   * The project only has one instance of the texture in question (Texture/tree2.png).  It is marked as addressable, with the address "tree" and no labels
   * The group containing "tree" has a custom schema added to it (TextureVariationSchema).  This defines the label for the provided texture, and a scale and label for alternate textures.
-  * For "Use Asset Database (fastest)" in the player, run with the play mode script of "Vary Fast".  This will look at all the label variations defined in the schema, and apply all labels to the "tree".  This will then go into play mode in the normal Fast Mode setup of loading from AssetDatabase, but will fake having an "HD", "SD", etc. version of the texture. 
-  * For "Simulate Groups (advanced)" in the player, run with the play mode script of "Virtual Variety".  This will do the same things as the "Vary Fast" script above.  Note, this is not a very accurate "Simulate Groups (advanced)" mode right now because it does not emulate the fact that each variety should be in its own bundle. 
+  * For "Fast Mode" in the player, run with the play mode script of "Variant Fast Mode".  This will look at all the label variations defined in the schema, and apply all labels to the "tree".  This will then go into play mode in the normal Fast Mode setup of loading from AssetDatabase, but will fake having an "HD", "SD", etc. version of the texture. 
+  * For "Virtual Mode" in the player, run with the play mode script of "Variant Virtual Mode".  This will do the same things as the "Variant Fast Mode" script above.  Note, this is not a very accurate virtual mode right now because it does not emulate the fact that each variety should be in its own bundle. 
   * With the build script of "Pack Variations" selected, building the player content will:
     * Find all groups with the TextureVariationSchema
 	* Loop over all size/label pairs, and copy the textures on-disk.
 	* Change the import settings on the created textures so as to scale them.
 	* Build all bundles
 	* Remove the extra files/groups that were created.
-  * After building with "Pack Variations", you can enter play mode using the standard "Use Existing Build (requires built groups)" script.
-   
+  * After building with "Pack Variations", you can enter play mode using the standard "Packed Play Mode" script.
+* Scenes/PrefabTextureScalerScene
+    * In this scene an Addressable prefab that gets duplicated with variant textures.
+    * The project only has one instance of the prefab (Assets/Cube.prefab).  This prefab has a Material that references a texture in the project.
+    * The group containing the prefab has a custom schema attached to it (PrefabTextureVariantSchema.cs).  This schema defines the label for the default prefab as well as labels and texture scales for the variant prefabs and their textures.  PrefabTextureVariantSchema will only iterate over GameObjects that have a MeshRenderer with a valid material and texture assigned to it.
+    * For "Fast Mode" in the player, run with the play mode script of "Variant Fast Mode".  This will look at all the label variations defined in the schema, and apply all labels to the "Prefab".  This will then go into play mode in the normal Fast Mode setup of loading from AssetDatabase, but will fake having an "LowRes", "MediumRes", etc. version of the prefab. 
+    * For "Virtual Mode" in the player, run with the play mode script of "Variant Virtual Mode".  This will do the same things as the "Variant Fast Mode" script above.  Note, this is not a very accurate virtual mode right now because it does not emulate the fact that each variety should be in its own bundle. 
+    * With the build script of "Pack Variations" selected, building the player content will:
+        * Find all groups with the PrefabTextureVariantSchema.
+        * Iterate through the group and duplicate any GameObjects into an "AddressablesGenerated" folder on-disk and mark the duplicates as Addressables.
+		* Check if the asset hash for an entry has changed and only create new variants whose source has a new asset hash.
+        * Iterate through each label/scale pair and create on-disk copies of the materials and textures for each of those GameObjects.
+        * Change the import settings on the created textures so as to scale them accordingly.
+        * Build the AssetBundles.
+        * Remove the extra groups that were created.
+		* Removed unused variant assets.
+    * After building with "Pack Variations", you can enter play mode using the standard "Packed Play Mode" script.
+    
 #### *Advanced/Sync Addressables*
 Synchronous Addressables!  What a crazy thing.  The value of exploring this demo can be broken into two categories.  One is looking at what would be involved in making addressables synchronous.  The other is looking at creating custom providers.
 On the synchronous front, this can be used as a starting point for making your own project support synchronous loading.  As you can see in the code, there are a lot of fail cases, but if you can know that things are on-device and ready to go, it should work.  
