@@ -50,7 +50,7 @@ public class VariationController : MonoBehaviour
 
     void LoadPrefab(string key, string label)
     {
-        Addressables.LoadAssetsAsync<GameObject>(new List<object> { key, label }, null,
+        Addressables.LoadAssetsAsync<GameObject>((IEnumerable) new List<object> { key, label }, null,
             Addressables.MergeMode.Intersection).Completed += PrefabLoaded;
 
     }
@@ -59,8 +59,8 @@ public class VariationController : MonoBehaviour
     {
         m_Mat = GetComponent<MeshRenderer>().material;
 
-        Addressables.LoadAssetsAsync<Texture2D>(new List<object> { key, label }, null, Addressables.MergeMode.Intersection).Completed
-            += TextureLoaded;
+        Addressables.LoadAssetsAsync<Texture2D>((IEnumerable) new List<object> { key, label }, null, 
+            Addressables.MergeMode.Intersection).Completed += TextureLoaded;
     }
     
     void PrefabLoaded(AsyncOperationHandle<IList<GameObject>> obj)
