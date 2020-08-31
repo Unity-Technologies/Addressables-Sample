@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.GUI;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
@@ -47,6 +48,6 @@ class RegisterAddressHasC
 {
     static RegisterAddressHasC()
     {
-        AnalyzeWindow.RegisterNewRule<AddressHasC>();
+        AnalyzeSystem.RegisterNewRule<AddressHasC>();
     }
 }

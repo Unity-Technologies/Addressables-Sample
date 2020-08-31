@@ -18,9 +18,15 @@ MonoBehaviour:
     - m_ResultName: No issues found
       m_Severity: 0
   - RuleName: Check Scene to Addressable Duplicate Dependencies
-    Results: []
+    Results:
+    - m_ResultName: Check Scene to Addressable Duplicate Dependencies - No issues
+        found.
+      m_Severity: 0
   - RuleName: Check Resources to Addressable Duplicate Dependencies
-    Results: []
+    Results:
+    - m_ResultName: Check Resources to Addressable Duplicate Dependencies - No issues
+        found.
+      m_Severity: 0
   - RuleName: Ensure all names have a 'C'
     Results:
     - m_ResultName: Default Local Group:Assets/Sphere.prefab
@@ -33,3 +39,11 @@ MonoBehaviour:
     Results:
     - m_ResultName: Default Local Group:Assets/WrongPath/Cube.prefab
       m_Severity: 3
+  - RuleName: Check Sprite Atlas to Addressable Duplicate Dependencies
+    Results:
+    - m_ResultName: No issues found
+      m_Severity: 0
+  - RuleName: Bundle Layout Preview
+    Results: []
+  - RuleName: UnityEditor.AddressableAssets.Build.AnalyzeRules.AnalyzeRule
+    Results: []

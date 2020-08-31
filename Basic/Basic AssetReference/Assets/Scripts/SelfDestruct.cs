@@ -12,13 +12,7 @@ public class SelfDestruct : MonoBehaviour {
 
 	void Release()
 	{
-		//note, that in some samples, this throws a warning about Addressables not being aware of the object.  This
-		// is because in some samples, the objects were not created via Addressables.InstantiateAsync, but were instead
-		// created by loading an addressable asset, then instantiating that through Unity's built in instantiation.
-		// As of 0.8, this is still functional code (but with a warning of upcoming change).  In a coming soon release, this
-		// will need to become:
-		//		if(!Addressables.ReleaseInstance(gameObject))
-		//			Destroy(gameObject);
-		Addressables.ReleaseInstance(gameObject);
+        if (!Addressables.ReleaseInstance(gameObject))
+            Destroy(gameObject);
 	}
 }

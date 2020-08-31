@@ -56,7 +56,7 @@ This example creates an AssetReference that is restricted to having a specific C
   
 #### *Basic/Sprite Land*
 *2019.3.0a11+* - Sprite demo is back.  There was an engine bug causing a crash when loading out of sprite sheets that caused us to remove this demo.  This is in 2019.3 alpha, and is being backported to 2019.2 and 2018.4.  If you use this demo, and your game crashes, or you get warnings about "gfx" not on main thread, you don't have a fixed version of the platform. 
-There are three sprite access methods currently demo'd in this sample.  The on-screen button will change functionality with each click, so you can demo the methods in order.  We have some additional mechanisms coming in Addressables 1.2+.  We will update this demo once that is out. 
+There are three sprite access methods currently demo'd in this sample.  The on-screen button will change functionality with each click, so you can demo the methods in order.
 * Scenes/SampleScene 
   * First is having an AssetReference directly to a single sprite.  Since this sprite is a single entry, we can reference the asset directly and get the sprite.  This is the most simple case. 
   * Second is accessing a sprite from within a sprite sheet. This is the one that was causing a crash, but should be fixed now.  Here we load the sprite sheet asset as type IList<Sprite>.  This tells addressables to load all the sub-objects that are sprites, and return them as a list.  
@@ -72,21 +72,21 @@ An example project to show two use cases or workflows for creating "variants".  
   * In the scene, there's a prefab with an existing texture that can load alternate textures based on button input.  (VariationController.cs)
   * The project only has one instance of the texture in question (Texture/tree2.png).  It is marked as addressable, with the address "tree" and no labels
   * The group containing "tree" has a custom schema added to it (TextureVariationSchema).  This defines the label for the provided texture, and a scale and label for alternate textures.
-  * For "Fast Mode" in the player, run with the play mode script of "Variant Fast Mode".  This will look at all the label variations defined in the schema, and apply all labels to the "tree".  This will then go into play mode in the normal Fast Mode setup of loading from AssetDatabase, but will fake having an "HD", "SD", etc. version of the texture. 
-  * For "Virtual Mode" in the player, run with the play mode script of "Variant Virtual Mode".  This will do the same things as the "Variant Fast Mode" script above.  Note, this is not a very accurate virtual mode right now because it does not emulate the fact that each variety should be in its own bundle. 
+  * For "Use Asset Database (fastest)" in the player, run with the play mode script of "Variant Use Asset Database (fastest)".  This will look at all the label variations defined in the schema, and apply all labels to the "tree".  This will then go into play mode in the normal "Use Asset Database (fastest)" setup of loading from AssetDatabase, but will fake having an "HD", "SD", etc. version of the texture. 
+  * For "Simulate Groups (Advanced)" in the player, run with the play mode script of "Variant Simulate Groups (Advanced)".  This will do the same things as the "Variant Use Asset Database (fastest)" script above.  Note, this is not a very accurate "Simulate Groups (Advanced)" mode right now because it does not emulate the fact that each variety should be in its own bundle. 
   * With the build script of "Pack Variations" selected, building the player content will:
     * Find all groups with the TextureVariationSchema
 	* Loop over all size/label pairs, and copy the textures on-disk.
 	* Change the import settings on the created textures so as to scale them.
 	* Build all bundles
 	* Remove the extra files/groups that were created.
-  * After building with "Pack Variations", you can enter play mode using the standard "Packed Play Mode" script.
+  * After building with "Pack Variations", you can enter play mode using the standard "Use Existing Build (requires built groups)" script.
 * Scenes/PrefabTextureScalerScene
     * In this scene an Addressable prefab that gets duplicated with variant textures.
     * The project only has one instance of the prefab (Assets/Cube.prefab).  This prefab has a Material that references a texture in the project.
     * The group containing the prefab has a custom schema attached to it (PrefabTextureVariantSchema.cs).  This schema defines the label for the default prefab as well as labels and texture scales for the variant prefabs and their textures.  PrefabTextureVariantSchema will only iterate over GameObjects that have a MeshRenderer with a valid material and texture assigned to it.
-    * For "Fast Mode" in the player, run with the play mode script of "Variant Fast Mode".  This will look at all the label variations defined in the schema, and apply all labels to the "Prefab".  This will then go into play mode in the normal Fast Mode setup of loading from AssetDatabase, but will fake having an "LowRes", "MediumRes", etc. version of the prefab. 
-    * For "Virtual Mode" in the player, run with the play mode script of "Variant Virtual Mode".  This will do the same things as the "Variant Fast Mode" script above.  Note, this is not a very accurate virtual mode right now because it does not emulate the fact that each variety should be in its own bundle. 
+    * For "Use Asset Database (fastest)" in the player, run with the play mode script of "Variant Use Asset Database (fastest)".  This will look at all the label variations defined in the schema, and apply all labels to the "Prefab".  This will then go into play mode in the normal "Use Asset Database (fastest)" setup of loading from AssetDatabase, but will fake having an "LowRes", "MediumRes", etc. version of the prefab. 
+    * For "Simulate Groups (Advanced)" in the player, run with the play mode script of "Variant Simulate Groups (Advanced)".  This will do the same things as the "Variant Use Asset Database (fastest)" script above.  Note, this is not a very accurate "Simulate Groups (Advanced)" mode right now because it does not emulate the fact that each variety should be in its own bundle. 
     * With the build script of "Pack Variations" selected, building the player content will:
         * Find all groups with the PrefabTextureVariantSchema.
         * Iterate through the group and duplicate any GameObjects into an "AddressablesGenerated" folder on-disk and mark the duplicates as Addressables.
@@ -96,7 +96,7 @@ An example project to show two use cases or workflows for creating "variants".  
         * Build the AssetBundles.
         * Remove the extra groups that were created.
 		* Removed unused variant assets.
-    * After building with "Pack Variations", you can enter play mode using the standard "Packed Play Mode" script.
+    * After building with "Pack Variations", you can enter play mode using the standard "Use Existing Build (requires built groups)" script.
     
 #### *Advanced/Sync Addressables*
 Synchronous Addressables!  What a crazy thing.  The value of exploring this demo can be broken into two categories.  One is looking at what would be involved in making addressables synchronous.  The other is looking at creating custom providers.
@@ -107,7 +107,7 @@ Why don't we put these sync methods in Addressables itself?  The best way to und
 
 One common workflow not shown here would have been to set things up to support async loading, but sync instantiation.  This would only work if the game always instantiated after loading was complete. That complicates the game-code, but is a simplified version of this demo from the addressables standpoint.
 
-*Not all play modes done.*  Packed content (for play mode, or the player) needs no custom builders.  Fast mode and Virtual mode on the other hand do.  At this point, we have only implemented a sample script for Fast Mode.  
+*Not all play modes done.*  Packed content (for play mode, or the player) needs no custom builders.  "Use Asset Database (fastest)" mode and "Simulate Groups (advanced)" mode on the other hand do.  At this point, we have only implemented a sample script for "Use Asset Database (fastest)" Mode.  
 * Scenes/SampleScene
   * This scene waits until the SyncAddressables system has been initialized, and then starts spawning a cube every 60 fixed-update calls. 
 * SyncAddressables code
@@ -116,10 +116,10 @@ One common workflow not shown here would have been to set things up to support a
     * `LoadAsset<>()` & `Instantiate()` - Calls the addressables version of the method, returning the result if things were ready, throwing exceptions if not.
   * SyncBundleProvider.cs - Loads the asset bundle into memory using synchronous methods.  If the bundle is online this will fail.  Also note, in it's current form, this will fail on Android as loading there is a little more complex.  It can load sync, we just didn't have time to add that support to this demo.  This is the most likely point in the flow for there to be an issue in the sync process.  If this were used in production, it would probably need extended error checking.
   * SyncBundledAssetProvider.cs - Loads from an asset bundle using the synchronous methods.  This is unlikely to be a failure point, as it isn't called until the bundle is loaded successfully.
-  * Editor/SyncFastModeBuild.cs - Since fast mode does not load from bundles, the default fast mode script has to inject it's own provider for all assets.  This custom script just replaces that standard provider with a sync one. 
+  * Editor/SyncFastModeBuild.cs - Since "Use Asset Database (fastest)" mode does not load from bundles, the default "Use Asset Database (fastest)" mode script has to inject it's own provider for all assets.  This custom script just replaces that standard provider with a sync one. 
   * SyncAssetDatabaseProvider.cs - An overridden provider to do asset database loads immediately. 
   * No Change Needed: SyncBuildScriptPackedMode or SyncBuildScriptPackedPlayMode.  Since the group schema allows you to specify provider, the standard build script works as is.
-  * Missing - the two main things missing from this demo are Virtual mode and the ability to load from Resources using the sync interfaces.
+  * Missing - the two main things missing from this demo are "Simulate Groups (Advanced)" and the ability to load from Resources using the sync interfaces.
 
 #### *Advanced/Custom Analyze Rule*
 This sample shows how to create custom AnalyzeRules for use within the Analyze window.  Both rules follow the recommended pattern for adding themselves to the UI.  There are no scenes to look at in this project, just analyze code.

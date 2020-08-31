@@ -12,12 +12,12 @@ using UnityEngine.ResourceManagement.ResourceProviders.Simulation;
 using UnityEngine.ResourceManagement.Util;
 using UnityEngine.Serialization;
 
-[CreateAssetMenu(fileName = "BuildScriptInheritedVirtualMode.asset", menuName = "Addressables/Custom Build/Virtual Mode Variations")]
+[CreateAssetMenu(fileName = "BuildScriptInheritedVirtualMode.asset", menuName = "Addressables/Custom Build/Variant Simulate Groups (advanced)")]
 public class BuildScriptInheritedVirtualMode : BuildScriptVirtualMode
 {
     public override string Name
     {
-        get { return "Variant Virtual Mode"; }
+        get { return "Variant Simulate Groups (advanced)"; }
     }
 
     protected override TResult BuildDataImplementation<TResult>(AddressablesDataBuilderInput context)

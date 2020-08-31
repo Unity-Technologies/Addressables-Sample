@@ -12,7 +12,7 @@ using UnityEngine.ResourceManagement.Util;
 using UnityEngine.Serialization;
 
 [InitializeOnLoad]
-[CreateAssetMenu(fileName = "BuildScriptInheritedFastMode.asset", menuName = "Addressables/Custom Build/Fast Mode Variations")]
+[CreateAssetMenu(fileName = "BuildScriptInheritedFastMode.asset", menuName = "Addressables/Custom Build/Variant Use Asset Database (fastest)")]
 public class BuildScriptInheritedFastMode : BuildScriptFastMode
 {
     BuildScriptInheritedFastMode()
@@ -23,7 +23,7 @@ public class BuildScriptInheritedFastMode : BuildScriptFastMode
 
     public override string Name
     {
-        get { return "Variant Fast Mode"; }
+        get { return "Variant Use Asset Database (fastest)"; }
     }
 
     private bool m_UsingVariantFastMode = false;
