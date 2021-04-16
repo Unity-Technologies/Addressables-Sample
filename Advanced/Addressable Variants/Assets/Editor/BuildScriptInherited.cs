@@ -84,6 +84,7 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
                 continue;
 
             string fileName = Path.GetFileNameWithoutExtension(mainEntry.AssetPath);
+            string ext = Path.GetExtension(mainEntry.AssetPath);
             mainEntry.SetLabel(schema.DefaultLabel, true, true);
             
             string mainAssetPath = AssetDatabase.GUIDToAssetPath(mainEntry.guid);
@@ -101,16 +102,21 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
             foreach (var variant in schema.Variants)
             {
                 string groupDirectory = Path.Combine(m_BaseDirectory, $"{group.Name}-{Path.GetFileNameWithoutExtension(mainEntry.address)}").Replace('\\', '/');
-                string variantDirectory = Path.Combine(groupDirectory, variant.Label).Replace('\\', '/');
                 m_DirectoriesInUse.Add(groupDirectory);
+                var variantGroup = CreateTemporaryGroupCopy($"{group.Name}_VariantGroup_{variant.Label}", group.Schemas, settings);
+
+                string baseVariantDirectory = Path.Combine(groupDirectory, variant.Label).Replace('\\', '/');
+                string newPrefabPath = mainAssetPath.Replace("Assets/", baseVariantDirectory + '/').Replace($"{fileName}{ext}", $"{fileName}_variant_{variant.Label}{ext}");
+
+                string variantDirectory = Path.GetDirectoryName(newPrefabPath).Replace('\\', '/');
                 m_DirectoriesInUse.Add(variantDirectory);
                 Directory.CreateDirectory(variantDirectory);
 
-                var variantGroup = CreateTemporaryGroupCopy($"{group.Name}_VariantGroup_{variant.Label}", group.Schemas, settings);
-
-                string newPrefabPath = mainAssetPath.Replace("Assets/", variantDirectory + '/').Replace(fileName, $"{fileName}_variant_{variant.Label}");
                 if (assetHashChanged || !File.Exists(newPrefabPath))
-                    AssetDatabase.CopyAsset(mainAssetPath, newPrefabPath);
+                {
+                    if (!AssetDatabase.CopyAsset(mainAssetPath, newPrefabPath))
+                        return $"Copying asset from {mainAssetPath} to variant path {newPrefabPath} failed.";
+                }
 
                 var dependencies = AssetDatabase.GetDependencies(newPrefabPath);
                 foreach (var dependency in dependencies)
