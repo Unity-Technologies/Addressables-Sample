@@ -144,7 +144,7 @@ Setup Instructions:
 3. Open the Addressables Groups window (Window > Asset Management > Addressable Groups). 
 4. In the Groups window, Create > Group > Pack Content. 
 5. Specify the asset pack delivery type in the “Play Asset Delivery” schema. 
-  - Be mindful of the size restrictions per delivery mode. 
+  - Be mindful of the [size restrictions per delivery mode](https://developer.android.com/guide/playcore/asset-delivery#flexible-delivery-modes). 
   - Any groups that do not have this schema will have their bundles placed in the core “streaming assets” pack. 
 6. In the “Content Packing & Loading” schema:
   1. Make sure the “Build & Load Paths” are set to the default local paths (LocalBuildPath and LocalLoadPath). At runtime we will configure the load paths to use asset pack locations (see InitializeAdressables.cs).
@@ -161,5 +161,5 @@ Setup Instructions:
   1. Make sure that the core Unity asset pack(s) are downloaded.
   2. Configure our custom InternalIdTransformFunc, which converts internal ids to their respective asset pack location.
   3. Then load assets using the Addressables API (we do this in LoadObject.cs).
-9.  When ready to build, select “Build App Bundle (Google Play)” in Build Settings. Then click “Build” to build the Android App Bundle. This will create all of our custom asset packs along with the core unity asset packs.
+9. When ready to build, select “Build App Bundle (Google Play)” in Build Settings. Then click “Build” to build the Android App Bundle. This will create all of our custom asset packs along with the core unity asset packs.
   - If you want to upload the App Bundle to the Google Play Console, make sure that you are doing a release build.
