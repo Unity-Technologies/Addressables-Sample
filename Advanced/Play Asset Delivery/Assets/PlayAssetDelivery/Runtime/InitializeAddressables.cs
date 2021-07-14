@@ -16,12 +16,15 @@ namespace PlayAssetDelivery
     /// </summary>
     public class InitializeAddressables : MonoBehaviour
     {
+        /// <summary>
+        /// Set to true once all core Unity asset packs are downloaded and we have finished configuring our custom Addressables properties. 
+        /// </summary>
         public bool hasInitialized = false;
 
         void Start()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR  
-            // Download the core unity asset packs if needed. Install-time asset packs should be already installed.
+            // Download the core Unity asset packs if needed. Install-time asset packs should be already installed.
             if (AndroidAssetPacks.coreUnityAssetPacksDownloaded)              
                 Setup();
             else
