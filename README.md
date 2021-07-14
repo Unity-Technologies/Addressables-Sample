@@ -131,3 +131,35 @@ This sample shows how to create custom AnalyzeRules for use within the Analyze w
   * This is a fixable rule.  Running fix on it will change addresses to comply with the rule.
   * When run, it first identifies all addresses that seem to be paths.  Of those, it makes sure that the address actually matches the path of the asset.  
   * This would be useful if you primarily left the addresses of your assets as the path (which is the default when marking an asset addressable).  If the asset is moved within the project, then the address no longer maps to where it is. This rule could fix that.
+
+#### *Advanced/Play Asset Delivery*
+An example project that shows how to use Google Play Asset Delivery with Addressables. SampleScene contains 3 buttons that will load or unload an asset that was assigned to an asset pack of a specific delivery type. 
+
+For a high-level introduction see the “Using Addressables with Google Play” page (link to Addressables docs to be added).
+Also see the Play Asset Delivery page in the Unity Manual (link to be added).
+
+Setup Instructions:
+1. In Build Settings set the platform to Android.
+2. Select “split app binary" in Project Settings > Player > Publishing Settings. 
+3. Open the Addressables Groups window (Window > Asset Management > Addressable Groups). 
+4. In the Groups window, Create > Group > Pack Content. 
+5. Specify the asset pack delivery type in the “Play Asset Delivery” schema. 
+  - Be mindful of the size restrictions per delivery mode. 
+  - Any groups that do not have this schema will have their bundles placed in the core “streaming assets” pack. 
+6. In the “Content Packing & Loading” schema:
+  1. Make sure the “Build & Load Paths” are set to the default local paths (LocalBuildPath and LocalLoadPath). At runtime we will configure the load paths to use asset pack locations (see InitializeAdressables.cs).
+  2. Since Google Play handles content delivery, it is not possible to use remote paths or the Content Update workflow. 
+  3. In Advanced Options > Bundle Naming Mode, use either “Filename” or “Append Hash to Filename”. We will use the bundle filename as the asset pack name, which has some naming restrictions: 
+    - All characters in the asset pack name must be alphanumeric or an underscore. 
+    - The first character must be a letter.
+    - Cannot have the same name as a core Unity asset pack.
+  4. In Advanced Options > Asset Bundle Provider use the “Play Asset Delivery Provider”. This will make sure that asset packs are downloaded before loading content from AssetBundles. 
+7. Build addressables using the custom “Play Asset Delivery” build script. In the Addressable Groups Window, do Build > New Build > Play Asset Delivery. This will prepare each bundle file to be placed into its own asset pack. 
+  - Each bundle will be moved to a directory named “{bundle file name}.androidpack” in “Assets/PlayAssetDelivery/AndroidAssetPacks”.
+  - Each directory will also contain a ‘build.gradle’ file that specifies that delivery type for the asset pack. If this file is deleted, Unity will assume that the asset pack’s delivery type is “on-demand”.
+8. See the InitializeAdressables.cs script that prepares Addressables to load content from asset packs at runtime. The basic workflow is:
+  1. Make sure that the core Unity asset pack(s) are downloaded.
+  2. Configure our custom InternalIdTransformFunc, which converts internal ids to their respective asset pack location.
+  3. Then load assets using the Addressables API (we do this in LoadObject.cs).
+9.  When ready to build, select “Build App Bundle (Google Play)” in Build Settings. Then click “Build” to build the Android App Bundle. This will create all of our custom asset packs along with the core unity asset packs.
+  - If you want to upload the App Bundle to the Google Play Console, make sure that you are doing a release build.
