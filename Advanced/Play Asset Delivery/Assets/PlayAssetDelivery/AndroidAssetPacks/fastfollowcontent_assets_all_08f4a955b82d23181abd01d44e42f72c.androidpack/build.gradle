@@ -1,0 +1,8 @@
+apply plugin: 'com.android.asset-pack'
+
+assetPack {
+	packName = "fastfollowcontent_assets_all_08f4a955b82d23181abd01d44e42f72c"
+	dynamicDelivery {
+		deliveryType = "fast-follow"
+	}
+}
