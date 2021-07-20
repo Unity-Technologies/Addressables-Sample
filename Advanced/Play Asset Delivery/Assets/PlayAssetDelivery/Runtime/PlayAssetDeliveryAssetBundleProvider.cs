@@ -3,6 +3,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.IO;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Android;
 using UnityEngine.Networking;
 using UnityEngine.ResourceManagement.ResourceLocations;
@@ -24,11 +25,9 @@ namespace AddressablesPlayAssetDelivery.Editor
             m_ProviderInterface = providerInterface;
             m_AssetPackName = Path.GetFileNameWithoutExtension(m_ProviderInterface.Location.InternalId);
 
-            // Check if the bundle was assigned to an install-time custom asset pack. The APK's StreamingAssets path should contain the bundle.
-            string bundleFileName = Path.GetFileName(providerInterface.Location.InternalId);
-            m_InstallTimePackPath = Path.Combine(Application.streamingAssetsPath, bundleFileName);
-            
-            UnityWebRequest www = UnityWebRequest.Get(m_InstallTimePackPath);
+            // Check if the bundle was assigned to the streaming assets pack. 
+            // The default internal id already points to the 'Application.streamingAssetsPath'.
+            UnityWebRequest www = UnityWebRequest.Get(providerInterface.Location.InternalId);
             www.SendWebRequest().completed += OnWebRequestCompleted;
 #else
             base.Provide(providerInterface);
@@ -55,8 +54,7 @@ namespace AddressablesPlayAssetDelivery.Editor
             UnityWebRequestAsyncOperation webOp = op as UnityWebRequestAsyncOperation;
             if (webOp.webRequest.result == UnityWebRequest.Result.Success)
             {
-                // Located bundle in the APK's StreamingAssets path.
-                PlayerPrefs.SetString(m_AssetPackName, m_InstallTimePackPath);
+                // Located bundle in 'Application.streamingAssetsPath'.
                 base.Provide(m_ProviderInterface);
                 return;
             }

@@ -77,27 +77,19 @@ namespace AddressablesPlayAssetDelivery
         {
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-            string filename = Path.GetFileName(location.InternalId);
-
             if (location.ResourceType == typeof(IAssetBundleResource))
             {
                 string assetPackName = Path.GetFileNameWithoutExtension(location.InternalId);
                 if (PlayerPrefs.HasKey(assetPackName))
                 {
-                    // Load bundle from a custom asset pack. PlayAssetDeliveryBundleProvider.Provider previously stored its path.
+                    // Load bundle from a custom fast-follow or on-demand asset pack. 
+                    // PlayAssetDeliveryBundleProvider.Provider previously stored its path to PlayerPrefs.
                     return PlayerPrefs.GetString(assetPackName);
                 }
             }
-
-            string streamingAssetsPackPath = AndroidAssetPacks.GetAssetPackPath("UnityStreamingAssetsPack");
-            if (!string.IsNullOrEmpty(streamingAssetsPackPath))
-            {
-                // Load resource from a fast-follow or on-demand 'UnityStreamingAssetsPack'.
-                return Path.Combine(streamingAssetsPackPath, filename);
-            }
             
-            // Load resource that was assigned to an install-time core Unity asset pack. 
-            // The pack's contents should be installed in the 'aa/Android' folder in the APK's StreamingAssets path.
+            // Load resource that was assigned to the streaming assets pack.
+            // The default internal id already points to the 'Application.streamingAssetsPath'.
             return location.InternalId;
 #else
             // Load from the 'Assets/PlayAssetDelivery/AndroidAssetsPacks' folder

@@ -139,16 +139,17 @@ For a high-level introduction see the “Addressable Asset system with Google Pl
 Also see the [Play Asset Delivery](https://docs.unity3d.com/Manual/play-asset-delivery.html) page in the Unity Manual.
 
 Setup Instructions:
-1. Configure Unity to build Android App Bundles and split the application binary. For more information see the ["Using Play Asset Delivery"](https://docs.unity3d.com/Manual/play-asset-delivery.html#using-play-asset-delivery) section in the Unity Manual.
+1. Configure Unity to build Android App Bundles and split the application binary. For more information see ["Using Play Asset Delivery"](https://docs.unity3d.com/Manual/play-asset-delivery.html#using-play-asset-delivery).
   1. In File > Build Settings:
     - Set the Platform to Android.
     - If Export Project is enabled, enable Export for App Bundle. Otherwise, enable Build App Bundle (Google Play).
   2. Select Split Application Binary" in Edit > Project Settings > Player > Publishing Settings.
-3. Open the Addressables Groups window (Window > Asset Management > Addressable Groups). 
+3. Open the Addressables Groups window (Window > Asset Management > Addressables Groups). 
 4. In the Groups window toolbar, select Create > Group > Pack Content to create a new group. 
 5. Specify the asset pack delivery type in the “Play Asset Delivery” schema. 
   - Be mindful of the [size restrictions per delivery mode](https://developer.android.com/guide/playcore/asset-delivery#flexible-delivery-modes). 
-  - Any groups that do not have this schema will have their bundles assigned to a core Unity assets pack. 
+  - Any groups that do not have this schema or use "install-time" delivery will have their bundles assigned to streaming assets pack. By default Addressables will temporarily move all built content to 'Assets/StreamingAssets' at build time.
+  - In most cases the streaming assets pack will use "install-time" delivery, but in large projects it may use "fast-follow" delivery instead. For more information see ["Generated Asset Packs"](https://docs.unity3d.com/Manual/play-asset-delivery.html#generated-asset-packs).
 6. In the “Content Packing & Loading” schema:
   1. Make sure the “Build & Load Paths” are set to the default local paths (LocalBuildPath and LocalLoadPath). At runtime we will configure the load paths to use asset pack locations (see InitializeAdressables.cs).
     - Since Google Play handles content delivery, it is not possible to use remote paths or the Content Update workflow. 
@@ -157,9 +158,9 @@ Setup Instructions:
     - The first character must be a letter.
     - Cannot have the same name as a core Unity asset pack.
   3. In Advanced Options > Asset Bundle Provider use the “Play Asset Delivery Provider”. This will make sure that asset packs are downloaded before loading content from AssetBundles. 
-7. Build Addressables using the custom “Play Asset Delivery” build script. In the Addressable Groups Window, do Build > New Build > Play Asset Delivery. This will prepare each bundle file to be assigned to its own asset pack. 
+7. Build Addressables using the custom “Play Asset Delivery” build script. In the Addressablse Groups Window, do Build > New Build > Play Asset Delivery. This will prepare each bundle file to be assigned to its own asset pack. 
   - Each bundle will be moved to a directory named “{bundle file name}.androidpack” in “Assets/PlayAssetDelivery/AndroidAssetPacks”.
-  - Each directory will also contain a ‘build.gradle’ file that specifies that delivery type for the asset pack. If this file is deleted, Unity will assume that the asset pack’s delivery type is “on-demand”.
+  - Each directory will also contain a ‘build.gradle’ file that specifies that delivery type for the asset pack. If this file is missing, Unity will assume that the asset pack’s delivery type is “on-demand”.
 8. See the InitializeAdressables.cs script that prepares Addressables to load content from asset packs at runtime. The basic workflow is:
   1. Make sure that the core Unity asset pack(s) are downloaded.
   2. Configure our custom InternalIdTransformFunc, which converts internal ids to their respective asset pack location.

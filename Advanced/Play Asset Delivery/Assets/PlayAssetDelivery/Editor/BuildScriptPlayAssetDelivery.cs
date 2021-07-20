@@ -75,7 +75,17 @@ namespace AddressablesPlayAssetDelivery.Editor
                     continue;
                 }
 
-                foreach (var entry in group.entries)
+                // We assign any content marked for install-time delivery to the streaming assets pack.
+                // In most cases the streaming assets pack will use install-time delivery, but in large projects
+                // it may use fast-follow delivery instead.
+                // For more information see https://docs.unity3d.com/Manual/play-asset-delivery.html#generated-asset-packs.
+                //
+                // At build time the AddressablesAssetPostProcessor will temporarily move all content in 
+                // 'Library/com.unity.addressables' to 'Assets/StreamingAssets', so we don't need to do any extra steps here. 
+                if (assetPackSchema.DeliveryType == DeliveryType.InstallTime)
+                    continue;
+
+                foreach (AddressableAssetEntry entry in group.entries)
                 {
                     if (bundlefileId.Contains(entry.BundleFileId))
                         continue;
@@ -100,8 +110,8 @@ namespace AddressablesPlayAssetDelivery.Editor
         {
             if(schema.DeliveryType == DeliveryType.None)
             {
-                return $"Group '{assetGroup.name}' has a '{typeof(PlayAssetDeliverySchema).Name}' but the Delivery type is set to 'None'. " +
-                    $"No gradle file will be created for asset packs in this group. Unity assumes that any custom asset packs with no gradle file use on-demand delivery.";
+                Addressables.LogWarning($"Group '{assetGroup.name}' has a '{typeof(PlayAssetDeliverySchema).Name}' but the Delivery type is set to 'None'. " +
+                    $"No gradle file will be created for asset packs in this group. Unity assumes that any custom asset packs with no gradle file use on-demand delivery.");
             }
             if (!assetGroup.HasSchema<BundledAssetGroupSchema>())
             {
@@ -137,7 +147,7 @@ namespace AddressablesPlayAssetDelivery.Editor
                 Addressables.LogWarning($"Custom asset pack at '{androidPackFolder}' contains {gradleFiles.Count} files with .gradle extension which will be ignored. " +
                     $"Only the 'build.gradle' file will be included in the Android App Bundle.");
 
-            // Skip creating the 'build.gradle' file for asset packs with no delivery type.
+            // Skip creating the 'build.gradle' file for asset packs with no specified delivery type.
             if (deliveryType == DeliveryType.None)
                 return androidPackFolder;
             
