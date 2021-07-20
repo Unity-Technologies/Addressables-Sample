@@ -76,12 +76,12 @@ namespace AddressablesPlayAssetDelivery.Editor
                 }
 
                 // We assign any content marked for install-time delivery to the streaming assets pack.
-                // In most cases the streaming assets pack will use install-time delivery, but in large projects
-                // it may use fast-follow delivery instead.
+                // In most cases the streaming assets pack will use "install-time" delivery, but in large projects
+                // it may use "fast-follow" delivery instead.
                 // For more information see https://docs.unity3d.com/Manual/play-asset-delivery.html#generated-asset-packs.
                 //
-                // At build time the AddressablesAssetPostProcessor will temporarily move all content in 
-                // 'Library/com.unity.addressables' to 'Assets/StreamingAssets', so we don't need to do any extra steps here. 
+                // At build time the AddressablesAssetPostProcessor will temporarily move all built content to 'Assets/StreamingAssets', 
+                // so we don't need to do any extra steps here. 
                 if (assetPackSchema.DeliveryType == DeliveryType.InstallTime)
                     continue;
 

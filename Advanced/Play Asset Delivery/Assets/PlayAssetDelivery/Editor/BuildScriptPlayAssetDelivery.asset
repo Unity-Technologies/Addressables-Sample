@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c53f5bc006d724442a74da61c556f1b8, type: 3}
-  m_Name: BuildScriptInherited
+  m_Name: BuildScriptPlayAssetDelivery
   m_EditorClassIdentifier: 
   instanceProviderType:
     m_AssemblyName: Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null

@@ -16,7 +16,6 @@ namespace AddressablesPlayAssetDelivery.Editor
     {
         ProvideHandle m_ProviderInterface;
         string m_AssetPackName;
-        string m_InstallTimePackPath;
 
         public override void Provide(ProvideHandle providerInterface)
         {
@@ -45,7 +44,6 @@ namespace AddressablesPlayAssetDelivery.Editor
             if(!string.IsNullOrEmpty(m_AssetPackName))
                 PlayerPrefs.DeleteKey(m_AssetPackName);
             m_AssetPackName = null;
-            m_InstallTimePackPath = null;
             m_ProviderInterface = default;
         }
 
