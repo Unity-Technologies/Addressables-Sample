@@ -14,7 +14,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.AddressableAssets.Initialization;
 
-namespace PlayAssetDelivery.Editor
+namespace AddressablesPlayAssetDelivery.Editor
 {
     /// <summary>
     /// In addition to the Default Build Script behavior (building AssetBundles), this script creates prepares bundled content for asset pack creation.
@@ -68,10 +68,10 @@ namespace PlayAssetDelivery.Editor
                     continue;
 
                 var assetPackSchema = group.GetSchema<PlayAssetDeliverySchema>();
-                string errorString = ValidateAssetPackGroupSchema(assetPackSchema, group);
-                if (!string.IsNullOrEmpty(errorString))
+                string warningString = ValidateAssetPackGroupSchema(assetPackSchema, group);
+                if (!string.IsNullOrEmpty(warningString))
                 {
-                    Addressables.LogWarning(errorString);
+                    Addressables.LogWarning(warningString);
                     continue;
                 }
 
@@ -101,7 +101,7 @@ namespace PlayAssetDelivery.Editor
             if(schema.DeliveryType == DeliveryType.None)
             {
                 return $"Group '{assetGroup.name}' has a '{typeof(PlayAssetDeliverySchema).Name}' but the Delivery type is set to 'None'. " +
-                    $"No asset packs will be configured for this group.";
+                    $"No gradle file will be created for asset packs in this group. Unity assumes that any custom asset packs with no gradle file use on-demand delivery.";
             }
             if (!assetGroup.HasSchema<BundledAssetGroupSchema>())
             {
@@ -136,7 +136,11 @@ namespace PlayAssetDelivery.Editor
             if (gradleFiles.Count > 0)
                 Addressables.LogWarning($"Custom asset pack at '{androidPackFolder}' contains {gradleFiles.Count} files with .gradle extension which will be ignored. " +
                     $"Only the 'build.gradle' file will be included in the Android App Bundle.");
-        
+
+            // Skip creating the 'build.gradle' file for asset packs with no delivery type.
+            if (deliveryType == DeliveryType.None)
+                return androidPackFolder;
+            
             // Create the 'build.gradle' file in the .androidpack directory
             string deliveryTypeString = k_DeliveryTypeToString[deliveryType].Name;
             string buildFilePath = Path.Combine(androidPackFolder, "build.gradle");

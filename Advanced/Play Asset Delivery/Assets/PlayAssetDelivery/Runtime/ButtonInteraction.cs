@@ -5,9 +5,9 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-namespace PlayAssetDelivery
+namespace AddressablesPlayAssetDelivery
 {
-    public class LoadObject : MonoBehaviour
+    public class ButtonInteraction : MonoBehaviour
     {
         public InitializeAddressables script;
         public AssetReference reference;
@@ -16,7 +16,7 @@ namespace PlayAssetDelivery
         bool isLoading = false;
         GameObject obj = null;
 
-        public void Load()
+        public void OnButtonClicked()
         {
             if (!script.hasInitialized)
                 Debug.LogError("Not finished initializing.");
@@ -31,7 +31,7 @@ namespace PlayAssetDelivery
                 }
                 else
                 {
-                    // Destroy the object
+                    // Unload the object
                     Addressables.ReleaseInstance(obj);
                     obj = null;
                 }

@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 using UnityEngine.ResourceManagement.ResourceLocations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 
-namespace PlayAssetDelivery.Editor
+namespace AddressablesPlayAssetDelivery.Editor
 {
     [DisplayName("Play Asset Delivery Provider")]
     public class PlayAssetDeliveryAssetBundleProvider : AssetBundleProvider

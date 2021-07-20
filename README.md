@@ -136,11 +136,14 @@ This sample shows how to create custom AnalyzeRules for use within the Analyze w
 An example project that shows how to use Google Play Asset Delivery with Addressables. SampleScene contains 3 buttons that will load or unload an asset that was assigned to an asset pack of a specific delivery type. 
 
 For a high-level introduction see the “Addressable Asset system with Google Play Asset Delivery” page (link to Addressables docs to be added).
-Also see the Play Asset Delivery page in the Unity Manual (link to be added).
+Also see the [Play Asset Delivery](https://docs.unity3d.com/Manual/play-asset-delivery.html) page in the Unity Manual.
 
 Setup Instructions:
-1. In Build Settings set the platform to Android.
-2. Select “split app binary" in Project Settings > Player > Publishing Settings. 
+1. Configure Unity to build Android App Bundles and split the application binary. For more information see the ["Using Play Asset Delivery"](https://docs.unity3d.com/Manual/play-asset-delivery.html#using-play-asset-delivery) section in the Unity Manual.
+  1. In File > Build Settings:
+    - Set the Platform to Android.
+    - If Export Project is enabled, enable Export for App Bundle. Otherwise, enable Build App Bundle (Google Play).
+  2. Select Split Application Binary" in Edit > Project Settings > Player > Publishing Settings.
 3. Open the Addressables Groups window (Window > Asset Management > Addressable Groups). 
 4. In the Groups window toolbar, select Create > Group > Pack Content to create a new group. 
 5. Specify the asset pack delivery type in the “Play Asset Delivery” schema. 
@@ -161,5 +164,5 @@ Setup Instructions:
   1. Make sure that the core Unity asset pack(s) are downloaded.
   2. Configure our custom InternalIdTransformFunc, which converts internal ids to their respective asset pack location.
   3. Then load assets using the Addressables API (we do this in LoadObject.cs).
-9. When ready to build, select “Build App Bundle (Google Play)” in Build Settings. Then click “Build”. This will create all of our custom asset packs along with the core unity asset packs.
+9. When ready to build the Android App Bundle, open File > Build Settings and click “Build”. This will create all of our custom asset packs along with the core Unity asset packs.
   - If you want to upload the App Bundle to the Google Play Console, make sure that you are doing a release build.

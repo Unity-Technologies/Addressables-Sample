@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.IO;
-using PlayAssetDelivery.Editor;
+using AddressablesPlayAssetDelivery.Editor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Android;
@@ -9,7 +9,7 @@ using UnityEngine.Networking;
 using UnityEngine.ResourceManagement.ResourceLocations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 
-namespace PlayAssetDelivery
+namespace AddressablesPlayAssetDelivery
 {
     /// <summary>
     /// Set up Addressables to locate content in asset packs.

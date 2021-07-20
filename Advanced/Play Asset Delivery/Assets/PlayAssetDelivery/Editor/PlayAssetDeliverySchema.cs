@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEngine;
 
-namespace PlayAssetDelivery.Editor
+namespace AddressablesPlayAssetDelivery.Editor
 {
     /// <summary>
     /// Serializable representation of 'Unity.Android.Types.AndroidAssetPackDeliveryType'.

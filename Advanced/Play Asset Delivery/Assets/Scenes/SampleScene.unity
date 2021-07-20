@@ -387,8 +387,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 578327988}
-        m_TargetAssemblyTypeName: PlayAssetDelivery.LoadObject, PlayAssetDelivery
-        m_MethodName: Load
+        m_TargetAssemblyTypeName: AddressablesPlayAssetDelivery.ButtonInteraction,
+          Addressables.PlayAssetDelivery
+        m_MethodName: OnButtonClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -867,8 +868,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1193909908}
-        m_TargetAssemblyTypeName: PlayAssetDelivery.LoadObject, PlayAssetDelivery
-        m_MethodName: Load
+        m_TargetAssemblyTypeName: AddressablesPlayAssetDelivery.ButtonInteraction,
+          Addressables.PlayAssetDelivery
+        m_MethodName: OnButtonClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1183,8 +1185,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1585839962}
-        m_TargetAssemblyTypeName: PlayAssetDelivery.LoadObject, PlayAssetDelivery
-        m_MethodName: Load
+        m_TargetAssemblyTypeName: AddressablesPlayAssetDelivery.ButtonInteraction,
+          Addressables.PlayAssetDelivery
+        m_MethodName: OnButtonClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
