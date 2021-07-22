@@ -81,7 +81,7 @@ namespace AddressablesPlayAssetDelivery
             else
             {
                 string contents = www.downloadHandler.text;
-                CustomAssetPacksData customPackData =  JsonUtility.FromJson<CustomAssetPacksData>(contents);
+                CustomAssetPackData customPackData =  JsonUtility.FromJson<CustomAssetPackData>(contents);
                 foreach(CustomAssetPackDataEntry entry in customPackData.Entries)
                 {
                     foreach(string bundle in entry.AssetBundles)

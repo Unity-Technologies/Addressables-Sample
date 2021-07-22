@@ -159,7 +159,7 @@ namespace AddressablesPlayAssetDelivery.Editor
         
         void SerializeCustomAssetPacksData(List<CustomAssetPackDataEntry> entries)
         {
-            var customPackData = new CustomAssetPacksData(entries);
+            var customPackData = new CustomAssetPackData(entries);
             string contents = JsonUtility.ToJson(customPackData);
 
             if (!Directory.Exists(Application.streamingAssetsPath))

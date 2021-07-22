@@ -21,11 +21,11 @@ namespace AddressablesPlayAssetDelivery
     }
 
     [Serializable]
-    public class CustomAssetPacksData
+    public class CustomAssetPackData
     {
         public List<CustomAssetPackDataEntry> Entries;
 
-        public CustomAssetPacksData(List<CustomAssetPackDataEntry> entries)
+        public CustomAssetPackData(List<CustomAssetPackDataEntry> entries)
         {
             Entries = new List<CustomAssetPackDataEntry>(entries);
         }
