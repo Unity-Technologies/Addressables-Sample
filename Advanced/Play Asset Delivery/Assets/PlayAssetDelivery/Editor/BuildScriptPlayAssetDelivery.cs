@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using Unity.Android.Types;
 using UnityEditor;
-using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.Build.DataBuilders;
 using UnityEditor.AddressableAssets.Settings;
@@ -17,14 +14,18 @@ using UnityEngine.AddressableAssets.Initialization;
 namespace AddressablesPlayAssetDelivery.Editor
 {
     /// <summary>
-    /// In addition to the Default Build Script behavior (building AssetBundles), this script creates prepares bundled content for asset pack creation.
-    /// When building an Android App Bundle, any content in a folder with a .androidpack extension (located anywhere in the Assets folder) will be placed into an asset pack. 
-    /// The .androidpack folder can contain a gradle file, specifically named 'build.gradle' to specify the asset pack settings (i.e. delivery type).
+    /// In addition to the Default Build Script behavior (building AssetBundles), this script creates prepares bundled content for custom asset pack creation
+    /// https://docs.unity3d.com/Manual/play-asset-delivery.html#custom-asset-packs. 
     /// 
-    /// This build script uses the bundle filename as the asset pack name. Each bundle will be moved into a {bundle filename}.androidpack folder located in 'Assets/AndroidAssetPacks'.
-    /// A 'build.gradle' file will also be created in each {bundle filename}.androidpack folder.
+    /// At build time the AddressablesAssetPostProcessor will temporarily move all built content to 'Assets/StreamingAssets'.
+    /// This means that any Addressables content will be automatically be included in the streaming assets pack even if they are not assigned to a custom asset pack. 
     /// 
-    /// If you want to manually create your own .androidpack folders or 'build.gradle' files, use the Default Build Script instead. 
+    /// We also assign any content marked for install-time delivery to the streaming assets pack. In most cases the streaming assets pack will use "install-time" delivery, 
+    /// but in large projects it may use "fast-follow" delivery instead. For more information see https://docs.unity3d.com/Manual/play-asset-delivery.html#generated-asset-packs.
+    ///  
+    /// For other delivery types bundles will be moved into a {asset pack name}.androidpack folder located in 'Assets/PlayAssetDelivery/CustomAssetPackContent'.
+    /// A 'build.gradle' file will also be created in each .androidpack folder unless the delivery type is set to "none". 
+    /// In this case Unity automatically assumes that any asset packs without a 'build.gradle' file use "on-demand" delivery.
     /// </summary>
     [CreateAssetMenu(fileName = "BuildScriptPlayAssetDelivery.asset", menuName = "Addressables/Custom Build/Play Asset Delivery")]
     public class BuildScriptPlayAssetDelivery : BuildScriptPackedMode
@@ -35,129 +36,136 @@ namespace AddressablesPlayAssetDelivery.Editor
             get { return "Play Asset Delivery"; }
         }
 
-        static string m_AssetPackFolderName = "AndroidAssetPacks";
+        static string m_AssetPackFolderName = "CustomAssetPackContent";
         static string m_RootDirectory = "Assets/PlayAssetDelivery";
-        static string AssetPackRootDirectory
+        static string PackContentRootDirectory
         {
             get { return $"{m_RootDirectory}/{m_AssetPackFolderName}"; }
         }
 
-        static readonly Dictionary<DeliveryType, AndroidAssetPackDeliveryType> k_DeliveryTypeToString = new Dictionary<DeliveryType, AndroidAssetPackDeliveryType>()
-        {
-            { DeliveryType.InstallTime, AndroidAssetPackDeliveryType.InstallTime },
-            { DeliveryType.FastFollow, AndroidAssetPackDeliveryType.FastFollow },
-            { DeliveryType.OnDemand, AndroidAssetPackDeliveryType.OnDemand },
-        };
-
         protected override TResult DoBuild<TResult>(AddressablesDataBuilderInput builderInput, AddressableAssetsBuildContext aaContext)
         {
             TResult result = base.DoBuild<TResult>(builderInput, aaContext);
-
-            var bundlefileId = new HashSet<string>();
             AddressableAssetSettings settings = aaContext.Settings;
-        
-            // Clear out the 'Assets/AndroidAssetPacks' directory
-            if(Directory.Exists(AssetPackRootDirectory))
-                AssetDatabase.DeleteAsset(AssetPackRootDirectory);
+            var assetPackToDataEntry = new Dictionary<string, CustomAssetPackDataEntry>();
+
+            // Reset schema data if the settings file was deleted
+            bool resetSchemaData = !CustomAssetPackSettings.SettingsExists ? true : false;
+
+            List<CustomAssetPackEditorInfo> customAssetPacks = CustomAssetPackSettings.GetSettings().CustomAssetPacks;
+            
+            // Clear out the 'Assets/PlayAssetDelivery/CustomAssetPackContent' directory
+            if(Directory.Exists(PackContentRootDirectory))
+                AssetDatabase.DeleteAsset(PackContentRootDirectory);
             AssetDatabase.CreateFolder(m_RootDirectory, m_AssetPackFolderName);
 
-            // Move bundle files to the 'Assets/AndroidAssetPacks' directory
+            // Create config files for all custom asset packs
+            foreach(CustomAssetPackEditorInfo assetPack in customAssetPacks)
+            {
+                if (assetPack.AssetPackName != CustomAssetPackSettings.k_InstallTimePackName)
+                {
+                    assetPackToDataEntry[assetPack.AssetPackName] = new CustomAssetPackDataEntry(assetPack.AssetPackName, assetPack.DeliveryType, new List<string>());
+                    string androidPackDir = CreateAndroidPackDirectory(assetPack.AssetPackName);
+                    CreateGradleFile(androidPackDir, assetPack.AssetPackName, assetPack.DeliveryType);
+                }
+            }
+
+            // Move bundle files to the 'Assets/PlayAssetDelivery/CustomAssetPackContent' directory
             foreach(AddressableAssetGroup group in settings.groups)
             {
                 if (!group.HasSchema<PlayAssetDeliverySchema>())
+                {
+                    // If creating an Android App Bundle, any Addressables content will be automatically assigned to the streaming assets pack. 
                     continue;
+                }
+                if (!group.HasSchema<BundledAssetGroupSchema>())
+                {
+                    Addressables.LogWarning($"Group '{group.name}' has a '{typeof(PlayAssetDeliverySchema).Name}' but not a '{typeof(BundledAssetGroupSchema).Name}'. " +
+                        $"It does not contain any content to be placed into an asset pack.");
+                    continue;
+                }
 
                 var assetPackSchema = group.GetSchema<PlayAssetDeliverySchema>();
-                string warningString = ValidateAssetPackGroupSchema(assetPackSchema, group);
-                if (!string.IsNullOrEmpty(warningString))
+                if(resetSchemaData)
+                    assetPackSchema.Reset();
+
+                CustomAssetPackEditorInfo assetPack = customAssetPacks[assetPackSchema.AssetPackIndex];
+                if (assetPack.DeliveryType == DeliveryType.InstallTime)
                 {
-                    Addressables.LogWarning(warningString);
+                    // We expect any install-time content to be assigned to the streaming assets pack.
                     continue;
                 }
-
-                // We assign any content marked for install-time delivery to the streaming assets pack.
-                // In most cases the streaming assets pack will use "install-time" delivery, but in large projects
-                // it may use "fast-follow" delivery instead.
-                // For more information see https://docs.unity3d.com/Manual/play-asset-delivery.html#generated-asset-packs.
-                //
-                // At build time the AddressablesAssetPostProcessor will temporarily move all built content to 'Assets/StreamingAssets', 
-                // so we don't need to do any extra steps here. 
-                if (assetPackSchema.DeliveryType == DeliveryType.InstallTime)
-                    continue;
-
-                foreach (AddressableAssetEntry entry in group.entries)
-                {
-                    if (bundlefileId.Contains(entry.BundleFileId))
-                        continue;
-
-                    string bundleBuildPath = AddressablesRuntimeProperties.EvaluateString(entry.BundleFileId);
-                    string assetPackName = Path.GetFileNameWithoutExtension(bundleBuildPath);
-                    string bundlePackDir = CreateAndroidPackDirectory(assetPackName, assetPackSchema.DeliveryType);
-
-                    // Move bundle to the created .androidpack folder
-                    string bundleFileName = Path.GetFileName(bundleBuildPath);
-                    string assetsFolderPath = Path.Combine(bundlePackDir, bundleFileName).Replace("\\", "/");
-                    File.Move(bundleBuildPath, assetsFolderPath);
-
-                    bundlefileId.Add(entry.BundleFileId);
-                }
+                ProcessGroup(group, assetPack.AssetPackName, assetPackToDataEntry);
             }
-
+            
+            // Create the CustomAssetPacksData.json file. It contains all custom asset pack information that can be used at runtime.
+            SerializeCustomAssetPacksData(assetPackToDataEntry.Values.ToList());
             return result;
         }
-
-        string ValidateAssetPackGroupSchema(PlayAssetDeliverySchema schema, AddressableAssetGroup assetGroup)
+        
+        string ConstructAndroidPackDirectoryName(string assetPackName)
         {
-            if(schema.DeliveryType == DeliveryType.None)
-            {
-                Addressables.LogWarning($"Group '{assetGroup.name}' has a '{typeof(PlayAssetDeliverySchema).Name}' but the Delivery type is set to 'None'. " +
-                    $"No gradle file will be created for asset packs in this group. Unity assumes that any custom asset packs with no gradle file use on-demand delivery.");
-            }
-            if (!assetGroup.HasSchema<BundledAssetGroupSchema>())
-            {
-                return $"Group '{assetGroup.name}' has a '{typeof(PlayAssetDeliverySchema).Name}' but not a '{typeof(BundledAssetGroupSchema).Name}'. " +
-                    $"No asset packs will be configured for this group";
-            }
-            var bundledAssetSchema = assetGroup.GetSchema<BundledAssetGroupSchema>();
-            if(bundledAssetSchema.BundleNaming == BundledAssetGroupSchema.BundleNamingStyle.FileNameHash ||
-                bundledAssetSchema.BundleNaming == BundledAssetGroupSchema.BundleNamingStyle.OnlyHash)
-                return $"Group '{assetGroup.name}' Bundle Naming Mode cannot be just a hash. Asset pack naming conventions require the first character to be a letter. " +
-                    $"Please use a different Bundle Naming Mode. No asset packs will be configured for this group.";
-            return string.Empty;
+            return $"{assetPackName}.androidpack";
         }
 
-        string CreateAndroidPackDirectory(string assetPackName, DeliveryType deliveryType)
+        string CreateAndroidPackDirectory(string assetPackName)
         {
-            Regex validAssetPackName = new Regex(@"^[A-Za-z][a-zA-Z0-9_]*$", RegexOptions.Compiled);
-            if (!validAssetPackName.IsMatch(assetPackName))
+            string folderName = ConstructAndroidPackDirectoryName(assetPackName);
+            string androidPackFolder = Path.Combine(PackContentRootDirectory, folderName).Replace("\\", "/");
+            AssetDatabase.CreateFolder(PackContentRootDirectory, folderName);
+            return androidPackFolder;
+        }
+
+        void ProcessGroup(AddressableAssetGroup group, string assetPackName, Dictionary<string, CustomAssetPackDataEntry> assetPackToDataEntry)
+        {
+            foreach (AddressableAssetEntry entry in group.entries)
             {
-                Addressables.LogWarning($"Custom asset pack has an invalid name '{assetPackName}'. All characters in the asset pack name must be alphanumeric or an underscore. " +
-                    $"Also the first character must be a letter. No gradle file will be created for this asset pack.");
-                return "";
+                string bundleBuildPath = AddressablesRuntimeProperties.EvaluateString(entry.BundleFileId);
+                string bundleName = Path.GetFileNameWithoutExtension(bundleBuildPath);
+                string bundlePackDir = Path.Combine(PackContentRootDirectory, ConstructAndroidPackDirectoryName(assetPackName));
+
+                // Save bundle to asset pack data
+                assetPackToDataEntry[assetPackName].AssetBundles.Add(bundleName);
+
+                // Move bundle to the appropriate .androidpack folder
+                string assetsFolderPath = Path.Combine(bundlePackDir, Path.GetFileName(bundleBuildPath));
+                File.Move(bundleBuildPath, assetsFolderPath);
             }
-        
-            // Create the .androidpack directory
-            string folderName = $"{assetPackName}.androidpack";
-            string androidPackFolder = Path.Combine(AssetPackRootDirectory, folderName).Replace("\\", "/");
-            AssetDatabase.CreateFolder(AssetPackRootDirectory, folderName);
+        }
 
-            // Warn about are other gradle files in the .androidpack directory
-            List<string> gradleFiles = Directory.GetFiles(androidPackFolder, "*.gradle").Where(x => Path.GetFileName(x) != "build.gradle").ToList();
+        void CreateGradleFile(string androidPackDir, string assetPackName, DeliveryType deliveryType)
+        {
+            if(deliveryType == DeliveryType.None)
+            {
+                Addressables.LogWarning($"Asset pack '{assetPackName}' has its delivery type set to 'None'. " +
+                $"No gradle file will be created for this asset pack. Unity assumes that any custom asset packs with no gradle file use on-demand delivery.");
+                return;
+            }
+
+            // Warn about other gradle files in the .androidpack directory
+            List<string> gradleFiles = Directory.GetFiles(androidPackDir, "*.gradle").Where(x => Path.GetFileName(x) != "build.gradle").ToList();
             if (gradleFiles.Count > 0)
-                Addressables.LogWarning($"Custom asset pack at '{androidPackFolder}' contains {gradleFiles.Count} files with .gradle extension which will be ignored. " +
+            {
+                Addressables.LogWarning($"Custom asset pack at '{androidPackDir}' contains {gradleFiles.Count} files with .gradle extension which will be ignored. " +
                     $"Only the 'build.gradle' file will be included in the Android App Bundle.");
-
-            // Skip creating the 'build.gradle' file for asset packs with no specified delivery type.
-            if (deliveryType == DeliveryType.None)
-                return androidPackFolder;
+            }
             
             // Create the 'build.gradle' file in the .androidpack directory
-            string deliveryTypeString = k_DeliveryTypeToString[deliveryType].Name;
-            string buildFilePath = Path.Combine(androidPackFolder, "build.gradle");
+            string deliveryTypeString = CustomAssetPackUtility.DeliveryTypeToGradleString(deliveryType);
+            string buildFilePath = Path.Combine(androidPackDir, "build.gradle");
             string content = $"apply plugin: 'com.android.asset-pack'\n\nassetPack {{\n\tpackName = \"{assetPackName}\"\n\tdynamicDelivery {{\n\t\tdeliveryType = \"{deliveryTypeString}\"\n\t}}\n}}";
             File.WriteAllText(buildFilePath, content);
+        }
+        
+        void SerializeCustomAssetPacksData(List<CustomAssetPackDataEntry> entries)
+        {
+            var customPackData = new CustomAssetPacksData(entries);
+            string contents = JsonUtility.ToJson(customPackData);
 
-            return androidPackFolder;
+            if (!Directory.Exists(Application.streamingAssetsPath))
+                Directory.CreateDirectory(Application.streamingAssetsPath);
+            string path = Path.Combine(Application.streamingAssetsPath, "CustomAssetPacksData.json");
+            File.WriteAllText(path, contents);
         }
     }
 }

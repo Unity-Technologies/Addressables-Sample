@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -9,7 +7,6 @@ namespace AddressablesPlayAssetDelivery
 {
     public class ButtonInteraction : MonoBehaviour
     {
-        public InitializeAddressables script;
         public AssetReference reference;
         public Transform parent;
 
@@ -18,7 +15,7 @@ namespace AddressablesPlayAssetDelivery
 
         public void OnButtonClicked()
         {
-            if (!script.hasInitialized)
+            if (!AddressablesInitSingleton.Instance.HasInitialized)
                 Debug.LogError("Not finished initializing.");
             else if (isLoading)
                 Debug.LogError("Loading operation currently in progress.");

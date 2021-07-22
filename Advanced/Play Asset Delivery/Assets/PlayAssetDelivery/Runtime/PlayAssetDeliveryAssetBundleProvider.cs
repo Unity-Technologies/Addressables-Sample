@@ -1,33 +1,46 @@
 using System;
-using System.Collections;
 using System.ComponentModel;
 using System.IO;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.Android;
-using UnityEngine.Networking;
 using UnityEngine.ResourceManagement.ResourceLocations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 
 namespace AddressablesPlayAssetDelivery.Editor
 {
+    /// <summary>
+    /// Ensures that the asset pack containing the AssetBundle is installed/downloaded before attemping to load the bundle.
+    /// </summary>
     [DisplayName("Play Asset Delivery Provider")]
     public class PlayAssetDeliveryAssetBundleProvider : AssetBundleProvider
     {
         ProvideHandle m_ProviderInterface;
-        string m_AssetPackName;
-
         public override void Provide(ProvideHandle providerInterface)
         {
             Reset();
 #if UNITY_ANDROID && !UNITY_EDITOR
-            m_ProviderInterface = providerInterface;
-            m_AssetPackName = Path.GetFileNameWithoutExtension(m_ProviderInterface.Location.InternalId);
-
-            // Check if the bundle was assigned to the streaming assets pack. 
-            // The default internal id already points to the 'Application.streamingAssetsPath'.
-            UnityWebRequest www = UnityWebRequest.Get(providerInterface.Location.InternalId);
-            www.SendWebRequest().completed += OnWebRequestCompleted;
+            string bundleName = Path.GetFileNameWithoutExtension(providerInterface.Location.InternalId);
+            if (!AddressablesInitSingleton.Instance.BundleNameToAssetPack.ContainsKey(bundleName))
+            {
+                // Bundle is assigned to the streaming assets pack
+                base.Provide(providerInterface);
+            }
+            else
+            {
+                // Bundle is assigned to a custom fast-follow or on-demand asset pack
+                string assetPackName = AddressablesInitSingleton.Instance.BundleNameToAssetPack[bundleName].AssetPackName;
+                if (AddressablesInitSingleton.Instance.AssetPackNameToRemotePath.ContainsKey(assetPackName))
+                {
+                    // Asset pack is already downloaded
+                    base.Provide(providerInterface);
+                }
+                else
+                {
+                    // Download the asset pack
+                    m_ProviderInterface = providerInterface;
+                    DownloadRemoteAssetPack(assetPackName);
+                }
+            }
 #else
             base.Provide(providerInterface);
 #endif
@@ -41,49 +54,21 @@ namespace AddressablesPlayAssetDelivery.Editor
 
         void Reset()
         {
-            if(!string.IsNullOrEmpty(m_AssetPackName))
-                PlayerPrefs.DeleteKey(m_AssetPackName);
-            m_AssetPackName = null;
             m_ProviderInterface = default;
         }
 
-        void OnWebRequestCompleted(UnityEngine.AsyncOperation op)
+        void DownloadRemoteAssetPack(string assetPackName)
         {
-            UnityWebRequestAsyncOperation webOp = op as UnityWebRequestAsyncOperation;
-            if (webOp.webRequest.result == UnityWebRequest.Result.Success)
-            {
-                // Located bundle in 'Application.streamingAssetsPath'.
-                base.Provide(m_ProviderInterface);
-                return;
-            }
-
-            // Otherwise the bundle must be assigned to a fast-follow or on-demand custom asset pack. Check if the pack was installed to the device.
-            //
             // Note that most methods in the AndroidAssetPacks class are either direct wrappers of java APIs in Google's PlayCore plugin,
             // or depend on values that the PlayCore API returns. If the PlayCore plugin is missing, calling these methods will throw an InvalidOperationException exception.
-            // We check for the exception here, once.
-            string assetPackPath = "";
             try
             {
-                assetPackPath = AndroidAssetPacks.GetAssetPackPath(m_AssetPackName);
+                AndroidAssetPacks.DownloadAssetPackAsync(new string[] { assetPackName }, CheckDownloadStatus);
             }
             catch(InvalidOperationException ioe)
             {
-                Debug.LogError($"Cannot retrieve state for asset pack '{m_AssetPackName}'. PlayCore Plugin is not installed: {ioe.Message}");
+                Debug.LogError($"Cannot retrieve state for asset pack '{assetPackName}'. PlayCore Plugin is not installed: {ioe.Message}");
                 m_ProviderInterface.Complete(this, false, new Exception("exception"));
-            }
-
-            if (string.IsNullOrEmpty(assetPackPath))
-            {
-                // Asset pack is not located on device. Download it from Google Play.
-                AndroidAssetPacks.DownloadAssetPackAsync(new string[] { m_AssetPackName }, CheckDownloadStatus);
-            }
-            else
-            {
-                // Asset pack was located on device. Proceed with loading the bundle.
-                string bundlePath = Path.Combine(assetPackPath, Path.GetFileName(m_ProviderInterface.Location.InternalId));
-                PlayerPrefs.SetString(m_AssetPackName, bundlePath);
-                base.Provide(m_ProviderInterface);
             }
         }
         
@@ -105,8 +90,7 @@ namespace AddressablesPlayAssetDelivery.Editor
                 if (!string.IsNullOrEmpty(assetPackPath))
                 {
                     // Asset pack was located on device. Proceed with loading the bundle.
-                    string bundlePath = Path.Combine(assetPackPath, Path.GetFileName(m_ProviderInterface.Location.InternalId));
-                    PlayerPrefs.SetString(info.name, bundlePath);
+                    AddressablesInitSingleton.Instance.AssetPackNameToRemotePath.Add(info.name, assetPackPath);
                     base.Provide(m_ProviderInterface);
                 }
                 else

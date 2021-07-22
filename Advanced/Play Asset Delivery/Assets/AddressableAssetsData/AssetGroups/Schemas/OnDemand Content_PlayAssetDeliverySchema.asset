@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: OnDemand Content_PlayAssetDeliverySchema
   m_EditorClassIdentifier: 
   m_Group: {fileID: 11400000, guid: 3e845d36e7d162e41b0ef6a48a55909c, type: 2}
-  m_DeliveryType: 3
+  m_AssetPackIndex: 2

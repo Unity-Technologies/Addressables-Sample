@@ -7,73 +7,114 @@ using UnityEngine;
 
 namespace AddressablesPlayAssetDelivery.Editor
 {
-    /// <summary>
-    /// Serializable representation of 'Unity.Android.Types.AndroidAssetPackDeliveryType'.
-    /// </summary>
-    public enum DeliveryType
-    {
-        /// <summary>
-        /// No delivery type specified.
-        /// </summary>
-        None = 0,
-
-        /// <summary>
-        /// Content is downloaded when the app is installed.
-        /// </summary>
-        InstallTime = 1,
-
-        /// <summary>
-        /// Content is downloaded automatically as soon as the the app is installed.
-        /// </summary>
-        FastFollow = 2,
-
-        /// <summary>
-        /// Content is downloaded while the app is running.
-        /// </summary>
-        OnDemand = 3
-    }
-
     [DisplayName("Play Asset Delivery")]
     public class PlayAssetDeliverySchema : AddressableAssetGroupSchema
     {
         [SerializeField]
-        [Tooltip("The delivery type for all asset packs with bundled content from this group. Each pack contains one bundle.")]
-        DeliveryType m_DeliveryType = DeliveryType.InstallTime;
-    
-        /// <summary>
-        /// The delivery type for all asset packs with bundled content from this group. Each pack contains one bundle.
-        /// </summary>
-        public DeliveryType DeliveryType
+        internal int m_AssetPackIndex = 0;
+        public int AssetPackIndex
         {
-            get { return m_DeliveryType; }
+            get 
+            {
+                return m_AssetPackIndex; 
+            }
             set
             {
-                if(m_DeliveryType != value)
+                if(m_AssetPackIndex != value)
                 {
-                    m_DeliveryType = value;
+                    m_AssetPackIndex = value;
                     SetDirty(true);
-                };
+                }
+            }
+        }
+
+        internal CustomAssetPackSettings m_Settings;
+        public CustomAssetPackSettings Settings
+        {
+            get
+            {
+                if (!CustomAssetPackSettings.SettingsExists)
+                    Reset();
+                if (m_Settings == null)
+                {
+                    m_Settings = CustomAssetPackSettings.GetSettings();
+                    if(AssetPackIndex >= m_Settings.CustomAssetPacks.Count)
+                        AssetPackIndex = 0;
+                }
+                return m_Settings;
+            }
+            set
+            {
+                if (m_Settings != value)
+                    m_Settings = value;
+            }
+        }
+
+        public void Reset()
+        {
+            AssetPackIndex = 0;
+            m_Settings = null;
+        }
+
+        void ShowAssetPacks(SerializedObject so, List<AddressableAssetGroupSchema> otherSchemas = null)
+        {
+            List<CustomAssetPackEditorInfo> customAssetPacks = Settings.CustomAssetPacks;
+
+            int current = AssetPackIndex;
+
+            string[] displayOptions = new string[customAssetPacks.Count];
+            for(int i = 0; i < customAssetPacks.Count; i++)
+            {
+                displayOptions[i] = $"{customAssetPacks[i].AssetPackName} ({customAssetPacks[i].DeliveryType})";
+            }
+
+            SerializedProperty prop = so.FindProperty("m_AssetPackIndex");
+            if(otherSchemas != null)
+                ShowMixedValue(prop, otherSchemas, typeof(int), "m_AssetPackIndex");
+
+            EditorGUI.BeginChangeCheck();
+            var newIndex = EditorGUILayout.Popup("Asset Pack", current, displayOptions);
+            if (EditorGUI.EndChangeCheck())
+            {
+                AssetPackIndex = newIndex;
+                CustomAssetPackEditorInfo newPack = customAssetPacks[AssetPackIndex];
+                if(otherSchemas != null)
+                {
+                    foreach (AddressableAssetGroupSchema s in otherSchemas)
+                    {
+                        PlayAssetDeliverySchema padSchema = s as PlayAssetDeliverySchema;
+                        padSchema.AssetPackIndex = newIndex;
+                    }
+                }
+            }
+            if(otherSchemas != null)
+                EditorGUI.showMixedValue = false;
+                
+            using (new GUILayout.HorizontalScope())
+            {
+                GUILayout.FlexibleSpace();
+                if (GUILayout.Button("Manage Asset Packs", "Minibutton"))
+                {
+                    EditorGUIUtility.PingObject(Settings);
+                    Selection.activeObject = Settings;
+                }
             }
         }
         
         /// <inheritdoc/>
+        public override void OnGUI()
+        {
+            var so = new SerializedObject(this);
+            ShowAssetPacks(so);
+            so.ApplyModifiedProperties();
+        }
+
+        /// <inheritdoc/>
         public override void OnGUIMultiple(List<AddressableAssetGroupSchema> otherSchemas)
         {
             var so = new SerializedObject(this);
-            var prop = so.FindProperty("m_DeliveryType");
-
-            ShowMixedValue(prop, otherSchemas, typeof(bool), "m_DeliveryType");
-            EditorGUI.BeginChangeCheck();
-            DeliveryType current = m_DeliveryType;
-            var newType = (DeliveryType)EditorGUILayout.EnumPopup("Delivery Type", current);
-            if (EditorGUI.EndChangeCheck())
-            {
-                DeliveryType = newType;
-                foreach (var s in otherSchemas)
-                    (s as PlayAssetDeliverySchema).DeliveryType = newType;
-            }
-            EditorGUI.showMixedValue = false;
-
+           
+            ShowAssetPacks(so, otherSchemas);
             so.ApplyModifiedProperties();
         }
     }
