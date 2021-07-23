@@ -57,7 +57,7 @@ namespace AddressablesPlayAssetDelivery.Editor
             // Clear out the 'Assets/PlayAssetDelivery/CustomAssetPackContent' directory
             if(Directory.Exists(PackContentRootDirectory))
                 AssetDatabase.DeleteAsset(PackContentRootDirectory);
-            AssetDatabase.CreateFolder(PackContentRootDirectory, m_AssetPackFolderName);
+            AssetDatabase.CreateFolder(m_RootDirectory, m_AssetPackFolderName);
 
             // Move bundle files to the 'Assets/PlayAssetDelivery/CustomAssetPackContent' directory
             foreach(AddressableAssetGroup group in settings.groups)
