@@ -40,8 +40,7 @@ namespace AddressablesPlayAssetDelivery.Editor
             float halfW = rect.width * 0.4f;
             CustomAssetPackEditorInfo currentAssetPack = m_Settings.CustomAssetPacks[index];
 
-            if (currentAssetPack.AssetPackName == CustomAssetPackSettings.k_InstallTimePackName)
-                GUI.enabled = false;
+            EditorGUI.BeginDisabledGroup(currentAssetPack.AssetPackName == CustomAssetPackSettings.k_InstallTimePackName);
            
             string oldName = currentAssetPack.AssetPackName;
             var newName = EditorGUI.DelayedTextField(new Rect(rect.x, rect.y, halfW, rect.height), oldName);
@@ -64,8 +63,7 @@ namespace AddressablesPlayAssetDelivery.Editor
             if (oldType != newType)
                 currentAssetPack.DeliveryType = newType;
             
-            if (currentAssetPack.AssetPackName == CustomAssetPackSettings.k_InstallTimePackName)
-                GUI.enabled = true;
+            EditorGUI.EndDisabledGroup();
         }
 
         bool IsDeliveryTypeEnabled(Enum e)

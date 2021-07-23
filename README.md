@@ -147,7 +147,7 @@ Setup Instructions:
   1. In File > Build Settings:
     - Set the Platform to Android.
     - If "Export Project is enabled", enable "Export for App Bundle". Otherwise, enable "Build App Bundle (Google Play)".
-  2. Select Split Application Binary" in Edit > Project Settings > Player > Publishing Settings.
+  2. If you want any bundled content to use "install-time" delivery, select "Split Application Binary" in Edit > Project Settings > Player > Publishing Settings.
 3. Open the Addressables Groups window (Window > Asset Management > Addressables Groups). 
 4. In the Groups window toolbar, select Create > Group > Asset Pack Content to create a new group. 
 5. Specify the assigned asset pack in “Play Asset Delivery” schema. Select "Manage Asset Packs" to modify custom asset packs.
