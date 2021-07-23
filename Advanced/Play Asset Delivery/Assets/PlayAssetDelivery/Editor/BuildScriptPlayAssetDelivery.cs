@@ -59,17 +59,6 @@ namespace AddressablesPlayAssetDelivery.Editor
                 AssetDatabase.DeleteAsset(PackContentRootDirectory);
             AssetDatabase.CreateFolder(m_RootDirectory, m_AssetPackFolderName);
 
-            // Create config files for all custom asset packs
-            foreach(CustomAssetPackEditorInfo assetPack in customAssetPacks)
-            {
-                if (assetPack.AssetPackName != CustomAssetPackSettings.k_InstallTimePackName)
-                {
-                    assetPackToDataEntry[assetPack.AssetPackName] = new CustomAssetPackDataEntry(assetPack.AssetPackName, assetPack.DeliveryType, new List<string>());
-                    string androidPackDir = CreateAndroidPackDirectory(assetPack.AssetPackName);
-                    CreateGradleFile(androidPackDir, assetPack.AssetPackName, assetPack.DeliveryType);
-                }
-            }
-
             // Move bundle files to the 'Assets/PlayAssetDelivery/CustomAssetPackContent' directory
             foreach(AddressableAssetGroup group in settings.groups)
             {
@@ -84,18 +73,19 @@ namespace AddressablesPlayAssetDelivery.Editor
                         $"It does not contain any content to be placed into an asset pack.");
                     continue;
                 }
-
+                
                 var assetPackSchema = group.GetSchema<PlayAssetDeliverySchema>();
                 if(resetSchemaData)
                     assetPackSchema.Reset();
-
+                
+                // Create config files for custom asset pack
                 CustomAssetPackEditorInfo assetPack = customAssetPacks[assetPackSchema.AssetPackIndex];
                 if (assetPack.DeliveryType == DeliveryType.InstallTime)
                 {
                     // We expect any install-time content to be assigned to the streaming assets pack.
                     continue;
                 }
-                ProcessGroup(group, assetPack.AssetPackName, assetPackToDataEntry);
+                ProcessGroup(group, assetPack.AssetPackName, assetPack.DeliveryType, assetPackToDataEntry);
             }
             
             // Create the CustomAssetPacksData.json file. It contains all custom asset pack information that can be used at runtime.
@@ -116,7 +106,7 @@ namespace AddressablesPlayAssetDelivery.Editor
             return androidPackFolder;
         }
 
-        void ProcessGroup(AddressableAssetGroup group, string assetPackName, Dictionary<string, CustomAssetPackDataEntry> assetPackToDataEntry)
+        void ProcessGroup(AddressableAssetGroup group, string assetPackName, DeliveryType deliveryType, Dictionary<string, CustomAssetPackDataEntry> assetPackToDataEntry)
         {
             foreach (AddressableAssetEntry entry in group.entries)
             {
@@ -124,8 +114,18 @@ namespace AddressablesPlayAssetDelivery.Editor
                 string bundleName = Path.GetFileNameWithoutExtension(bundleBuildPath);
                 string bundlePackDir = Path.Combine(PackContentRootDirectory, ConstructAndroidPackDirectoryName(assetPackName));
 
-                // Save bundle to asset pack data
-                assetPackToDataEntry[assetPackName].AssetBundles.Add(bundleName);
+                if(!assetPackToDataEntry.ContainsKey(assetPackName))
+                {
+                    // Create .androidpack directory and gradle file for the asset pack
+                    assetPackToDataEntry[assetPackName] = new CustomAssetPackDataEntry(assetPackName, deliveryType, new List<string>() { bundleName });
+                    string androidPackDir = CreateAndroidPackDirectory(assetPackName);
+                    CreateGradleFile(androidPackDir, assetPackName, deliveryType);
+                }
+                else
+                {
+                    // Otherwise just save the bundle to asset pack data
+                    assetPackToDataEntry[assetPackName].AssetBundles.Add(bundleName);
+                }
 
                 // Move bundle to the appropriate .androidpack folder
                 string assetsFolderPath = Path.Combine(bundlePackDir, Path.GetFileName(bundleBuildPath));
