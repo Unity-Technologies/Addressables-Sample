@@ -103,8 +103,7 @@ namespace AddressablesPlayAssetDelivery.Editor
                 settings = AssetDatabase.LoadAssetAtPath<CustomAssetPackSettings>(k_DefaultSettingsPath);
 
                 // Entry used for all content marked for install-time delivery
-                var installTimePackLocation = new CustomAssetPackEditorInfo(k_InstallTimePackName, DeliveryType.InstallTime);
-                settings.CustomAssetPacks.Add(installTimePackLocation);
+                settings.AddCustomAssetPack(k_InstallTimePackName, DeliveryType.InstallTime);
 
                 AssetDatabase.SaveAssets();
             }
