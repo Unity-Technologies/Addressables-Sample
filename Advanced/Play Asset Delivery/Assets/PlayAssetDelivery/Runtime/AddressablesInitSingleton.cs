@@ -137,11 +137,12 @@ namespace AddressablesPlayAssetDelivery
                 }
             }
             
-            // Load resource that was assigned to the streaming assets pack.
-            // The default internal id already points to the 'Application.streamingAssetsPath'.
+            // Load resource from the default location. If the resource was assigned to the streaming assets pack, the default internal id 
+            // already points to 'Application.streamingAssetsPath'.
             return location.InternalId;
 #else
-            // Load bundle from the 'Assets/PlayAssetDelivery/CustomAssetPackContent' folder
+            // Load bundle from the 'Assets/PlayAssetDelivery/CustomAssetPackContent' folder. 
+            // Only "fast-follow" or "on-demand custom" asset pack content will be located here.
             if (location.ResourceType == typeof(IAssetBundleResource))
             {
                 string bundleName = Path.GetFileNameWithoutExtension(location.InternalId);
@@ -155,7 +156,7 @@ namespace AddressablesPlayAssetDelivery
                 }
             }
 
-            // Load resource from the 'Library/com.unity.addressables' folder
+            // Load resource from the default location.
             return location.InternalId;
 #endif
         }
