@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-#if UNITY_EDITOR
+#if UNITY_EDITOR && UNITY_2021_2_OR_NEWER
 using Unity.Android.Types;
 #endif
 
@@ -30,10 +30,11 @@ namespace AddressablesPlayAssetDelivery
         /// </summary>
         OnDemand = 3
     }
-    
+
     public class CustomAssetPackUtility
     {
 #if UNITY_EDITOR
+#if UNITY_2021_2_OR_NEWER
         static readonly Dictionary<DeliveryType, AndroidAssetPackDeliveryType> k_DeliveryTypeToGradleString = new Dictionary<DeliveryType, AndroidAssetPackDeliveryType>()
         {
             { DeliveryType.InstallTime, AndroidAssetPackDeliveryType.InstallTime },
@@ -45,6 +46,19 @@ namespace AddressablesPlayAssetDelivery
         {
             return k_DeliveryTypeToGradleString[deliveryType].Name;
         }
+#else
+        static readonly Dictionary<DeliveryType, string> k_DeliveryTypeToGradleString = new Dictionary<DeliveryType, string>()
+        {
+            { DeliveryType.InstallTime, "install-time" },
+            { DeliveryType.FastFollow, "fast-follow" },
+            { DeliveryType.OnDemand, "on-demand" },
+        };
+
+        public static string DeliveryTypeToGradleString(DeliveryType deliveryType)
+        {
+            return k_DeliveryTypeToGradleString[deliveryType];
+        }
+#endif
 #endif
     }
 }

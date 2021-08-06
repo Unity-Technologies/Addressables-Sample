@@ -15,7 +15,7 @@ MonoBehaviour:
   m_CustomAssetPacks:
   - AssetPackName: InstallTimeContent
     DeliveryType: 1
-  - AssetPackName: FastFollowPack
+  - AssetPackName: FastFollowContent
     DeliveryType: 2
-  - AssetPackName: OnDemandPack
+  - AssetPackName: OnDemandContent
     DeliveryType: 3

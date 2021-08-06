@@ -1,8 +1,8 @@
 apply plugin: 'com.android.asset-pack'
 
 assetPack {
-	packName = "OnDemandPack"
+	packName = "FastFollowContent"
 	dynamicDelivery {
-		deliveryType = "on-demand"
+		deliveryType = "fast-follow"
 	}
 }
