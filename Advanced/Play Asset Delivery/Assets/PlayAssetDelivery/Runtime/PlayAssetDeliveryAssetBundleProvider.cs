@@ -65,13 +65,13 @@ namespace AddressablesPlayAssetDelivery.Editor
             {
                 AndroidAssetPacks.DownloadAssetPackAsync(new string[] { assetPackName }, CheckDownloadStatus);
             }
-            catch(InvalidOperationException ioe)
+            catch (InvalidOperationException ioe)
             {
                 Debug.LogError($"Cannot retrieve state for asset pack '{assetPackName}'. PlayCore Plugin is not installed: {ioe.Message}");
                 m_ProviderInterface.Complete(this, false, new Exception("exception"));
             }
         }
-        
+
         void CheckDownloadStatus(AndroidAssetPackInfo info)
         {
             string message = "";
@@ -83,7 +83,7 @@ namespace AddressablesPlayAssetDelivery.Editor
                 message = $"Cancelled asset pack download request '{info.name}'.";
             else if (info.status == AndroidAssetPackStatus.WaitingForWifi)
                 AndroidAssetPacks.RequestToUseMobileDataAsync(OnRequestToUseMobileDataComplete);
-            else if(info.status == AndroidAssetPackStatus.Completed)
+            else if (info.status == AndroidAssetPackStatus.Completed)
             {
                 string assetPackPath = AndroidAssetPacks.GetAssetPackPath(info.name);
 

@@ -14,7 +14,7 @@ namespace AddressablesPlayAssetDelivery.Editor
         CustomAssetPackSettings m_Settings;
         [SerializeField]
         ReorderableList m_CustomAssetPacks;
-        
+
         Regex m_ValidAssetPackName = new Regex(@"^[A-Za-z][a-zA-Z0-9_]*$", RegexOptions.Compiled);
 
         void OnEnable()
@@ -22,7 +22,7 @@ namespace AddressablesPlayAssetDelivery.Editor
             m_Settings = target as CustomAssetPackSettings;
             if (m_Settings == null)
                 return;
-            
+
             m_CustomAssetPacks = new ReorderableList(m_Settings.CustomAssetPacks, typeof(CustomAssetPackEditorInfo), true, true, true, true);
             m_CustomAssetPacks.drawElementCallback = DrawCustomAssetPackCallback;
             m_CustomAssetPacks.headerHeight = 0;
@@ -41,7 +41,7 @@ namespace AddressablesPlayAssetDelivery.Editor
             CustomAssetPackEditorInfo currentAssetPack = m_Settings.CustomAssetPacks[index];
 
             EditorGUI.BeginDisabledGroup(currentAssetPack.AssetPackName == CustomAssetPackSettings.k_InstallTimePackName);
-           
+
             string oldName = currentAssetPack.AssetPackName;
             var newName = EditorGUI.DelayedTextField(new Rect(rect.x, rect.y, halfW, rect.height), oldName);
             if (newName != oldName)
@@ -62,14 +62,14 @@ namespace AddressablesPlayAssetDelivery.Editor
             var newType = (DeliveryType)EditorGUI.EnumPopup(new Rect(rect.x + halfW, rect.y, rect.width - halfW, rect.height), new GUIContent(""), oldType, IsDeliveryTypeEnabled);
             if (oldType != newType)
                 currentAssetPack.DeliveryType = newType;
-            
+
             EditorGUI.EndDisabledGroup();
         }
 
         bool IsDeliveryTypeEnabled(Enum e)
         {
             var deliveryType = (DeliveryType)e;
-            if(deliveryType != DeliveryType.InstallTime)
+            if (deliveryType != DeliveryType.InstallTime)
                 return true;
             return false;
         }
@@ -85,7 +85,6 @@ namespace AddressablesPlayAssetDelivery.Editor
                 Debug.LogError($"Cannot delete asset pack name '{CustomAssetPackSettings.k_InstallTimePackName}'. It represents the streaming assets pack which will contain all install-time content.");
             else
                 m_Settings.RemovePackAtIndex(list.index);
-
         }
     }
 }

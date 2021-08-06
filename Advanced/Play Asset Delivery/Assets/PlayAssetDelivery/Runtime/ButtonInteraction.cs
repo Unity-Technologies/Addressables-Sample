@@ -19,7 +19,7 @@ namespace AddressablesPlayAssetDelivery
                 Debug.LogError("Not finished initializing.");
             else if (isLoading)
                 Debug.LogError("Loading operation currently in progress.");
-            else if(!isLoading)
+            else if (!isLoading)
             {
                 if (obj == null)
                 {

@@ -9,7 +9,7 @@ namespace AddressablesPlayAssetDelivery
         public string AssetPackName;
 
         public DeliveryType DeliveryType;
-        
+
         public List<string> AssetBundles;
 
         public CustomAssetPackDataEntry(string assetPackName, DeliveryType deliveryType, IEnumerable<string> assetBundles)

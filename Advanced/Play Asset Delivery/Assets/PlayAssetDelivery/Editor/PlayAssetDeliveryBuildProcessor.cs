@@ -11,7 +11,7 @@ namespace AddressablesPlayAssetDelivery.Editor
 {
     /// <summary>
     /// Copies Addresssables build data to the Assets/StreamingAssets folder when processing a player build.
-    /// 
+    ///
     /// If using Unity 2021.2+ and Addressables 1.19.0+, the AddressablesPlayerBuildProcessor class no longer copies data to the 'Assets/StreamingAssets' folder
     /// in favor of a performance optimization. We will need to rely on this custom build processor instead.
     /// </summary>
@@ -64,7 +64,7 @@ namespace AddressablesPlayAssetDelivery.Editor
                 string parentDir = Path.GetDirectoryName(Addressables.PlayerBuildDataPath);
                 if (!string.IsNullOrEmpty(parentDir) && !Directory.Exists(parentDir))
                     Directory.CreateDirectory(parentDir);
-                Directory.Move(Addressables.BuildPath, Addressables.PlayerBuildDataPath );
+                Directory.Move(Addressables.BuildPath, Addressables.PlayerBuildDataPath);
             }
         }
     }
@@ -101,7 +101,7 @@ namespace AddressablesPlayAssetDelivery.Editor
                 Debug.LogError($"Could not Move to directory {destDirName}, directory arlready exists.");
                 return;
             }
-        
+
             Directory.Move(sourceDirName, destDirName);
             // check if the folder is valid in the AssetDatabase before deleting through standard file system
             string relativePath = sourceDirName.Replace("\\", "/").Replace(Application.dataPath, "Assets");

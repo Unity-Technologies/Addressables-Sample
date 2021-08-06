@@ -14,13 +14,13 @@ namespace AddressablesPlayAssetDelivery.Editor
         internal int m_AssetPackIndex = 0;
         public int AssetPackIndex
         {
-            get 
+            get
             {
-                return m_AssetPackIndex; 
+                return m_AssetPackIndex;
             }
             set
             {
-                if(m_AssetPackIndex != value)
+                if (m_AssetPackIndex != value)
                 {
                     m_AssetPackIndex = value;
                     SetDirty(true);
@@ -38,7 +38,7 @@ namespace AddressablesPlayAssetDelivery.Editor
                 if (m_Settings == null)
                 {
                     m_Settings = CustomAssetPackSettings.GetSettings();
-                    if(AssetPackIndex >= m_Settings.CustomAssetPacks.Count)
+                    if (AssetPackIndex >= m_Settings.CustomAssetPacks.Count)
                         AssetPackIndex = 0;
                 }
                 return m_Settings;
@@ -63,13 +63,13 @@ namespace AddressablesPlayAssetDelivery.Editor
             int current = AssetPackIndex;
 
             string[] displayOptions = new string[customAssetPacks.Count];
-            for(int i = 0; i < customAssetPacks.Count; i++)
+            for (int i = 0; i < customAssetPacks.Count; i++)
             {
                 displayOptions[i] = $"{customAssetPacks[i].AssetPackName} ({customAssetPacks[i].DeliveryType})";
             }
 
             SerializedProperty prop = so.FindProperty("m_AssetPackIndex");
-            if(otherSchemas != null)
+            if (otherSchemas != null)
                 ShowMixedValue(prop, otherSchemas, typeof(int), "m_AssetPackIndex");
 
             EditorGUI.BeginChangeCheck();
@@ -78,7 +78,7 @@ namespace AddressablesPlayAssetDelivery.Editor
             {
                 AssetPackIndex = newIndex;
                 CustomAssetPackEditorInfo newPack = customAssetPacks[AssetPackIndex];
-                if(otherSchemas != null)
+                if (otherSchemas != null)
                 {
                     foreach (AddressableAssetGroupSchema s in otherSchemas)
                     {
@@ -87,9 +87,9 @@ namespace AddressablesPlayAssetDelivery.Editor
                     }
                 }
             }
-            if(otherSchemas != null)
+            if (otherSchemas != null)
                 EditorGUI.showMixedValue = false;
-                
+
             using (new GUILayout.HorizontalScope())
             {
                 GUILayout.FlexibleSpace();
@@ -100,7 +100,7 @@ namespace AddressablesPlayAssetDelivery.Editor
                 }
             }
         }
-        
+
         /// <inheritdoc/>
         public override void OnGUI()
         {
@@ -113,7 +113,7 @@ namespace AddressablesPlayAssetDelivery.Editor
         public override void OnGUIMultiple(List<AddressableAssetGroupSchema> otherSchemas)
         {
             var so = new SerializedObject(this);
-           
+
             ShowAssetPacks(so, otherSchemas);
             so.ApplyModifiedProperties();
         }

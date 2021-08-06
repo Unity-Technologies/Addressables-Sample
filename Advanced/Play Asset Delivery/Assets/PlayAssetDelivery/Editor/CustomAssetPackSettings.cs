@@ -13,14 +13,14 @@ namespace AddressablesPlayAssetDelivery.Editor
     {
         public string AssetPackName;
         public DeliveryType DeliveryType;
-        
+
         public CustomAssetPackEditorInfo(string assetPackName, DeliveryType deliveryType)
         {
             AssetPackName = assetPackName;
             DeliveryType = deliveryType;
         }
-    }    
-    
+    }
+
     /// <summary>
     /// Stores information (name & delivery type) for all custom asset packs.
     /// </summary>
@@ -28,7 +28,7 @@ namespace AddressablesPlayAssetDelivery.Editor
     {
         public static string k_DefaultConfigFolder = "Assets/PlayAssetDelivery";
         public static string k_DefaultConfigObjectName = "CustomAssetPackSettings";
-        
+
         public static string k_InstallTimePackName = "InstallTimeContent";
         public static string k_DefaultPackName = "AssetPack";
         public static DeliveryType k_DefaultDeliveryType = DeliveryType.OnDemand;
@@ -51,7 +51,7 @@ namespace AddressablesPlayAssetDelivery.Editor
         {
             get { return m_CustomAssetPacks; }
         }
-        
+
         void AddCustomAssetPack(string assetPackName, DeliveryType deliveryType)
         {
             CustomAssetPacks.Add(new CustomAssetPackEditorInfo(assetPackName, deliveryType));
@@ -84,7 +84,7 @@ namespace AddressablesPlayAssetDelivery.Editor
             CustomAssetPacks.RemoveAt(index);
             EditorUtility.SetDirty(this);
         }
-        
+
         public static bool SettingsExists
         {
             get { return !string.IsNullOrEmpty(AssetDatabase.AssetPathToGUID(k_DefaultSettingsPath)); }
@@ -96,8 +96,8 @@ namespace AddressablesPlayAssetDelivery.Editor
             if (settings == null)
             {
                 settings = CreateInstance<CustomAssetPackSettings>();
-                
-                if(!AssetDatabase.IsValidFolder(k_DefaultConfigFolder))
+
+                if (!AssetDatabase.IsValidFolder(k_DefaultConfigFolder))
                     Directory.CreateDirectory(k_DefaultConfigFolder);
                 AssetDatabase.CreateAsset(settings, k_DefaultSettingsPath);
                 settings = AssetDatabase.LoadAssetAtPath<CustomAssetPackSettings>(k_DefaultSettingsPath);

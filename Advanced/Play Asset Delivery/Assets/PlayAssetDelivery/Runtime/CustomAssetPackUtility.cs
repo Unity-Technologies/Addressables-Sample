@@ -46,6 +46,7 @@ namespace AddressablesPlayAssetDelivery
         {
             return k_DeliveryTypeToGradleString[deliveryType].Name;
         }
+
 #else
         static readonly Dictionary<DeliveryType, string> k_DeliveryTypeToGradleString = new Dictionary<DeliveryType, string>()
         {
@@ -58,6 +59,7 @@ namespace AddressablesPlayAssetDelivery
         {
             return k_DeliveryTypeToGradleString[deliveryType];
         }
+
 #endif
 #endif
     }
