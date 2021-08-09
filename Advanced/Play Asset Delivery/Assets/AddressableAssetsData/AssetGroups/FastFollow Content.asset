@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: FastFollow Content
+  m_EditorClassIdentifier: 
+  m_GroupName: FastFollow Content
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 8c617aa2af96e4346bc025eb32c9f79b
+  m_SerializeEntries:
+  - m_GUID: 3923fde39e7c6c14f81a20e998f099f7
+    m_Address: Sphere
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: b5c09aef320017846b8c82aaae72d986, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 1c982bf07e4def143862dd56055d6e4c, type: 2}
+    - {fileID: 11400000, guid: 76cd8fac97e13544c815670ed263abf3, type: 2}
