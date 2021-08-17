@@ -44,6 +44,8 @@ namespace AddressablesPlayAssetDelivery.Editor
             get { return $"{m_RootDirectory}/{m_AssetPackFolderName}"; }
         }
 
+        HashSet<string> m_MovedBundles;
+
         protected override TResult DoBuild<TResult>(AddressablesDataBuilderInput builderInput, AddressableAssetsBuildContext aaContext)
         {
             TResult result = base.DoBuild<TResult>(builderInput, aaContext);
@@ -61,6 +63,7 @@ namespace AddressablesPlayAssetDelivery.Editor
             AssetDatabase.CreateFolder(m_RootDirectory, m_AssetPackFolderName);
 
             // Move bundle files to the 'Assets/PlayAssetDelivery/CustomAssetPackContent' directory
+            m_MovedBundles = new HashSet<string>();
             foreach (AddressableAssetGroup group in settings.groups)
             {
                 if (!group.HasSchema<PlayAssetDeliverySchema>())
@@ -111,6 +114,9 @@ namespace AddressablesPlayAssetDelivery.Editor
         {
             foreach (AddressableAssetEntry entry in group.entries)
             {
+                if (m_MovedBundles.Contains(entry.BundleFileId))
+                    continue;
+
                 string bundleBuildPath = AddressablesRuntimeProperties.EvaluateString(entry.BundleFileId);
                 string bundleName = Path.GetFileNameWithoutExtension(bundleBuildPath);
                 string bundlePackDir = Path.Combine(PackContentRootDirectory, ConstructAssetPackDirectoryName(assetPackName));
@@ -131,6 +137,7 @@ namespace AddressablesPlayAssetDelivery.Editor
                 // Move bundle to the appropriate .androidpack folder
                 string assetsFolderPath = Path.Combine(bundlePackDir, Path.GetFileName(bundleBuildPath));
                 File.Move(bundleBuildPath, assetsFolderPath);
+                m_MovedBundles.Add(entry.BundleFileId);
             }
         }
 
