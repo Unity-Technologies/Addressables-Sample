@@ -144,29 +144,30 @@ The basic workflow is:
 
 Setup Instructions:
 1. Configure Unity to build Android App Bundles and split the application binary. For more information see ["Using Play Asset Delivery"](https://docs.unity3d.com/Manual/play-asset-delivery.html#using-play-asset-delivery).
-  1. In File > Build Settings:
-    - Set the Platform to Android.
-    - If "Export Project is enabled", enable "Export for App Bundle". Otherwise, enable "Build App Bundle (Google Play)".
-  2. If you want any bundled content to use "install-time" delivery, select "Split Application Binary" in Edit > Project Settings > Player > Publishing Settings.
+   1. In File > Build Settings:
+      - Set the Platform to Android.
+      - If "Export Project is enabled", enable "Export for App Bundle". Otherwise, enable "Build App Bundle (Google Play)".
+2. If you want any bundled content to use "install-time" delivery, select "Split Application Binary" in Edit > Project Settings > Player > Publishing Settings.
 3. Open the Addressables Groups window (Window > Asset Management > Addressables Groups).
 4. In the Groups window toolbar, select Create > Group > Asset Pack Content to create a new group whose content will be assigned to an asset pack. The group contains 2 schemas “Content Packing & Loading” and "Play Asset Delivery”. 
-  - If you don't want the group's content to be assigned to an asset pack (i.e. remote content that will be hosted on a different CDN) remove the "Play Asset Delivery” schema. Then in "Content Packing & Loading" set the “Build & Load Paths” to remote paths (RemoteBuildPath and RemoteLoadPath) and in "Advanced Options" set the "Asset Bundle Provider" to the default bundle provider (AssetBundle Provider). Alternatively you can do Create > Group > Packed Assets to create a default bundled asset group, but make sure to use remote paths (RemoteBuildPath and RemoteLoadPath). Any local content will be automatically assigned to the streaming assets pack.
+   - If you don't want the group's content to be assigned to an asset pack (i.e. remote content that will be hosted on a different CDN) remove the "Play Asset Delivery” schema. Then in "Content Packing & Loading" set the “Build & Load Paths” to remote paths (RemoteBuildPath and RemoteLoadPath) and in "Advanced Options" set the "Asset Bundle Provider" to the default bundle provider (AssetBundle Provider). 
+   - Alternatively you can do Create > Group > Packed Assets to create a default bundled asset group, but make sure to use remote paths (RemoteBuildPath and RemoteLoadPath). Any local content will be automatically assigned to the streaming assets pack.
 5. Specify the assigned asset pack in “Play Asset Delivery” schema. Select "Manage Asset Packs" to modify custom asset packs.
-  - Any groups that do not have this schema or use "install-time" delivery will have their bundles assigned to streaming assets pack. In most cases the streaming assets pack will use "install-time" delivery, but in large projects it may use "fast-follow" delivery instead. For more information see ["Generated Asset Packs"](https://docs.unity3d.com/Manual/play-asset-delivery.html#generated-asset-packs).
-  - Assign all content intended for "install-time" delivery to the "InstallTimeContent" asset pack. This is a "placeholder" asset pack that is representative of the streaming assets pack. No custom asset pack named "InstallTimeContent" is actually created.
+   - Any groups that do not have this schema or use "install-time" delivery will have their bundles assigned to streaming assets pack. In most cases the streaming assets pack will use "install-time" delivery, but in large projects it may use "fast-follow" delivery instead. For more information see ["Generated Asset Packs"](https://docs.unity3d.com/Manual/play-asset-delivery.html#generated-asset-packs).
+   - Assign all content intended for "install-time" delivery to the "InstallTimeContent" asset pack. This is a "placeholder" asset pack that is representative of the streaming assets pack. No custom asset pack named "InstallTimeContent" is actually created.
 6. In the “Content Packing & Loading” schema:
-  1. Set the “Build & Load Paths” to the default local paths (LocalBuildPath and LocalLoadPath). At runtime we will configure the load paths to use asset pack locations (see AddressablesInitSingleton.cs).
-    - Since the Google Play Console doesn't provide remote URLs for uploaded content, it is not possible to use remote paths or the Content Update workflow for content assigned to asset packs. Remote content will need to be hosted on a different CDN.
-  2. In Advanced Options > Asset Bundle Provider use the “Play Asset Delivery Provider”. This will make sure that asset packs are downloaded before loading content from AssetBundles.
+   1. Set the “Build & Load Paths” to the default local paths (LocalBuildPath and LocalLoadPath). At runtime we will configure the load paths to use asset pack locations (see AddressablesInitSingleton.cs).
+      - Since the Google Play Console doesn't provide remote URLs for uploaded content, it is not possible to use remote paths or the Content Update workflow for content assigned to asset packs. Remote content will need to be hosted on a different CDN.
+   2. In Advanced Options > Asset Bundle Provider use the “Play Asset Delivery Provider”. This will make sure that asset packs are downloaded before loading content from AssetBundles.
 7. Build Addressables using the custom “Play Asset Delivery” build script. In the Addressables Groups Window, do Build > New Build > Play Asset Delivery.
-  1. Prepare each bundle file to be assigned to its own asset pack:
-    - Each asset pack will have a directory named “{asset pack name}.androidpack” in “Assets/PlayAssetDelivery/CustomAssetPackContent".
-    - Each .androidpack directory also contains a ‘build.gradle’ file that specifies that delivery type for the asset pack. If this file is missing, Unity will assume that the asset pack’s delivery type is “on-demand”.
-  2. Create a "CustomAssetPacksData.json" file in 'Assets/StreamingAssets' that stores all custom asset pack information to be used at runtime.
+   1. Prepare each bundle file to be assigned to its own asset pack:
+      - Each asset pack will have a directory named “{asset pack name}.androidpack” in “Assets/PlayAssetDelivery/CustomAssetPackContent".
+      - Each .androidpack directory also contains a ‘build.gradle’ file that specifies that delivery type for the asset pack. If this file is missing, Unity will assume that the asset pack’s delivery type is “on-demand”.
+   2. Create a "CustomAssetPacksData.json" file in 'Assets/StreamingAssets' that stores all custom asset pack information to be used at runtime.
 8. Prepare Addressables to load content from asset packs at runtime (we do this in AddressablesInitSingleton.cs).
-  1. Make sure that the generated asset packs are downloaded.
-  2. Configure our custom InternalIdTransformFunc, which converts internal ids to their respective asset pack location.
-  3. Load all custom asset pack data from the "CustomAssetPacksData.json".
-  4. Then load assets using the Addressables API (we do this in LoadObject.cs).
+   1. Make sure that the generated asset packs are downloaded.
+   2. Configure our custom InternalIdTransformFunc, which converts internal ids to their respective asset pack location.
+   3. Load all custom asset pack data from the "CustomAssetPacksData.json".
+   4. Then load assets using the Addressables API (we do this in LoadObject.cs).
 9. When ready to build the Android App Bundle, open File > Build Settings and click “Build”. This will create all of our custom asset packs along with the generated asset packs.
-  - If you want to upload the App Bundle to the Google Play Console, make sure that you are doing a release build.
+   - If you want to upload the App Bundle to the Google Play Console, make sure that you are doing a release build.
