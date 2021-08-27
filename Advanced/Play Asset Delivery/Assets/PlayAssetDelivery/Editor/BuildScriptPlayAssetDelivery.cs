@@ -17,9 +17,8 @@ namespace AddressablesPlayAssetDelivery.Editor
     /// In addition to the Default Build Script behavior (building AssetBundles), this script prepares bundled content for custom asset pack creation
     /// https://docs.unity3d.com/Manual/play-asset-delivery.html#custom-asset-packs.
     ///
-    /// At build time the build processor (either PlayAssetDeliveryBuildProcessor if using Unity 2021.2+ and Addressables 1.19.0+, or AddressablesPlayerBuildProcessor otherwise)
-    /// will temporarily move all local content to 'Assets/StreamingAssets'. This means that any local content will be automatically included in the streaming assets pack
-    /// even if they are not assigned to a custom asset pack.
+    /// At build time the AddressablesPlayerBuildProcessor will include all local content in the streaming assets path. This means that any local content 
+    /// will be automatically included in the streaming assets pack even if they are not assigned to a custom asset pack.
     ///
     /// We also assign any content marked for "install-time" delivery to the streaming assets pack. In most cases the streaming assets pack will use "install-time" delivery,
     /// but in large projects it may use "fast-follow" delivery instead. For more information see https://docs.unity3d.com/Manual/play-asset-delivery.html#generated-asset-packs.
