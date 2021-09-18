@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using UnityEngine;
 #if UNITY_EDITOR && UNITY_2021_2_OR_NEWER
 using Unity.Android.Types;
 #endif
@@ -33,6 +36,42 @@ namespace AddressablesPlayAssetDelivery
 
     public class CustomAssetPackUtility
     {
+        public const string kBuildFolderName = "Build";
+        public const string kPackContentFolderName = "CustomAssetPackContent";
+
+        public const string kBuildProcessorDataFilename = "BuildProcessorData.json";
+        public const string kRuntimeDataFilename = "CustomAssetPacksData.json";
+
+        public static string RootDirectory
+        {
+            get { return Path.Combine("Assets", "PlayAssetDelivery"); }
+        }
+
+        public static string BuildRootDirectory
+        {
+            get { return Path.Combine(RootDirectory, kBuildFolderName); }
+        }
+
+        public static string PackContentRootDirectory
+        {
+            get { return Path.Combine(BuildRootDirectory, kPackContentFolderName); }
+        }
+
+        public static string BuildProcessorDataPath
+        {
+            get { return Path.Combine(BuildRootDirectory, kBuildProcessorDataFilename); }
+        }
+
+        public static string CustomAssetPacksDataEditorPath
+        {
+            get { return Path.Combine(BuildRootDirectory, kRuntimeDataFilename); }
+        }
+
+        public static string CustomAssetPacksDataRuntimePath
+        {
+            get { return Path.Combine(Application.streamingAssetsPath, kRuntimeDataFilename); }
+        }
+
 #if UNITY_EDITOR
 #if UNITY_2021_2_OR_NEWER
         static readonly Dictionary<DeliveryType, AndroidAssetPackDeliveryType> k_DeliveryTypeToGradleString = new Dictionary<DeliveryType, AndroidAssetPackDeliveryType>()

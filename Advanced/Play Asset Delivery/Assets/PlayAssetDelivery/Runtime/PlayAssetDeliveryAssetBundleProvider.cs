@@ -6,7 +6,7 @@ using UnityEngine.Android;
 using UnityEngine.ResourceManagement.ResourceLocations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 
-namespace AddressablesPlayAssetDelivery.Editor
+namespace AddressablesPlayAssetDelivery
 {
     /// <summary>
     /// Ensures that the asset pack containing the AssetBundle is installed/downloaded before attemping to load the bundle.
@@ -17,12 +17,27 @@ namespace AddressablesPlayAssetDelivery.Editor
         ProvideHandle m_ProviderInterface;
         public override void Provide(ProvideHandle providerInterface)
         {
-            Reset();
+            if (!AddressablesInitSingleton.Instance.HasInitialized)
+            {
+                Debug.LogError($"Cannot load object from '{providerInterface.Location.InternalId}'. AddressablesInitSingleton is stil initializing.");
+                providerInterface.Complete(this, false, new Exception("exception"));
+                return;
+            }
+
 #if UNITY_ANDROID && !UNITY_EDITOR
+            m_ProviderInterface = providerInterface;
+            LoadFromAssetPack(providerInterface);
+#else
+            base.Provide(providerInterface);
+#endif
+        }
+
+        void LoadFromAssetPack(ProvideHandle providerInterface)
+        {
             string bundleName = Path.GetFileNameWithoutExtension(providerInterface.Location.InternalId);
             if (!AddressablesInitSingleton.Instance.BundleNameToAssetPack.ContainsKey(bundleName))
             {
-                // Bundle is assigned to the streaming assets pack
+                // Bundle is either assigned to the generated asset packs, or not assigned to any asset pack
                 base.Provide(providerInterface);
             }
             else
@@ -37,23 +52,14 @@ namespace AddressablesPlayAssetDelivery.Editor
                 else
                 {
                     // Download the asset pack
-                    m_ProviderInterface = providerInterface;
                     DownloadRemoteAssetPack(assetPackName);
                 }
             }
-#else
-            base.Provide(providerInterface);
-#endif
         }
 
         public override void Release(IResourceLocation location, object asset)
         {
             base.Release(location, asset);
-            Reset();
-        }
-
-        void Reset()
-        {
             m_ProviderInterface = default;
         }
 

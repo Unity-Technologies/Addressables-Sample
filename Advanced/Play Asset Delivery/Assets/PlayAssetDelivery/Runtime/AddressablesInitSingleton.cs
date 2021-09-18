@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using AddressablesPlayAssetDelivery.Editor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Android;
@@ -42,86 +41,118 @@ namespace AddressablesPlayAssetDelivery
             get { return m_AssetPackNameToRemotePath; }
         }
 
+        [Tooltip("Show warnings that occur when initializing the singleton.")]
+        public bool logInitializationWarnings = true;
+
         void Start()
         {
+            Addressables.ResourceManager.ResourceProviders.Add(new PlayAssetDeliveryAssetBundleProvider());
 #if UNITY_ANDROID && !UNITY_EDITOR
-            // Download the core Unity asset packs if needed. Install-time asset packs should be already installed.
-            if (AndroidAssetPacks.coreUnityAssetPacksDownloaded)
-                Setup();
-            else
-            {
-                string[] coreUnityAssetPackNames = AndroidAssetPacks.GetCoreUnityAssetPackNames(); // only returns names of asset packs that are fast-follow or on-demand delivery
-                if (coreUnityAssetPackNames.Length == 0)
-                    Debug.LogError("Cannot retrieve core Unity asset pack names. PlayCore Plugin is not installed.");
-                else
-                    AndroidAssetPacks.DownloadAssetPackAsync(coreUnityAssetPackNames, CheckDownloadStatus);
-            }
+            LoadFromAssetPacksIfAvailable();
+#elif UNITY_ANDROID && UNITY_EDITOR
+            LoadFromEditorData();
 #else
-            Setup();
+            HasInitialized = true;
 #endif
         }
 
-        void Setup()
+        void LoadFromAssetPacksIfAvailable()
         {
-            Addressables.ResourceManager.ResourceProviders.Add(new PlayAssetDeliveryAssetBundleProvider());
-            Addressables.ResourceManager.InternalIdTransformFunc = AssetPackTransformFunc;
-            StartCoroutine(LoadCustomAssetPacksData());
+            if (AndroidAssetPacks.coreUnityAssetPacksDownloaded)
+            {
+                // Core Unity asset packs use install-time delivery and are already installed.
+                StartCoroutine(DownloadCustomAssetPacksData());
+            }
+            else
+            {
+                // Core Unity asset packs use fast-follow or on-demand delivery and need to be downloaded.
+                string[] coreUnityAssetPackNames = AndroidAssetPacks.GetCoreUnityAssetPackNames(); // only returns names of asset packs that are fast-follow or on-demand delivery
+                if (coreUnityAssetPackNames.Length == 0)
+                    LogWarning("Cannot retrieve core Unity asset pack names. PlayCore Plugin is not installed.", true);
+                else
+                    AndroidAssetPacks.DownloadAssetPackAsync(coreUnityAssetPackNames, CheckDownloadStatus);
+            }
         }
 
-        IEnumerator LoadCustomAssetPacksData()
+        void LoadFromEditorData()
         {
-            string path = Path.Combine(Application.streamingAssetsPath, "CustomAssetPacksData.json");
-            UnityWebRequest www = UnityWebRequest.Get(path);
+            if (File.Exists(CustomAssetPackUtility.CustomAssetPacksDataEditorPath))
+            {
+                InitializeBundleToAssetPackMap(File.ReadAllText(CustomAssetPackUtility.CustomAssetPacksDataEditorPath));
+                Addressables.ResourceManager.InternalIdTransformFunc = EditorTransformFunc;
+            }
+            else if (File.Exists(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath))
+            {
+                InitializeBundleToAssetPackMap(File.ReadAllText(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath));
+                Addressables.ResourceManager.InternalIdTransformFunc = EditorTransformFunc;
+            }
+            HasInitialized = true;
+        }
+
+        void LogWarning(string message, bool finishInitializing)
+        {
+            if (logInitializationWarnings)
+                Debug.LogWarning($"{message} Default internal id locations will be used instead.");
+            HasInitialized = finishInitializing;
+        }
+
+        IEnumerator DownloadCustomAssetPacksData()
+        {
+            UnityWebRequest www = UnityWebRequest.Get(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath);
             yield return www.SendWebRequest();
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError($"Could not load 'CustomAssetPacksData.json' : {www.error}");
+                LogWarning($"Could not load 'CustomAssetPacksData.json' : {www.error}.", true);
             }
             else
             {
-                string contents = www.downloadHandler.text;
-                CustomAssetPackData customPackData =  JsonUtility.FromJson<CustomAssetPackData>(contents);
-                foreach (CustomAssetPackDataEntry entry in customPackData.Entries)
-                {
-                    foreach (string bundle in entry.AssetBundles)
-                    {
-                        BundleNameToAssetPack.Add(bundle, entry);
-                    }
-                }
+                InitializeBundleToAssetPackMap(www.downloadHandler.text);
+                Addressables.ResourceManager.InternalIdTransformFunc = AppBundleTransformFunc;
                 HasInitialized = true;
+            }
+        }
+
+        void InitializeBundleToAssetPackMap(string contents)
+        {
+            CustomAssetPackData customPackData =  JsonUtility.FromJson<CustomAssetPackData>(contents);
+            foreach (CustomAssetPackDataEntry entry in customPackData.Entries)
+            {
+                foreach (string bundle in entry.AssetBundles)
+                {
+                    BundleNameToAssetPack.Add(bundle, entry);
+                }
             }
         }
 
         void CheckDownloadStatus(AndroidAssetPackInfo info)
         {
             if (info.status == AndroidAssetPackStatus.Failed)
-                Debug.LogError($"Failed to retrieve the state of asset pack '{info.name}'.");
+                LogWarning($"Failed to retrieve the state of asset pack '{info.name}'.", true);
             else if (info.status == AndroidAssetPackStatus.Unknown)
-                Debug.LogError($"Asset pack '{info.name}' is unavailable for this application. This can occur if the app was not installed through Google Play.");
+                LogWarning($"Asset pack '{info.name}' is unavailable for this application. This can occur if the app was not installed through Google Play.", true);
             else if (info.status == AndroidAssetPackStatus.Canceled)
-                Debug.LogError($"Cancelled asset pack download request '{info.name}'.");
+                LogWarning($"Cancelled asset pack download request '{info.name}'.", true);
             else if (info.status == AndroidAssetPackStatus.WaitingForWifi)
             {
                 AndroidAssetPacks.RequestToUseMobileDataAsync(result =>
                 {
                     if (!result.allowed)
-                        Debug.LogError("Request to use mobile data was denied.");
+                        LogWarning("Request to use mobile data was denied.", true);
                 });
             }
             else if (info.status == AndroidAssetPackStatus.Completed)
             {
                 string assetPackPath = AndroidAssetPacks.GetAssetPackPath(info.name);
                 if (string.IsNullOrEmpty(assetPackPath))
-                {
-                    Debug.LogError($"Downloaded asset pack '{info.name}' but cannot locate it on device.");
-                }
+                    LogWarning($"Downloaded asset pack '{info.name}' but cannot locate it on device.", true);
+                else if (AndroidAssetPacks.coreUnityAssetPacksDownloaded)
+                    StartCoroutine(DownloadCustomAssetPacksData());
             }
         }
 
-        string AssetPackTransformFunc(IResourceLocation location)
+        string AppBundleTransformFunc(IResourceLocation location)
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
             if (location.ResourceType == typeof(IAssetBundleResource))
             {
                 string bundleName = Path.GetFileNameWithoutExtension(location.InternalId);
@@ -136,29 +167,31 @@ namespace AddressablesPlayAssetDelivery
                     }
                 }
             }
-
-            // Load resource from the default location. If the resource was assigned to the streaming assets pack, the default internal id
-            // already points to 'Application.streamingAssetsPath'.
+            // Load resource from the default location. The generated asset packs contain streaming assets.
             return location.InternalId;
-#else
-            // Load bundle from the 'Assets/PlayAssetDelivery/CustomAssetPackContent' folder.
-            // Only "fast-follow" or "on-demand custom" asset pack content will be located here.
+        }
+
+        string EditorTransformFunc(IResourceLocation location)
+        {
             if (location.ResourceType == typeof(IAssetBundleResource))
             {
                 string bundleName = Path.GetFileNameWithoutExtension(location.InternalId);
                 if (BundleNameToAssetPack.ContainsKey(bundleName))
                 {
                     string assetPackName = BundleNameToAssetPack[bundleName].AssetPackName;
-                    string androidPackFolder = $"Assets/PlayAssetDelivery/CustomAssetPackContent/{assetPackName}.androidpack";
+                    string androidPackFolder = $"{CustomAssetPackUtility.PackContentRootDirectory}/{assetPackName}.androidpack";
                     string bundlePath = Path.Combine(androidPackFolder, Path.GetFileName(location.InternalId));
                     if (File.Exists(bundlePath))
+                    {
+                        // Load bundle from the 'Assets/PlayAssetDelivery/Build/CustomAssetPackContent' folder.
+                        // The PlayAssetDeliveryBuildProcessor moves bundles assigned to "fast-follow" or "on-demand" asset packs to this location
+                        // as result of a previous App Bundle build.
                         return bundlePath;
+                    }
                 }
             }
-
             // Load resource from the default location.
             return location.InternalId;
-#endif
         }
     }
 }

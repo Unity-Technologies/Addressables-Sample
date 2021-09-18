@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEditor;
@@ -11,7 +10,10 @@ namespace AddressablesPlayAssetDelivery.Editor
     public class PlayAssetDeliverySchema : AddressableAssetGroupSchema
     {
         [SerializeField]
-        internal int m_AssetPackIndex = 0;
+        int m_AssetPackIndex = 0;
+        /// <summary>
+        /// Represents the asset pack that will contain this group's bundled content. Note that 'InstallTimeContent' is representative of the generated asset packs.
+        /// </summary>
         public int AssetPackIndex
         {
             get
@@ -28,16 +30,36 @@ namespace AddressablesPlayAssetDelivery.Editor
             }
         }
 
-        internal CustomAssetPackSettings m_Settings;
+        [SerializeField]
+        bool m_IncludeInAssetPack = true;
+        /// <summary>
+        /// Controls whether to include content in the specified asset pack.
+        /// We use <see cref="BuildScriptPlayAssetDelivery"/> to assign content to custom asset packs.
+        /// </summary>
+        public bool IncludeInAssetPack
+        {
+            get { return m_IncludeInAssetPack; }
+            set
+            {
+                m_IncludeInAssetPack = value;
+                SetDirty(true);
+            }
+        }
+
+        [SerializeField]
+        CustomAssetPackSettings m_Settings;
+        /// <summary>
+        /// Object that stores all custom asset pack information.
+        /// </summary>
         public CustomAssetPackSettings Settings
         {
             get
             {
                 if (!CustomAssetPackSettings.SettingsExists)
-                    Reset();
+                    ResetAssetPackIndex();
                 if (m_Settings == null)
                 {
-                    m_Settings = CustomAssetPackSettings.GetSettings();
+                    m_Settings = CustomAssetPackSettings.GetSettings(true);
                     if (AssetPackIndex >= m_Settings.CustomAssetPacks.Count)
                         AssetPackIndex = 0;
                 }
@@ -50,7 +72,13 @@ namespace AddressablesPlayAssetDelivery.Editor
             }
         }
 
-        public void Reset()
+        GUIContent m_AssetPackGUI =
+            new GUIContent("Asset Pack", "Asset pack that will contain this group's bundled content.");
+
+        GUIContent m_IncludeInAssetPackGUI =
+            new GUIContent("Include In Asset Pack", "Controls whether to include this group's bundled content in the specified custom asset pack when using the 'Play Asset Delivery' build script.");
+
+        public void ResetAssetPackIndex()
         {
             AssetPackIndex = 0;
             m_Settings = null;
@@ -59,7 +87,6 @@ namespace AddressablesPlayAssetDelivery.Editor
         void ShowAssetPacks(SerializedObject so, List<AddressableAssetGroupSchema> otherSchemas = null)
         {
             List<CustomAssetPackEditorInfo> customAssetPacks = Settings.CustomAssetPacks;
-
             int current = AssetPackIndex;
 
             string[] displayOptions = new string[customAssetPacks.Count];
@@ -73,11 +100,14 @@ namespace AddressablesPlayAssetDelivery.Editor
                 ShowMixedValue(prop, otherSchemas, typeof(int), "m_AssetPackIndex");
 
             EditorGUI.BeginChangeCheck();
-            var newIndex = EditorGUILayout.Popup("Asset Pack", current, displayOptions);
+            var newIndex = EditorGUILayout.Popup(m_AssetPackGUI, current, displayOptions);
             if (EditorGUI.EndChangeCheck())
             {
+                // Switching from InstallTimeContent to a custom asset pack. Set PrepareForCustomAssetPack to true by default.
+                if (AssetPackIndex == 0 && newIndex > 0)
+                    IncludeInAssetPack = true;
+
                 AssetPackIndex = newIndex;
-                CustomAssetPackEditorInfo newPack = customAssetPacks[AssetPackIndex];
                 if (otherSchemas != null)
                 {
                     foreach (AddressableAssetGroupSchema s in otherSchemas)
@@ -87,6 +117,29 @@ namespace AddressablesPlayAssetDelivery.Editor
                     }
                 }
             }
+            if (otherSchemas != null)
+                EditorGUI.showMixedValue = false;
+
+            prop = so.FindProperty("m_IncludeInCustomAssetPack");
+            if (otherSchemas != null)
+                ShowMixedValue(prop, otherSchemas, typeof(bool), "m_IncludeInCustomAssetPack");
+            EditorGUI.BeginChangeCheck();
+            bool newIncludeInAssetPack = EditorGUILayout.Toggle(m_IncludeInAssetPackGUI, IncludeInAssetPack);
+            if (EditorGUI.EndChangeCheck())
+            {
+                IncludeInAssetPack = newIncludeInAssetPack;
+                if (otherSchemas != null)
+                {
+                    foreach (AddressableAssetGroupSchema s in otherSchemas)
+                    {
+                        PlayAssetDeliverySchema padSchema = s as PlayAssetDeliverySchema;
+                        padSchema.IncludeInAssetPack = newIncludeInAssetPack;
+                    }
+                }
+            }
+            if (AssetPackIndex == 0 && !IncludeInAssetPack)
+                EditorGUILayout.HelpBox("Will still be included if \"Content Packing & Loading\" > \"Build Path\" uses the Addressables.BuildPath or Application.streamingAssetsPath.", MessageType.Info);
+
             if (otherSchemas != null)
                 EditorGUI.showMixedValue = false;
 
@@ -113,10 +166,8 @@ namespace AddressablesPlayAssetDelivery.Editor
         public override void OnGUIMultiple(List<AddressableAssetGroupSchema> otherSchemas)
         {
             var so = new SerializedObject(this);
-
             ShowAssetPacks(so, otherSchemas);
             so.ApplyModifiedProperties();
         }
     }
 }
-#endif
