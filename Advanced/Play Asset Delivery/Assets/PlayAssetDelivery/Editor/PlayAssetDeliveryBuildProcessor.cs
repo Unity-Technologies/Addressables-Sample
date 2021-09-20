@@ -31,13 +31,10 @@ namespace AddressablesPlayAssetDelivery.Editor
         /// </summary>
         public void OnPreprocessBuild(BuildReport report)
         {
-            if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android)
-            {
-                if (EditorUserBuildSettings.buildAppBundle)
-                    MoveDataForAppBundleBuild();
-                else
-                    MoveDataToDefaultLocation();
-            }
+            if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android && EditorUserBuildSettings.buildAppBundle)
+                MoveDataForAppBundleBuild();
+            else
+                MoveDataToDefaultLocation();
         }
 
         /// <summary>
