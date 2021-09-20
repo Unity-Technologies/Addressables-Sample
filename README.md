@@ -134,12 +134,28 @@ Configure Unity to build Android App Bundles. For more information see ["Play As
   - If "Export Project is enabled", enable "Export for App Bundle". Otherwise, enable "Build App Bundle (Google Play)".
 2. If you want any bundled content to use "install-time" delivery, select "Split Application Binary" in Edit > Project Settings > Player > Publishing Settings.
 
-###### Configure Addressables 
+###### Configure custom Addressable scripts
+The sample project uses several custom Addressable scripts.
+
+In 'Assets/PlayAssetDelivery/Editor' we have:
+- A custom group template (Asset Pack Content.asset).
+- A custom data builder script (BuildScriptPlayAssetDelivery.cs) and its serialized asset (BuildScriptPlayAssetDelivery.asset)
+- A custom build processor (PlayAssetDeliveryBuildProcessor.cs)
+- A custom schema (PlayAssetDeliverySchema.cs)
+
+In 'Assets/PlayAssetDelivery/Runtime' we have:
+- A custom AssetBundle Provider (PlayAssetdeliveryAssetbundleProvider.cs)
+
+Configure the following properties in AddressableAssetSettings:
+1. In "Build and Play Mode Scripts" add the custom data builder asset (BuildScriptPlayAssetDelivery.asset).
+2. In "Asset Group Templates" add the custom group template (Asset Pack Content.asset).
+
+###### Assign Addressable Groups to asset packs 
 1. In the Addressables Groups window (Window > Asset Management > Addressables Groups) toolbar, select Create > Group > Asset Pack Content to create a new group whose content will be assigned to an asset pack. The group contains 2 schemas “Content Packing & Loading” and "Play Asset Delivery”.
-2. Specify the assigned asset pack in “Play Asset Delivery” schema. Select "Manage Asset Packs" to modify custom asset packs.
+2. Specify the assigned asset pack in “Play Asset Delivery” schema. Select "Manage Asset Packs" to modify custom asset packs. Be mindful of the [size restrictions per delivery mode](https://developer.android.com/guide/playcore/asset-delivery#custom-asset-packs).
    - Assign all content intended for "install-time" delivery to the "InstallTimeContent" asset pack. This is a "placeholder" asset pack that is representative of the [generated asset packs](https://docs.unity3d.com/Manual/play-asset-delivery.html#generated-asset-packs). No custom asset pack named "InstallTimeContent" is actually created.
    - In most cases the generated asset packs will use "install-time" delivery, but in large projects it may use "fast-follow" delivery instead. For more information see ["Generated Asset Packs"](https://docs.unity3d.com/Manual/play-asset-delivery.html#generated-asset-packs).
-     - **Note**: To exclude the group from the asset pack either disable "Include In Asset Pack" or remove the "Play Asset Delivery" schema. Additionally make sure that its "Content Packing & Loading" > “Build Path" does not use the Addressables.BuildPath or Application.streamingAssetsPath. Any content in those directories will be assigned to the generated asset packs.
+   - **Note**: To exclude the group from the asset pack either disable "Include In Asset Pack" or remove the "Play Asset Delivery" schema. Additionally make sure that its "Content Packing & Loading" > “Build Path" does not use the Addressables.BuildPath or Application.streamingAssetsPath. Any content in those directories will be assigned to the generated asset packs.
 3. In the “Content Packing & Loading” schema:
    - Set the “Build & Load Paths” to the default local paths (LocalBuildPath and LocalLoadPath). At runtime we will configure the load paths to use asset pack locations (see AddressablesInitSingleton.cs).
      - **Note**: Since the Google Play Console doesn't provide remote URLs for uploaded content, it is not possible to use remote paths or the Content Update workflow for content assigned to asset packs. Remote content will need to be hosted on a different CDN.
