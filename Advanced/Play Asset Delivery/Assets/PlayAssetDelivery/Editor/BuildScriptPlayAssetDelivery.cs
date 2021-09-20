@@ -121,9 +121,25 @@ namespace AddressablesPlayAssetDelivery.Editor
                 List<string> bundleFiles = Directory.EnumerateFiles(CustomAssetPackUtility.PackContentRootDirectory, "*.bundle").ToList();
                 foreach (string file in bundleFiles)
                     AssetDatabase.DeleteAsset(file);
+                
+                // Delete "CustomAssetPacksData.json"
+                if (File.Exists(CustomAssetPackUtility.CustomAssetPacksDataEditorPath))
+                    AssetDatabase.DeleteAsset(CustomAssetPackUtility.CustomAssetPacksDataEditorPath);
+                if (File.Exists(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath))
+                {
+                    File.Delete(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath);
+                    File.Delete(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath + ".meta");
+                }
+                
+                // Delete "BuildProcessorData.json"
+                if (File.Exists(CustomAssetPackUtility.BuildProcessorDataPath))
+                    AssetDatabase.DeleteAsset(CustomAssetPackUtility.BuildProcessorDataPath);
             }
-            // Create the 'Assets/PlayAssetDelivery/Build/CustomAssetPackContent' directory
-            AssetDatabase.CreateFolder(CustomAssetPackUtility.BuildRootDirectory, CustomAssetPackUtility.kPackContentFolderName);
+            else
+            {
+                // Create the 'Assets/PlayAssetDelivery/Build/CustomAssetPackContent' directory
+                AssetDatabase.CreateFolder(CustomAssetPackUtility.BuildRootDirectory, CustomAssetPackUtility.kPackContentFolderName);
+            }
         }
 
         bool BuildPathIncludedInStreamingAssets(string buildPath)
@@ -250,24 +266,14 @@ namespace AddressablesPlayAssetDelivery.Editor
         {
             var customPackEditorData = new BuildProcessorData(entries);
             string contents = JsonUtility.ToJson(customPackEditorData);
-
-            string path = CustomAssetPackUtility.BuildProcessorDataPath;
-            File.WriteAllText(path, contents);
+            File.WriteAllText(CustomAssetPackUtility.BuildProcessorDataPath, contents);
         }
 
         void SerializeCustomAssetPacksData(List<CustomAssetPackDataEntry> entries)
         {
             var customPackData = new CustomAssetPackData(entries);
             string contents = JsonUtility.ToJson(customPackData);
-
-            string path = CustomAssetPackUtility.CustomAssetPacksDataEditorPath;
-            File.WriteAllText(path, contents);
-
-            if (File.Exists(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath))
-            {
-                File.Delete(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath);
-                File.Delete(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath + ".meta");
-            }
+            File.WriteAllText(CustomAssetPackUtility.CustomAssetPacksDataEditorPath, contents);
         }
     }
 }
