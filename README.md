@@ -114,7 +114,7 @@ An example project that shows how to use [Unity's Play Asset Delivery API](https
 
  **Note**: [Play Asset Delivery](https://docs.unity3d.com/Manual/play-asset-delivery.html) requires Unity 2019.4+
 
-If you want to make [custom asset packs](https://docs.unity3d.com/Manual/play-asset-delivery.html#custom-asset-packs) use this project as a guide. Otherwise you don't need to change how Addressables is configured in your project. Just follow the instructions specified in the [Play Asset Delivery]((https://docs.unity3d.com/Manual/play-asset-delivery.html) manual page.
+If you want to make [custom asset packs](https://docs.unity3d.com/Manual/play-asset-delivery.html#custom-asset-packs) use this project as a guide. Otherwise you don't need to change how Addressables is configured in your project. Just follow the instructions specified in the [Play Asset Delivery](https://docs.unity3d.com/Manual/play-asset-delivery.html) manual page.
 
 This is possible because the AddressablesPlayerBuildProcessor moves all content located in Addressables.BuildPath to the streaming assets path. Unity assigns streaming assets to the [generated asset packs](https://docs.unity3d.com/Manual/play-asset-delivery.html#generated-asset-packs).
 
@@ -176,8 +176,8 @@ Prepare Addressables to load content from asset packs at runtime (see Addressabl
 Once configured, you can load assets using the Addressables API (see LoadObject.cs).
 
 ##### Build the Android App Bundle
-Assuming that you have configured the build settings mentioned here [Configure Build & Player Settings](#Configure-Build-&-Player-Settings), when ready to build the Android App Bundle open File > Build Settings and click “Build”. 
+Assuming that you have configured the build settings mentioned here [Configure Build & Player Settings](#Configure-Build-&-Player-Settings), to build the Android App Bundle do File > Build Settings > Build. 
 
 **Note**: If you want to upload the App Bundle to the Google Play Console, make sure that you are doing a release build.
 
-This will build all of our custom asset packs along with the generated asset packs. The PlayAssetDeliveryBuildProcessor will automatically move bundles to their "{asset pack name}.androidpack” directories in 'Assets/PlayAssetDelivery/Build/CustomAssetPackContent', so that they will be assigned to their corresponding custom asset pack.
+The PlayAssetDeliveryBuildProcessor will automatically move bundles to their "{asset pack name}.androidpack” directories in 'Assets/PlayAssetDelivery/Build/CustomAssetPackContent', so that they will be assigned to their corresponding custom asset pack. Then Unity will build all of our custom asset packs along with the generated asset packs. 
