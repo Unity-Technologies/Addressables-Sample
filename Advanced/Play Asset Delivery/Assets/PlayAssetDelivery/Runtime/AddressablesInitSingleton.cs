@@ -102,9 +102,7 @@ namespace AddressablesPlayAssetDelivery
             yield return www.SendWebRequest();
 
             if (www.result != UnityWebRequest.Result.Success)
-            {
                 LogWarning($"Could not load 'CustomAssetPacksData.json' : {www.error}.", true);
-            }
             else
             {
                 InitializeBundleToAssetPackMap(www.downloadHandler.text);

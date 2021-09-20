@@ -103,10 +103,6 @@ namespace AddressablesPlayAssetDelivery.Editor
             var newIndex = EditorGUILayout.Popup(m_AssetPackGUI, current, displayOptions);
             if (EditorGUI.EndChangeCheck())
             {
-                // Switching from InstallTimeContent to a custom asset pack. Set PrepareForCustomAssetPack to true by default.
-                if (AssetPackIndex == 0 && newIndex > 0)
-                    IncludeInAssetPack = true;
-
                 AssetPackIndex = newIndex;
                 if (otherSchemas != null)
                 {
