@@ -13,13 +13,13 @@ namespace AddressablesPlayAssetDelivery.Editor
     /// Moves custom asset pack data from their default build location <see cref="BuildScriptPlayAssetDelivery"/> to their correct player build data location.
     /// For an Android App Bundle, bundles assigned to a custom asset pack must be located in their {asset pack name}.androidpack directory in the Assets folder.
     /// The 'CustomAssetPacksData.json' file is also moved to StreamingAssets.
-    /// 
+    ///
     /// This script executes before the <see cref="AddressablesPlayerBuildProcessor"/> which moves all Addressables data to StreamingAssets.
     /// </summary>
     public class PlayAssetDeliveryBuildProcessor : IPreprocessBuildWithReport
     {
         /// <summary>
-        /// Returns the player build processor callback order. 
+        /// Returns the player build processor callback order.
         /// </summary>
         public int callbackOrder
         {
@@ -31,9 +31,9 @@ namespace AddressablesPlayAssetDelivery.Editor
         /// </summary>
         public void OnPreprocessBuild(BuildReport report)
         {
-            if(EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android)
+            if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android)
             {
-                if(EditorUserBuildSettings.buildAppBundle)
+                if (EditorUserBuildSettings.buildAppBundle)
                     MoveDataForAppBundleBuild();
                 else
                     MoveDataToDefaultLocation();
@@ -56,7 +56,7 @@ namespace AddressablesPlayAssetDelivery.Editor
             {
                 string contents = File.ReadAllText(CustomAssetPackUtility.BuildProcessorDataPath);
                 var data =  JsonUtility.FromJson<BuildProcessorData>(contents);
-                
+
                 foreach (BuildProcessorDataEntry entry in data.Entries)
                 {
                     string assetsFolderPath = Path.Combine(CustomAssetPackUtility.PackContentRootDirectory, entry.AssetsSubfolderPath);
@@ -68,7 +68,7 @@ namespace AddressablesPlayAssetDelivery.Editor
                 }
             }
         }
-        
+
         /// <summary>
         /// Move custom asset pack data from their App Bundle data location to to their build location.
         /// </summary>
@@ -79,13 +79,12 @@ namespace AddressablesPlayAssetDelivery.Editor
                 File.Move(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath, CustomAssetPackUtility.CustomAssetPacksDataEditorPath);
                 File.Delete(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath + ".meta");
                 DeleteDirectory(Application.streamingAssetsPath, true);
-               
             }
-            if(File.Exists(CustomAssetPackUtility.BuildProcessorDataPath))
+            if (File.Exists(CustomAssetPackUtility.BuildProcessorDataPath))
             {
                 string contents = File.ReadAllText(CustomAssetPackUtility.BuildProcessorDataPath);
                 var data =  JsonUtility.FromJson<BuildProcessorData>(contents);
-                
+
                 foreach (BuildProcessorDataEntry entry in data.Entries)
                 {
                     string assetsFolderPath = Path.Combine(CustomAssetPackUtility.PackContentRootDirectory, entry.AssetsSubfolderPath);

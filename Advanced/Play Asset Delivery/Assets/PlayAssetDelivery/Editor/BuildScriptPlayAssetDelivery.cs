@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -60,19 +61,30 @@ namespace AddressablesPlayAssetDelivery.Editor
             return result;
         }
 
+        /// <inheritdoc/>
+        public override void ClearCachedData()
+        {
+            base.ClearCachedData();
+            if (AssetDatabase.IsValidFolder(CustomAssetPackUtility.PackContentRootDirectory))
+            {
+                try
+                {
+                    AssetDatabase.DeleteAsset(CustomAssetPackUtility.PackContentRootDirectory);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogException(e);
+                }
+            }
+        }
+
         void CreateCustomAssetPacks(AddressableAssetSettings settings, CustomAssetPackSettings customAssetPackSettings, bool resetAssetPackSchemaData)
         {
             List<CustomAssetPackEditorInfo> customAssetPacks = customAssetPackSettings.CustomAssetPacks;
             var assetPackToDataEntry = new Dictionary<string, CustomAssetPackDataEntry>();
             var bundleIdToEditorDataEntry = new Dictionary<string, BuildProcessorDataEntry>();
 
-            // Create the 'Assets/PlayAssetDelivery/Build' directory
-            if (!Directory.Exists(CustomAssetPackUtility.BuildRootDirectory))
-                AssetDatabase.CreateFolder(CustomAssetPackUtility.RootDirectory, CustomAssetPackUtility.kBuildFolderName);
-
-            // Create the 'Assets/PlayAssetDelivery/Build/CustomAssetPackContent' directory
-            if (!Directory.Exists(CustomAssetPackUtility.PackContentRootDirectory))
-                AssetDatabase.CreateFolder(CustomAssetPackUtility.BuildRootDirectory, CustomAssetPackUtility.kPackContentFolderName);
+            CreateBuildOutputFolders();
 
             foreach (AddressableAssetGroup group in settings.groups)
             {
@@ -96,6 +108,24 @@ namespace AddressablesPlayAssetDelivery.Editor
             SerializeCustomAssetPacksData(assetPackToDataEntry.Values.ToList());
         }
 
+        void CreateBuildOutputFolders()
+        {
+            if (!AssetDatabase.IsValidFolder(CustomAssetPackUtility.BuildRootDirectory))
+            {
+                // Create the 'Assets/PlayAssetDelivery/Build' directory
+                AssetDatabase.CreateFolder(CustomAssetPackUtility.RootDirectory, CustomAssetPackUtility.kBuildFolderName);
+            }
+            else if (AssetDatabase.IsValidFolder(CustomAssetPackUtility.PackContentRootDirectory))
+            {
+                // Delete all bundle files in 'Assets/PlayAssetDelivery/Build/CustomAssetPackContent'
+                List<string> bundleFiles = Directory.EnumerateFiles(CustomAssetPackUtility.PackContentRootDirectory, "*.bundle").ToList();
+                foreach (string file in bundleFiles)
+                    AssetDatabase.DeleteAsset(file);
+            }
+            // Create the 'Assets/PlayAssetDelivery/Build/CustomAssetPackContent' directory
+            AssetDatabase.CreateFolder(CustomAssetPackUtility.BuildRootDirectory, CustomAssetPackUtility.kPackContentFolderName);
+        }
+
         bool BuildPathIncludedInStreamingAssets(string buildPath)
         {
             return buildPath.StartsWith(Addressables.BuildPath) || buildPath.StartsWith(Application.streamingAssetsPath);
@@ -113,8 +143,6 @@ namespace AddressablesPlayAssetDelivery.Editor
 
             if (!AssetDatabase.IsValidFolder(path))
                 AssetDatabase.CreateFolder(CustomAssetPackUtility.PackContentRootDirectory, folderName);
-            else
-                DeleteBundleFiles(path);
             return path;
         }
 
@@ -204,7 +232,7 @@ namespace AddressablesPlayAssetDelivery.Editor
             }
 
             // Warn about other gradle files in the .androidpack directory
-            List<string> gradleFiles = Directory.GetFiles(androidPackDir, "*.gradle").Where(x => Path.GetFileName(x) != "build.gradle").ToList();
+            List<string> gradleFiles = Directory.EnumerateFiles(androidPackDir, "*.gradle").Where(x => Path.GetFileName(x) != "build.gradle").ToList();
             if (gradleFiles.Count > 0)
             {
                 Addressables.LogWarning($"Custom asset pack at '{androidPackDir}' contains {gradleFiles.Count} files with .gradle extension which will be ignored. " +
@@ -216,16 +244,6 @@ namespace AddressablesPlayAssetDelivery.Editor
             string buildFilePath = Path.Combine(androidPackDir, "build.gradle");
             string content = $"apply plugin: 'com.android.asset-pack'\n\nassetPack {{\n\tpackName = \"{assetPackName}\"\n\tdynamicDelivery {{\n\t\tdeliveryType = \"{deliveryTypeString}\"\n\t}}\n}}";
             File.WriteAllText(buildFilePath, content);
-        }
-
-        void DeleteBundleFiles(string androidPackDir)
-        {
-            // Delete any existing bundle files.
-            List<string> bundleFiles = Directory.GetFiles(androidPackDir, "*.bundle").ToList();
-            foreach (string file in bundleFiles)
-            {
-                AssetDatabase.DeleteAsset(file);
-            }
         }
 
         void SerializeBuildProcessorData(List<BuildProcessorDataEntry> entries)
