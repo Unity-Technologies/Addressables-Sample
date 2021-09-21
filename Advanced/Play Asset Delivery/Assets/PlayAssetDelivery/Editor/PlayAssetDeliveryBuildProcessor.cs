@@ -75,7 +75,7 @@ namespace AddressablesPlayAssetDelivery.Editor
             {
                 File.Move(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath, CustomAssetPackUtility.CustomAssetPacksDataEditorPath);
                 File.Delete(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath + ".meta");
-                DeleteDirectory(Application.streamingAssetsPath, true);
+                CustomAssetPackUtility.DeleteDirectory(Application.streamingAssetsPath, true);
             }
             if (File.Exists(CustomAssetPackUtility.BuildProcessorDataPath))
             {
@@ -91,21 +91,6 @@ namespace AddressablesPlayAssetDelivery.Editor
                         File.Delete(assetsFolderPath + ".meta");
                     }
                 }
-            }
-        }
-
-        static void DeleteDirectory(string directoryPath, bool onlyIfEmpty)
-        {
-            bool isEmpty = !Directory.EnumerateFiles(directoryPath, "*", SearchOption.AllDirectories).Any()
-                && !Directory.EnumerateDirectories(directoryPath, "*", SearchOption.AllDirectories).Any();
-            if (!onlyIfEmpty || isEmpty)
-            {
-                // check if the folder is valid in the AssetDatabase before deleting through standard file system
-                string relativePath = directoryPath.Replace("\\", "/").Replace(Application.dataPath, "Assets");
-                if (AssetDatabase.IsValidFolder(relativePath))
-                    AssetDatabase.DeleteAsset(relativePath);
-                else
-                    Directory.Delete(directoryPath, true);
             }
         }
     }

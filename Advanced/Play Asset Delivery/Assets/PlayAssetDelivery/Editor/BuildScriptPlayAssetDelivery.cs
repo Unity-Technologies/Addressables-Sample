@@ -65,17 +65,43 @@ namespace AddressablesPlayAssetDelivery.Editor
         public override void ClearCachedData()
         {
             base.ClearCachedData();
+            try
+            {
+                ClearJsonFiles();
+                ClearBundlesInAssetsFolder();
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+        }
+
+        void ClearBundlesInAssetsFolder()
+        {
             if (AssetDatabase.IsValidFolder(CustomAssetPackUtility.PackContentRootDirectory))
             {
-                try
-                {
-                    AssetDatabase.DeleteAsset(CustomAssetPackUtility.PackContentRootDirectory);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogException(e);
-                }
+                // Delete all bundle files in 'Assets/PlayAssetDelivery/Build/CustomAssetPackContent'
+                List<string> bundleFiles = Directory.EnumerateFiles(CustomAssetPackUtility.PackContentRootDirectory, "*.bundle", SearchOption.AllDirectories).ToList();
+                foreach (string file in bundleFiles)
+                    AssetDatabase.DeleteAsset(file);
             }
+        }
+
+        void ClearJsonFiles()
+        {
+            // Delete "CustomAssetPacksData.json"
+            if (File.Exists(CustomAssetPackUtility.CustomAssetPacksDataEditorPath))
+                AssetDatabase.DeleteAsset(CustomAssetPackUtility.CustomAssetPacksDataEditorPath);
+            if (File.Exists(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath))
+            {
+                File.Delete(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath);
+                File.Delete(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath + ".meta");
+                CustomAssetPackUtility.DeleteDirectory(Application.streamingAssetsPath, true);
+            }
+                
+            // Delete "BuildProcessorData.json"
+            if (File.Exists(CustomAssetPackUtility.BuildProcessorDataPath))
+                AssetDatabase.DeleteAsset(CustomAssetPackUtility.BuildProcessorDataPath);
         }
 
         void CreateCustomAssetPacks(AddressableAssetSettings settings, CustomAssetPackSettings customAssetPackSettings, bool resetAssetPackSchemaData)
@@ -110,36 +136,17 @@ namespace AddressablesPlayAssetDelivery.Editor
 
         void CreateBuildOutputFolders()
         {
+            // Create the 'Assets/PlayAssetDelivery/Build' directory
             if (!AssetDatabase.IsValidFolder(CustomAssetPackUtility.BuildRootDirectory))
-            {
-                // Create the 'Assets/PlayAssetDelivery/Build' directory
                 AssetDatabase.CreateFolder(CustomAssetPackUtility.RootDirectory, CustomAssetPackUtility.kBuildFolderName);
-            }
-            else if (AssetDatabase.IsValidFolder(CustomAssetPackUtility.PackContentRootDirectory))
-            {
-                // Delete all bundle files in 'Assets/PlayAssetDelivery/Build/CustomAssetPackContent'
-                List<string> bundleFiles = Directory.EnumerateFiles(CustomAssetPackUtility.PackContentRootDirectory, "*.bundle").ToList();
-                foreach (string file in bundleFiles)
-                    AssetDatabase.DeleteAsset(file);
-                
-                // Delete "CustomAssetPacksData.json"
-                if (File.Exists(CustomAssetPackUtility.CustomAssetPacksDataEditorPath))
-                    AssetDatabase.DeleteAsset(CustomAssetPackUtility.CustomAssetPacksDataEditorPath);
-                if (File.Exists(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath))
-                {
-                    File.Delete(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath);
-                    File.Delete(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath + ".meta");
-                }
-                
-                // Delete "BuildProcessorData.json"
-                if (File.Exists(CustomAssetPackUtility.BuildProcessorDataPath))
-                    AssetDatabase.DeleteAsset(CustomAssetPackUtility.BuildProcessorDataPath);
-            }
             else
-            {
-                // Create the 'Assets/PlayAssetDelivery/Build/CustomAssetPackContent' directory
+                ClearJsonFiles();
+
+            // Create the 'Assets/PlayAssetDelivery/Build/CustomAssetPackContent' directory
+            if (!AssetDatabase.IsValidFolder(CustomAssetPackUtility.PackContentRootDirectory))
                 AssetDatabase.CreateFolder(CustomAssetPackUtility.BuildRootDirectory, CustomAssetPackUtility.kPackContentFolderName);
-            }
+            else
+                ClearBundlesInAssetsFolder();
         }
 
         bool BuildPathIncludedInStreamingAssets(string buildPath)

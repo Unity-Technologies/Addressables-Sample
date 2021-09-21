@@ -73,6 +73,21 @@ namespace AddressablesPlayAssetDelivery
         }
 
 #if UNITY_EDITOR
+        public static void DeleteDirectory(string directoryPath, bool onlyIfEmpty)
+        {
+            bool isEmpty = !Directory.EnumerateFiles(directoryPath, "*", SearchOption.AllDirectories).Any()
+                && !Directory.EnumerateDirectories(directoryPath, "*", SearchOption.AllDirectories).Any();
+            if (!onlyIfEmpty || isEmpty)
+            {
+                // check if the folder is valid in the AssetDatabase before deleting through standard file system
+                string relativePath = directoryPath.Replace("\\", "/").Replace(Application.dataPath, "Assets");
+                if (UnityEditor.AssetDatabase.IsValidFolder(relativePath))
+                    UnityEditor.AssetDatabase.DeleteAsset(relativePath);
+                else
+                    Directory.Delete(directoryPath, true);
+            }
+        }
+
 #if UNITY_2021_2_OR_NEWER
         static readonly Dictionary<DeliveryType, AndroidAssetPackDeliveryType> k_DeliveryTypeToGradleString = new Dictionary<DeliveryType, AndroidAssetPackDeliveryType>()
         {
