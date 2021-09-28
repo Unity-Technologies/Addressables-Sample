@@ -116,9 +116,9 @@ namespace AddressablesPlayAssetDelivery.Editor
             if (otherSchemas != null)
                 EditorGUI.showMixedValue = false;
 
-            prop = so.FindProperty("m_IncludeInCustomAssetPack");
+            prop = so.FindProperty("m_IncludeInAssetPack");
             if (otherSchemas != null)
-                ShowMixedValue(prop, otherSchemas, typeof(bool), "m_IncludeInCustomAssetPack");
+                ShowMixedValue(prop, otherSchemas, typeof(bool), "m_IncludeInAssetPack");
             EditorGUI.BeginChangeCheck();
             bool newIncludeInAssetPack = EditorGUILayout.Toggle(m_IncludeInAssetPackGUI, IncludeInAssetPack);
             if (EditorGUI.EndChangeCheck())
