@@ -47,7 +47,7 @@ namespace AddressablesPlayAssetDelivery.Editor
                 if (!Directory.Exists(Application.streamingAssetsPath))
                     Directory.CreateDirectory(Application.streamingAssetsPath);
                 File.Move(CustomAssetPackUtility.CustomAssetPacksDataEditorPath, CustomAssetPackUtility.CustomAssetPacksDataRuntimePath);
-                File.Delete(CustomAssetPackUtility.CustomAssetPacksDataEditorPath + ".meta");
+                AssetDatabase.DeleteAsset(CustomAssetPackUtility.CustomAssetPacksDataEditorPath);
             }
             if (File.Exists(CustomAssetPackUtility.BuildProcessorDataPath))
             {
@@ -88,7 +88,7 @@ namespace AddressablesPlayAssetDelivery.Editor
                     if (File.Exists(assetsFolderPath))
                     {
                         File.Move(assetsFolderPath, entry.BundleBuildPath);
-                        File.Delete(assetsFolderPath + ".meta");
+                        AssetDatabase.DeleteAsset(assetsFolderPath);
                     }
                 }
             }

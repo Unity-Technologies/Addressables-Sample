@@ -40,21 +40,21 @@ namespace AddressablesPlayAssetDelivery
         public const string kPackContentFolderName = "CustomAssetPackContent";
 
         public const string kBuildProcessorDataFilename = "BuildProcessorData.json";
-        public const string kRuntimeDataFilename = "CustomAssetPacksData.json";
+        public const string kCustomAssetPackDataFilename = "CustomAssetPacksData.json";
 
         public static string RootDirectory
         {
-            get { return Path.Combine("Assets", "PlayAssetDelivery"); }
+            get { return $"Assets/PlayAssetDelivery"; }
         }
 
         public static string BuildRootDirectory
         {
-            get { return Path.Combine(RootDirectory, kBuildFolderName); }
+            get { return $"{RootDirectory}/{kBuildFolderName}"; }
         }
 
         public static string PackContentRootDirectory
         {
-            get { return Path.Combine(BuildRootDirectory, kPackContentFolderName); }
+            get { return $"{RootDirectory}/{kPackContentFolderName}"; }
         }
 
         public static string BuildProcessorDataPath
@@ -64,12 +64,12 @@ namespace AddressablesPlayAssetDelivery
 
         public static string CustomAssetPacksDataEditorPath
         {
-            get { return Path.Combine(BuildRootDirectory, kRuntimeDataFilename); }
+            get { return Path.Combine(BuildRootDirectory, kCustomAssetPackDataFilename); }
         }
 
         public static string CustomAssetPacksDataRuntimePath
         {
-            get { return Path.Combine(Application.streamingAssetsPath, kRuntimeDataFilename); }
+            get { return Path.Combine(Application.streamingAssetsPath, kCustomAssetPackDataFilename); }
         }
 
 #if UNITY_EDITOR
