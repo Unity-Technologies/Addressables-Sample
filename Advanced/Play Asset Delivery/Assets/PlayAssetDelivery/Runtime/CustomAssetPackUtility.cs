@@ -54,7 +54,7 @@ namespace AddressablesPlayAssetDelivery
 
         public static string PackContentRootDirectory
         {
-            get { return $"{RootDirectory}/{kPackContentFolderName}"; }
+            get { return $"{BuildRootDirectory}/{kPackContentFolderName}"; }
         }
 
         public static string BuildProcessorDataPath
