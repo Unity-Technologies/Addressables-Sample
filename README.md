@@ -110,7 +110,7 @@ This sample shows how to create custom AnalyzeRules for use within the Analyze w
   * This would be useful if you primarily left the addresses of your assets as the path (which is the default when marking an asset addressable).  If the asset is moved within the project, then the address no longer maps to where it is. This rule could fix that.
 
 #### *Advanced/Play Asset Delivery*
-An example project that shows how to use [Unity's Play Asset Delivery API](https://docs.unity3d.com/Manual/play-asset-delivery.html) with Addressables. SampleScene contains 3 buttons that will load or unload an asset that was assigned to an asset pack of a specific delivery type.
+An example project that shows how to use [Unity's Play Asset Delivery API](https://docs.unity3d.com/Manual/play-asset-delivery.html) with Addressables. SampleScene (located in 'Assets/Scenes') contains 3 buttons that will load or unload an asset assigned to a specific delivery type.
 
  **Note**: [Play Asset Delivery](https://docs.unity3d.com/Manual/play-asset-delivery.html) requires Unity 2019.4+
 
@@ -179,6 +179,8 @@ Prepare Addressables to load content from asset packs at runtime (see PlayAssetD
 3. Load all custom asset pack data from the "CustomAssetPacksData.json" file.
 
 Once configured, you can load assets using the Addressables API (see LoadObject.cs).
+
+**Note**: To load content from AssetBundles during Play Mode, go to the Addressables Groups window (**Window** > **Asset Management** > **Addressables Groups**) toolbar and select **Play Mode Script** > **Use Existing Build (requires built groups)**.
 
 ##### Build the Android App Bundle
 When you have configured the build settings according to the [Configure Build & Player Settings](#Configure-Build-&-Player-Settings) instructions, go to **File** > **Build Settings** and select **Build** to build the Android App bundle.
