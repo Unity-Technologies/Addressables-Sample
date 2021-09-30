@@ -1,9 +1,10 @@
-using System.Collections.Generic;
+using System;
 using System.IO;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Android;
 using UnityEngine.Networking;
+using UnityEngine.ResourceManagement;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
 using UnityEngine.ResourceManagement.ResourceProviders;
@@ -11,66 +12,54 @@ using UnityEngine.ResourceManagement.Util;
 
 namespace AddressablesPlayAssetDelivery
 {
-    public class AddressablesInitSingleton : ComponentSingleton<AddressablesInitSingleton>
+    /// <summary>
+    /// IInitializableObject that configures Addressables for loading content from asset packs.
+    /// </summary>
+    [Serializable]
+    public class PlayAssetDeliveryInitialization : IInitializableObject
     {
-        /// <summary>
-        /// Maps an asset bundle name to the name of its assigned asset pack.
-        /// </summary>
-        Dictionary<string, CustomAssetPackDataEntry> m_BundleNameToAssetPack = new Dictionary<string, CustomAssetPackDataEntry>();
-        public Dictionary<string, CustomAssetPackDataEntry> BundleNameToAssetPack
+        public bool Initialize(string id, string data)
         {
-            get { return m_BundleNameToAssetPack; }
+            return true;
         }
 
         /// <summary>
-        /// Maps an asset pack name to the location where it has been downloaded.
+        /// Determines whether warnings should be logged during initialization.
         /// </summary>
-        Dictionary<string, string> m_AssetPackNameToDownloadPath = new Dictionary<string, string>();
-        public Dictionary<string, string> AssetPackNameToDownloadPath
+        /// <param name="data">The JSON serialized <see cref="PlayAssetDeliveryInitializationData"/> object</param>
+        /// <returns>True to log warnings, otherwise returns false. Default value is true.</returns>
+        public bool LogWarnings(string data)
         {
-            get { return m_AssetPackNameToDownloadPath; }
+            var initializeData = JsonUtility.FromJson<PlayAssetDeliveryInitializationData>(data);
+            if (initializeData != null)
+                return initializeData.LogWarnings;
+            return true;
         }
 
-        /// <summary>
-        /// Handle to the operation that sets up Addressables to load content from their expected location.
-        /// </summary>
-        AsyncOperationHandle<bool> m_InitializeOperation;
-        public AsyncOperationHandle<bool> InitializeOperation
-        {
-            get { return m_InitializeOperation; }
-            set { m_InitializeOperation = value;  }
-        }
-
-        [Tooltip("Show warnings that occur when initializing the singleton.")]
-        public bool logInitializationWarnings = true;
-
-        void Start()
-        {
-            InitializeOperation = Initialize(logInitializationWarnings);
-        }
-
-        /// <summary>
-        /// Sets up Addressables to locate content from their expected location.
-        /// </summary>
-        /// <param name="logWarnings">Set to true to log warnings. Otherwise set to false to disable warnings.</param>
-        /// <returns>The handle of this operation.</returns>
-        public static AsyncOperationHandle<bool> Initialize(bool logWarnings)
+        /// <inheritdoc/>
+        public virtual AsyncOperationHandle<bool> InitializeAsync(ResourceManager rm, string id, string data)
         {
             var op = new PlayAssetDeliveryInitializeOperation();
-            return op.Start(logWarnings);
+            return op.Start(rm, LogWarnings(data));
         }
     }
 
+    /// <summary>
+    /// Configures Addressables for loading content from asset packs
+    /// </summary>
     public class PlayAssetDeliveryInitializeOperation : AsyncOperationBase<bool>
     {
+        ResourceManager m_RM;
         bool m_LogWarnings = false;
+
         bool m_IsDone = false; // AsyncOperationBase.IsDone is internal
         bool m_HasExecuted = false;  // AsyncOperationBase.HasExecuted is internal
 
-        public AsyncOperationHandle<bool> Start(bool logWarnings)
+        public AsyncOperationHandle<bool> Start(ResourceManager rm, bool logWarnings)
         {
+            m_RM = rm;
             m_LogWarnings = logWarnings;
-            return Addressables.ResourceManager.StartOperation(this, default);
+            return m_RM.StartOperation(this, default);
         }
 
         protected override bool InvokeWaitForCompletion()
@@ -154,7 +143,7 @@ namespace AddressablesPlayAssetDelivery
             {
                 foreach (string bundle in entry.AssetBundles)
                 {
-                    AddressablesInitSingleton.Instance.BundleNameToAssetPack.Add(bundle, entry);
+                    PlayAssetDeliveryRuntimeDataSingleton.Instance.BundleNameToAssetPack.Add(bundle, entry);
                 }
             }
         }
@@ -190,14 +179,14 @@ namespace AddressablesPlayAssetDelivery
             if (location.ResourceType == typeof(IAssetBundleResource))
             {
                 string bundleName = Path.GetFileNameWithoutExtension(location.InternalId);
-                if (AddressablesInitSingleton.Instance.BundleNameToAssetPack.ContainsKey(bundleName))
+                if (PlayAssetDeliveryRuntimeDataSingleton.Instance.BundleNameToAssetPack.ContainsKey(bundleName))
                 {
-                    string assetPackName = AddressablesInitSingleton.Instance.BundleNameToAssetPack[bundleName].AssetPackName;
-                    if (AddressablesInitSingleton.Instance.AssetPackNameToDownloadPath.ContainsKey(assetPackName))
+                    string assetPackName = PlayAssetDeliveryRuntimeDataSingleton.Instance.BundleNameToAssetPack[bundleName].AssetPackName;
+                    if (PlayAssetDeliveryRuntimeDataSingleton.Instance.AssetPackNameToDownloadPath.ContainsKey(assetPackName))
                     {
                         // Load bundle that was assigned to a custom fast-follow or on-demand asset pack.
                         // PlayAssetDeliveryBundleProvider.Provider previously saved the asset pack path.
-                        return Path.Combine(AddressablesInitSingleton.Instance.AssetPackNameToDownloadPath[assetPackName], Path.GetFileName(location.InternalId));
+                        return Path.Combine(PlayAssetDeliveryRuntimeDataSingleton.Instance.AssetPackNameToDownloadPath[assetPackName], Path.GetFileName(location.InternalId));
                     }
                 }
             }
@@ -210,9 +199,9 @@ namespace AddressablesPlayAssetDelivery
             if (location.ResourceType == typeof(IAssetBundleResource))
             {
                 string bundleName = Path.GetFileNameWithoutExtension(location.InternalId);
-                if (AddressablesInitSingleton.Instance.BundleNameToAssetPack.ContainsKey(bundleName))
+                if (PlayAssetDeliveryRuntimeDataSingleton.Instance.BundleNameToAssetPack.ContainsKey(bundleName))
                 {
-                    string assetPackName = AddressablesInitSingleton.Instance.BundleNameToAssetPack[bundleName].AssetPackName;
+                    string assetPackName = PlayAssetDeliveryRuntimeDataSingleton.Instance.BundleNameToAssetPack[bundleName].AssetPackName;
                     string androidPackFolder = $"{CustomAssetPackUtility.PackContentRootDirectory}/{assetPackName}.androidpack";
                     string bundlePath = Path.Combine(androidPackFolder, Path.GetFileName(location.InternalId));
                     if (File.Exists(bundlePath))
@@ -227,5 +216,19 @@ namespace AddressablesPlayAssetDelivery
             // Load resource from the default location.
             return location.InternalId;
         }
+    }
+
+    /// <summary>
+    /// Contains settings for <see cref="PlayAssetDeliveryInitialization"/>.
+    /// </summary>
+    [Serializable]
+    public class PlayAssetDeliveryInitializationData
+    {
+        [SerializeField]
+        bool m_LogWarnings = true;
+        /// <summary>
+        /// Enable recompression of asset bundles into LZ4 format as they are saved to the cache.  This sets the Caching.compressionEnabled value.
+        /// </summary>
+        public bool LogWarnings { get { return m_LogWarnings; } set { m_LogWarnings = value; } }
     }
 }

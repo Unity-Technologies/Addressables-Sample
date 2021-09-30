@@ -1266,7 +1266,7 @@ GameObject:
   - component: {fileID: 2071150462}
   - component: {fileID: 2071150461}
   m_Layer: 0
-  m_Name: AddressablesInitSingleton
+  m_Name: RuntimeDataSingleton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1284,7 +1284,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d74196624b266334794c58390f0c69c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_LoadingStrategy: 0
 --- !u!4 &2071150462
 Transform:
   m_ObjectHideFlags: 0

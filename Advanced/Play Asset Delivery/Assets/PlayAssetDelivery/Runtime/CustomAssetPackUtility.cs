@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-#if UNITY_EDITOR && UNITY_2021_2_OR_NEWER
+#if UNITY_EDITOR && UNITY_ANDROID && UNITY_2021_2_OR_NEWER
 using Unity.Android.Types;
 #endif
 
@@ -88,7 +88,7 @@ namespace AddressablesPlayAssetDelivery
             }
         }
 
-#if UNITY_2021_2_OR_NEWER
+#if UNITY_ANDROID && UNITY_2021_2_OR_NEWER
         static readonly Dictionary<DeliveryType, AndroidAssetPackDeliveryType> k_DeliveryTypeToGradleString = new Dictionary<DeliveryType, AndroidAssetPackDeliveryType>()
         {
             { DeliveryType.InstallTime, AndroidAssetPackDeliveryType.InstallTime },
