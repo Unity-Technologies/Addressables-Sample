@@ -17,13 +17,6 @@ namespace AddressablesPlayAssetDelivery
         ProvideHandle m_ProviderInterface;
         public override void Provide(ProvideHandle providerInterface)
         {
-            if (!AddressablesInitSingleton.Instance.HasInitialized)
-            {
-                Debug.LogError($"Cannot load object from '{providerInterface.Location.InternalId}'. AddressablesInitSingleton is stil initializing.");
-                providerInterface.Complete(this, false, new Exception("exception"));
-                return;
-            }
-
 #if UNITY_ANDROID && !UNITY_EDITOR
             m_ProviderInterface = providerInterface;
             LoadFromAssetPack(providerInterface);
@@ -44,7 +37,7 @@ namespace AddressablesPlayAssetDelivery
             {
                 // Bundle is assigned to a custom fast-follow or on-demand asset pack
                 string assetPackName = AddressablesInitSingleton.Instance.BundleNameToAssetPack[bundleName].AssetPackName;
-                if (AddressablesInitSingleton.Instance.AssetPackNameToRemotePath.ContainsKey(assetPackName))
+                if (AddressablesInitSingleton.Instance.AssetPackNameToDownloadPath.ContainsKey(assetPackName))
                 {
                     // Asset pack is already downloaded
                     base.Provide(providerInterface);
@@ -96,7 +89,7 @@ namespace AddressablesPlayAssetDelivery
                 if (!string.IsNullOrEmpty(assetPackPath))
                 {
                     // Asset pack was located on device. Proceed with loading the bundle.
-                    AddressablesInitSingleton.Instance.AssetPackNameToRemotePath.Add(info.name, assetPackPath);
+                    AddressablesInitSingleton.Instance.AssetPackNameToDownloadPath.Add(info.name, assetPackPath);
                     base.Provide(m_ProviderInterface);
                 }
                 else

@@ -1,31 +1,18 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Android;
 using UnityEngine.Networking;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.ResourceManagement.Util;
 
 namespace AddressablesPlayAssetDelivery
 {
-    /// <summary>
-    /// Set up Addressables to locate content in asset packs.
-    /// </summary>
     public class AddressablesInitSingleton : ComponentSingleton<AddressablesInitSingleton>
     {
-        /// <summary>
-        /// Set to true once all core Unity asset packs are downloaded, configured the custom Addressables properties, and loaded all custom asset packs information.
-        /// </summary>
-        bool m_HasInitialized = false;
-        public bool HasInitialized
-        {
-            get { return m_HasInitialized; }
-            internal set { m_HasInitialized = value; }
-        }
-
         /// <summary>
         /// Maps an asset bundle name to the name of its assigned asset pack.
         /// </summary>
@@ -35,10 +22,23 @@ namespace AddressablesPlayAssetDelivery
             get { return m_BundleNameToAssetPack; }
         }
 
-        Dictionary<string, string> m_AssetPackNameToRemotePath = new Dictionary<string, string>();
-        public Dictionary<string, string> AssetPackNameToRemotePath
+        /// <summary>
+        /// Maps an asset pack name to the location where it has been downloaded.
+        /// </summary>
+        Dictionary<string, string> m_AssetPackNameToDownloadPath = new Dictionary<string, string>();
+        public Dictionary<string, string> AssetPackNameToDownloadPath
         {
-            get { return m_AssetPackNameToRemotePath; }
+            get { return m_AssetPackNameToDownloadPath; }
+        }
+
+        /// <summary>
+        /// Handle to the operation that sets up Addressables to load content from their expected location.
+        /// </summary>
+        AsyncOperationHandle<bool> m_InitializeOperation;
+        public AsyncOperationHandle<bool> InitializeOperation
+        {
+            get { return m_InitializeOperation; }
+            set { m_InitializeOperation = value;  }
         }
 
         [Tooltip("Show warnings that occur when initializing the singleton.")]
@@ -46,14 +46,59 @@ namespace AddressablesPlayAssetDelivery
 
         void Start()
         {
+            InitializeOperation = Initialize(logInitializationWarnings);
+        }
+
+        /// <summary>
+        /// Sets up Addressables to locate content from their expected location.
+        /// </summary>
+        /// <param name="logWarnings">Set to true to log warnings. Otherwise set to false to disable warnings.</param>
+        /// <returns>The handle of this operation.</returns>
+        public static AsyncOperationHandle<bool> Initialize(bool logWarnings)
+        {
+            var op = new PlayAssetDeliveryInitializeOperation();
+            return op.Start(logWarnings);
+        }
+    }
+
+    public class PlayAssetDeliveryInitializeOperation : AsyncOperationBase<bool>
+    {
+        bool m_LogWarnings = false;
+        bool m_IsDone = false; // AsyncOperationBase.IsDone is internal
+        bool m_HasExecuted = false;  // AsyncOperationBase.HasExecuted is internal
+
+        public AsyncOperationHandle<bool> Start(bool logWarnings)
+        {
+            m_LogWarnings = logWarnings;
+            return Addressables.ResourceManager.StartOperation(this, default);
+        }
+
+        protected override bool InvokeWaitForCompletion()
+        {
+            if (!m_HasExecuted)
+                Execute();
+            return m_IsDone;
+        }
+
+        void CompleteOverride(string warningMsg)
+        {
+            if (m_LogWarnings && warningMsg != null)
+                Debug.LogWarning($"{warningMsg} Default internal id locations will be used instead.");
+            Complete(true, true, "");
+            m_IsDone = true;
+        }
+
+        protected override void Execute()
+        {
             Addressables.ResourceManager.ResourceProviders.Add(new PlayAssetDeliveryAssetBundleProvider());
-#if UNITY_ANDROID && !UNITY_EDITOR
+        #if UNITY_ANDROID && !UNITY_EDITOR
             LoadFromAssetPacksIfAvailable();
-#elif UNITY_ANDROID && UNITY_EDITOR
+        #elif UNITY_ANDROID && UNITY_EDITOR
             LoadFromEditorData();
 #else
-            HasInitialized = true;
+            CompleteOverride(null);
 #endif
+            m_HasExecuted = true;
         }
 
         void LoadFromAssetPacksIfAvailable()
@@ -61,14 +106,14 @@ namespace AddressablesPlayAssetDelivery
             if (AndroidAssetPacks.coreUnityAssetPacksDownloaded)
             {
                 // Core Unity asset packs use install-time delivery and are already installed.
-                StartCoroutine(DownloadCustomAssetPacksData());
+                DownloadCustomAssetPacksData();
             }
             else
             {
                 // Core Unity asset packs use fast-follow or on-demand delivery and need to be downloaded.
                 string[] coreUnityAssetPackNames = AndroidAssetPacks.GetCoreUnityAssetPackNames(); // only returns names of asset packs that are fast-follow or on-demand delivery
                 if (coreUnityAssetPackNames.Length == 0)
-                    LogWarning("Cannot retrieve core Unity asset pack names. PlayCore Plugin is not installed.", true);
+                    CompleteOverride("Cannot retrieve core Unity asset pack names. PlayCore Plugin is not installed.");
                 else
                     AndroidAssetPacks.DownloadAssetPackAsync(coreUnityAssetPackNames, CheckDownloadStatus);
             }
@@ -77,38 +122,29 @@ namespace AddressablesPlayAssetDelivery
         void LoadFromEditorData()
         {
             if (File.Exists(CustomAssetPackUtility.CustomAssetPacksDataEditorPath))
-            {
                 InitializeBundleToAssetPackMap(File.ReadAllText(CustomAssetPackUtility.CustomAssetPacksDataEditorPath));
-                Addressables.ResourceManager.InternalIdTransformFunc = EditorTransformFunc;
-            }
             else if (File.Exists(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath))
-            {
                 InitializeBundleToAssetPackMap(File.ReadAllText(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath));
-                Addressables.ResourceManager.InternalIdTransformFunc = EditorTransformFunc;
-            }
-            HasInitialized = true;
+
+            Addressables.ResourceManager.InternalIdTransformFunc = EditorTransformFunc;
+            CompleteOverride(null);
         }
 
-        void LogWarning(string message, bool finishInitializing)
-        {
-            if (logInitializationWarnings)
-                Debug.LogWarning($"{message} Default internal id locations will be used instead.");
-            HasInitialized = finishInitializing;
-        }
-
-        IEnumerator DownloadCustomAssetPacksData()
+        void DownloadCustomAssetPacksData()
         {
             UnityWebRequest www = UnityWebRequest.Get(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath);
-            yield return www.SendWebRequest();
-
-            if (www.result != UnityWebRequest.Result.Success)
-                LogWarning($"Could not load '{CustomAssetPackUtility.kCustomAssetPackDataFilename}' : {www.error}.", true);
-            else
+            www.SendWebRequest().completed += (op) =>
             {
-                InitializeBundleToAssetPackMap(www.downloadHandler.text);
-                Addressables.ResourceManager.InternalIdTransformFunc = AppBundleTransformFunc;
-                HasInitialized = true;
-            }
+                UnityWebRequest www = (op as UnityWebRequestAsyncOperation).webRequest;
+                if (www.result != UnityWebRequest.Result.Success)
+                    CompleteOverride($"Could not load '{CustomAssetPackUtility.kCustomAssetPackDataFilename}' : {www.error}.");
+                else
+                {
+                    InitializeBundleToAssetPackMap(www.downloadHandler.text);
+                    Addressables.ResourceManager.InternalIdTransformFunc = AppBundleTransformFunc;
+                    CompleteOverride(null);
+                }
+            };
         }
 
         void InitializeBundleToAssetPackMap(string contents)
@@ -118,7 +154,7 @@ namespace AddressablesPlayAssetDelivery
             {
                 foreach (string bundle in entry.AssetBundles)
                 {
-                    BundleNameToAssetPack.Add(bundle, entry);
+                    AddressablesInitSingleton.Instance.BundleNameToAssetPack.Add(bundle, entry);
                 }
             }
         }
@@ -126,26 +162,26 @@ namespace AddressablesPlayAssetDelivery
         void CheckDownloadStatus(AndroidAssetPackInfo info)
         {
             if (info.status == AndroidAssetPackStatus.Failed)
-                LogWarning($"Failed to retrieve the state of asset pack '{info.name}'.", true);
+                CompleteOverride($"Failed to retrieve the state of asset pack '{info.name}'.");
             else if (info.status == AndroidAssetPackStatus.Unknown)
-                LogWarning($"Asset pack '{info.name}' is unavailable for this application. This can occur if the app was not installed through Google Play.", true);
+                CompleteOverride($"Asset pack '{info.name}' is unavailable for this application. This can occur if the app was not installed through Google Play.");
             else if (info.status == AndroidAssetPackStatus.Canceled)
-                LogWarning($"Cancelled asset pack download request '{info.name}'.", true);
+                CompleteOverride($"Cancelled asset pack download request '{info.name}'.");
             else if (info.status == AndroidAssetPackStatus.WaitingForWifi)
             {
                 AndroidAssetPacks.RequestToUseMobileDataAsync(result =>
                 {
                     if (!result.allowed)
-                        LogWarning("Request to use mobile data was denied.", true);
+                        CompleteOverride("Request to use mobile data was denied.");
                 });
             }
             else if (info.status == AndroidAssetPackStatus.Completed)
             {
                 string assetPackPath = AndroidAssetPacks.GetAssetPackPath(info.name);
                 if (string.IsNullOrEmpty(assetPackPath))
-                    LogWarning($"Downloaded asset pack '{info.name}' but cannot locate it on device.", true);
+                    CompleteOverride($"Downloaded asset pack '{info.name}' but cannot locate it on device.");
                 else if (AndroidAssetPacks.coreUnityAssetPacksDownloaded)
-                    StartCoroutine(DownloadCustomAssetPacksData());
+                    DownloadCustomAssetPacksData();
             }
         }
 
@@ -154,14 +190,14 @@ namespace AddressablesPlayAssetDelivery
             if (location.ResourceType == typeof(IAssetBundleResource))
             {
                 string bundleName = Path.GetFileNameWithoutExtension(location.InternalId);
-                if (BundleNameToAssetPack.ContainsKey(bundleName))
+                if (AddressablesInitSingleton.Instance.BundleNameToAssetPack.ContainsKey(bundleName))
                 {
-                    string assetPackName = BundleNameToAssetPack[bundleName].AssetPackName;
-                    if (AssetPackNameToRemotePath.ContainsKey(assetPackName))
+                    string assetPackName = AddressablesInitSingleton.Instance.BundleNameToAssetPack[bundleName].AssetPackName;
+                    if (AddressablesInitSingleton.Instance.AssetPackNameToDownloadPath.ContainsKey(assetPackName))
                     {
                         // Load bundle that was assigned to a custom fast-follow or on-demand asset pack.
                         // PlayAssetDeliveryBundleProvider.Provider previously saved the asset pack path.
-                        return Path.Combine(AssetPackNameToRemotePath[assetPackName], Path.GetFileName(location.InternalId));
+                        return Path.Combine(AddressablesInitSingleton.Instance.AssetPackNameToDownloadPath[assetPackName], Path.GetFileName(location.InternalId));
                     }
                 }
             }
@@ -174,9 +210,9 @@ namespace AddressablesPlayAssetDelivery
             if (location.ResourceType == typeof(IAssetBundleResource))
             {
                 string bundleName = Path.GetFileNameWithoutExtension(location.InternalId);
-                if (BundleNameToAssetPack.ContainsKey(bundleName))
+                if (AddressablesInitSingleton.Instance.BundleNameToAssetPack.ContainsKey(bundleName))
                 {
-                    string assetPackName = BundleNameToAssetPack[bundleName].AssetPackName;
+                    string assetPackName = AddressablesInitSingleton.Instance.BundleNameToAssetPack[bundleName].AssetPackName;
                     string androidPackFolder = $"{CustomAssetPackUtility.PackContentRootDirectory}/{assetPackName}.androidpack";
                     string bundlePath = Path.Combine(androidPackFolder, Path.GetFileName(location.InternalId));
                     if (File.Exists(bundlePath))

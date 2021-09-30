@@ -15,9 +15,10 @@ namespace AddressablesPlayAssetDelivery
 
         public void OnButtonClicked()
         {
-            if (!AddressablesInitSingleton.Instance.HasInitialized)
-                Debug.LogError($"Cannot load object. AddressablesInitSingleton is still initializing.");
-            else if (isLoading)
+            if (AddressablesInitSingleton.Instance.InitializeOperation.IsValid())
+                AddressablesInitSingleton.Instance.InitializeOperation.WaitForCompletion();
+
+            if (isLoading)
                 Debug.LogError("Loading operation currently in progress.");
             else if (!isLoading)
             {

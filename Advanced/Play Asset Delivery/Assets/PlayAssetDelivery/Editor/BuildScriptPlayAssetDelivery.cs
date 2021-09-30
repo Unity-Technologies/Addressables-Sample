@@ -98,7 +98,7 @@ namespace AddressablesPlayAssetDelivery.Editor
                 File.Delete(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath + ".meta");
                 CustomAssetPackUtility.DeleteDirectory(Application.streamingAssetsPath, true);
             }
-                
+
             // Delete "BuildProcessorData.json"
             if (File.Exists(CustomAssetPackUtility.BuildProcessorDataPath))
                 AssetDatabase.DeleteAsset(CustomAssetPackUtility.BuildProcessorDataPath);
