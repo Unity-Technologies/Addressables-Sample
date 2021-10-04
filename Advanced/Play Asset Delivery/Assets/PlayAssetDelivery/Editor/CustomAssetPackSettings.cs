@@ -41,17 +41,6 @@ namespace AddressablesPlayAssetDelivery.Editor
         }
 
         [SerializeField]
-        public bool m_autoMoveBundlesAtBuildTime = true;
-        /// <summary>
-        /// Automatically move bundles from their build paths to their respective .androidpack directories when building the player.
-        /// </summary>
-        public bool AutoMoveBundlesAtBuildTime
-        {
-            get { return m_autoMoveBundlesAtBuildTime; }
-            set { m_autoMoveBundlesAtBuildTime = value; }
-        }
-
-        [SerializeField]
         List<CustomAssetPackEditorInfo> m_CustomAssetPacks = new List<CustomAssetPackEditorInfo>();
         /// <summary>
         /// Store all custom asset pack information. By default it has an entry named "InstallTimeContent" that should be used for all install-time content.
