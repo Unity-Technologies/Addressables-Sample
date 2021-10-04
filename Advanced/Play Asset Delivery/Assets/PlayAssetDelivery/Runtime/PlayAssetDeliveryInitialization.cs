@@ -143,7 +143,7 @@ namespace AddressablesPlayAssetDelivery
             {
                 foreach (string bundle in entry.AssetBundles)
                 {
-                    PlayAssetDeliveryRuntimeDataSingleton.Instance.BundleNameToAssetPack.Add(bundle, entry);
+                    PlayAssetDeliveryRuntimeData.Instance.BundleNameToAssetPack.Add(bundle, entry);
                 }
             }
         }
@@ -179,14 +179,14 @@ namespace AddressablesPlayAssetDelivery
             if (location.ResourceType == typeof(IAssetBundleResource))
             {
                 string bundleName = Path.GetFileNameWithoutExtension(location.InternalId);
-                if (PlayAssetDeliveryRuntimeDataSingleton.Instance.BundleNameToAssetPack.ContainsKey(bundleName))
+                if (PlayAssetDeliveryRuntimeData.Instance.BundleNameToAssetPack.ContainsKey(bundleName))
                 {
-                    string assetPackName = PlayAssetDeliveryRuntimeDataSingleton.Instance.BundleNameToAssetPack[bundleName].AssetPackName;
-                    if (PlayAssetDeliveryRuntimeDataSingleton.Instance.AssetPackNameToDownloadPath.ContainsKey(assetPackName))
+                    string assetPackName = PlayAssetDeliveryRuntimeData.Instance.BundleNameToAssetPack[bundleName].AssetPackName;
+                    if (PlayAssetDeliveryRuntimeData.Instance.AssetPackNameToDownloadPath.ContainsKey(assetPackName))
                     {
                         // Load bundle that was assigned to a custom fast-follow or on-demand asset pack.
                         // PlayAssetDeliveryBundleProvider.Provider previously saved the asset pack path.
-                        return Path.Combine(PlayAssetDeliveryRuntimeDataSingleton.Instance.AssetPackNameToDownloadPath[assetPackName], Path.GetFileName(location.InternalId));
+                        return Path.Combine(PlayAssetDeliveryRuntimeData.Instance.AssetPackNameToDownloadPath[assetPackName], Path.GetFileName(location.InternalId));
                     }
                 }
             }
@@ -199,9 +199,9 @@ namespace AddressablesPlayAssetDelivery
             if (location.ResourceType == typeof(IAssetBundleResource))
             {
                 string bundleName = Path.GetFileNameWithoutExtension(location.InternalId);
-                if (PlayAssetDeliveryRuntimeDataSingleton.Instance.BundleNameToAssetPack.ContainsKey(bundleName))
+                if (PlayAssetDeliveryRuntimeData.Instance.BundleNameToAssetPack.ContainsKey(bundleName))
                 {
-                    string assetPackName = PlayAssetDeliveryRuntimeDataSingleton.Instance.BundleNameToAssetPack[bundleName].AssetPackName;
+                    string assetPackName = PlayAssetDeliveryRuntimeData.Instance.BundleNameToAssetPack[bundleName].AssetPackName;
                     string androidPackFolder = $"{CustomAssetPackUtility.PackContentRootDirectory}/{assetPackName}.androidpack";
                     string bundlePath = Path.Combine(androidPackFolder, Path.GetFileName(location.InternalId));
                     if (File.Exists(bundlePath))

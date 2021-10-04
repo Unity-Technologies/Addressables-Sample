@@ -28,7 +28,7 @@ namespace AddressablesPlayAssetDelivery
         void LoadFromAssetPack(ProvideHandle providerInterface)
         {
             string bundleName = Path.GetFileNameWithoutExtension(providerInterface.Location.InternalId);
-            if (!PlayAssetDeliveryRuntimeDataSingleton.Instance.BundleNameToAssetPack.ContainsKey(bundleName))
+            if (!PlayAssetDeliveryRuntimeData.Instance.BundleNameToAssetPack.ContainsKey(bundleName))
             {
                 // Bundle is either assigned to the generated asset packs, or not assigned to any asset pack
                 base.Provide(providerInterface);
@@ -36,8 +36,8 @@ namespace AddressablesPlayAssetDelivery
             else
             {
                 // Bundle is assigned to a custom fast-follow or on-demand asset pack
-                string assetPackName = PlayAssetDeliveryRuntimeDataSingleton.Instance.BundleNameToAssetPack[bundleName].AssetPackName;
-                if (PlayAssetDeliveryRuntimeDataSingleton.Instance.AssetPackNameToDownloadPath.ContainsKey(assetPackName))
+                string assetPackName = PlayAssetDeliveryRuntimeData.Instance.BundleNameToAssetPack[bundleName].AssetPackName;
+                if (PlayAssetDeliveryRuntimeData.Instance.AssetPackNameToDownloadPath.ContainsKey(assetPackName))
                 {
                     // Asset pack is already downloaded
                     base.Provide(providerInterface);
@@ -89,7 +89,7 @@ namespace AddressablesPlayAssetDelivery
                 if (!string.IsNullOrEmpty(assetPackPath))
                 {
                     // Asset pack was located on device. Proceed with loading the bundle.
-                    PlayAssetDeliveryRuntimeDataSingleton.Instance.AssetPackNameToDownloadPath.Add(info.name, assetPackPath);
+                    PlayAssetDeliveryRuntimeData.Instance.AssetPackNameToDownloadPath.Add(info.name, assetPackPath);
                     base.Provide(m_ProviderInterface);
                 }
                 else
