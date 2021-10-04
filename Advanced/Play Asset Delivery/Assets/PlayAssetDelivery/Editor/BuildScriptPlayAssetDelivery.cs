@@ -118,7 +118,7 @@ namespace AddressablesPlayAssetDelivery.Editor
                 {
                     var assetPackSchema = group.GetSchema<PlayAssetDeliverySchema>();
                     // Reset schema data to match Custom Asset Pack Settings. This can occur when the CustomAssetPackSettings was deleted but the schema properties still use the old settings data.
-                    if (resetAssetPackSchemaData)
+                    if (resetAssetPackSchemaData || assetPackSchema.AssetPackIndex >= customAssetPacks.Count)
                         assetPackSchema.ResetAssetPackIndex();
 
                     CustomAssetPackEditorInfo assetPack = customAssetPacks[assetPackSchema.AssetPackIndex];
