@@ -1,1 +1,1 @@
-{"Entries":[{"AssetPackName":"FastFollowContent","DeliveryType":2,"AssetBundles":["fastfollowcontent_assets_all_15c16475abdeb6f9efc37c83705884d4"]},{"AssetPackName":"OnDemandContent","DeliveryType":3,"AssetBundles":["ondemandcontent_assets_all_4b2a046ded78abb28a46618ebcee25f6"]}]}
+{"Entries":[{"AssetPackName":"CustomFastFollow","DeliveryType":2,"AssetBundles":["fastfollowcontent_assets_all_15c16475abdeb6f9efc37c83705884d4"]},{"AssetPackName":"CustomOnDemand","DeliveryType":3,"AssetBundles":["ondemandcontent_assets_capsule_8af6841c77701a0122d47c250e8b5f44"]}]}

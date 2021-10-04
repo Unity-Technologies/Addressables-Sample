@@ -25,7 +25,7 @@ namespace AddressablesPlayAssetDelivery.Editor
     /// </summary>
     public class CustomAssetPackSettings : ScriptableObject
     {
-        public static string kDefaultConfigFolder = "Assets/PlayAssetDelivery";
+        public static string kDefaultConfigFolder = "Assets/PlayAssetDelivery/Data";
         public static string kDefaultConfigObjectName = "CustomAssetPackSettings";
 
         public static string kInstallTimePackName = "InstallTimeContent";
