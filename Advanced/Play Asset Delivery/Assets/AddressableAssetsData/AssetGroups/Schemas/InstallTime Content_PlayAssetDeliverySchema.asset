@@ -14,6 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Group: {fileID: 11400000, guid: dbcfd3d3e16edd247a1ed269e11f8a37, type: 2}
   m_AssetPackIndex: 0
-  m_AssetPack:
-    AssetPackName: InstallTimeContent
-    DeliveryType: 1
+  m_IncludeInAssetPack: 1
+  m_Settings: {fileID: 11400000, guid: a2e96aef650c01a4da07478d97d3b10e, type: 2}

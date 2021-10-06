@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,18 +25,18 @@ namespace AddressablesPlayAssetDelivery.Editor
     /// </summary>
     public class CustomAssetPackSettings : ScriptableObject
     {
-        public static string k_DefaultConfigFolder = "Assets/PlayAssetDelivery";
-        public static string k_DefaultConfigObjectName = "CustomAssetPackSettings";
+        public static string kDefaultConfigFolder = "Assets/PlayAssetDelivery/Data";
+        public static string kDefaultConfigObjectName = "CustomAssetPackSettings";
 
-        public static string k_InstallTimePackName = "InstallTimeContent";
-        public static string k_DefaultPackName = "AssetPack";
-        public static DeliveryType k_DefaultDeliveryType = DeliveryType.OnDemand;
+        public static string kInstallTimePackName = "InstallTimeContent";
+        public static string kDefaultPackName = "AssetPack";
+        public static DeliveryType kDefaultDeliveryType = DeliveryType.OnDemand;
 
-        public static string k_DefaultSettingsPath
+        public static string kDefaultSettingsPath
         {
             get
             {
-                return $"{k_DefaultConfigFolder}/{k_DefaultConfigObjectName}.asset";
+                return $"{kDefaultConfigFolder}/{kDefaultConfigObjectName}.asset";
             }
         }
 
@@ -45,7 +44,7 @@ namespace AddressablesPlayAssetDelivery.Editor
         List<CustomAssetPackEditorInfo> m_CustomAssetPacks = new List<CustomAssetPackEditorInfo>();
         /// <summary>
         /// Store all custom asset pack information. By default it has an entry named "InstallTimeContent" that should be used for all install-time content.
-        /// This is a "placeholder" asset pack that is representative of the streaming assets pack. No custom asset pack named "InstallTimeContent" is actually created.
+        /// This is a "placeholder" asset pack that is representative of the generated asset packs. No custom asset pack named "InstallTimeContent" is actually created.
         /// </summary>
         public List<CustomAssetPackEditorInfo> CustomAssetPacks
         {
@@ -60,8 +59,8 @@ namespace AddressablesPlayAssetDelivery.Editor
 
         public void AddUniqueAssetPack()
         {
-            string assetPackName = GenerateUniqueName(k_DefaultPackName, CustomAssetPacks.Select(p => p.AssetPackName));
-            AddCustomAssetPack(assetPackName, k_DefaultDeliveryType);
+            string assetPackName = GenerateUniqueName(kDefaultPackName, CustomAssetPacks.Select(p => p.AssetPackName));
+            AddCustomAssetPack(assetPackName, kDefaultDeliveryType);
         }
 
         internal string GenerateUniqueName(string baseName, IEnumerable<string> enumerable)
@@ -87,23 +86,23 @@ namespace AddressablesPlayAssetDelivery.Editor
 
         public static bool SettingsExists
         {
-            get { return !string.IsNullOrEmpty(AssetDatabase.AssetPathToGUID(k_DefaultSettingsPath)); }
+            get { return !string.IsNullOrEmpty(AssetDatabase.AssetPathToGUID(kDefaultSettingsPath)); }
         }
 
-        public static CustomAssetPackSettings GetSettings()
+        public static CustomAssetPackSettings GetSettings(bool create)
         {
-            var settings = AssetDatabase.LoadAssetAtPath<CustomAssetPackSettings>(k_DefaultSettingsPath);
-            if (settings == null)
+            var settings = AssetDatabase.LoadAssetAtPath<CustomAssetPackSettings>(kDefaultSettingsPath);
+            if (create && settings == null)
             {
                 settings = CreateInstance<CustomAssetPackSettings>();
 
-                if (!AssetDatabase.IsValidFolder(k_DefaultConfigFolder))
-                    Directory.CreateDirectory(k_DefaultConfigFolder);
-                AssetDatabase.CreateAsset(settings, k_DefaultSettingsPath);
-                settings = AssetDatabase.LoadAssetAtPath<CustomAssetPackSettings>(k_DefaultSettingsPath);
+                if (!AssetDatabase.IsValidFolder(kDefaultConfigFolder))
+                    Directory.CreateDirectory(kDefaultConfigFolder);
+                AssetDatabase.CreateAsset(settings, kDefaultSettingsPath);
+                settings = AssetDatabase.LoadAssetAtPath<CustomAssetPackSettings>(kDefaultSettingsPath);
 
                 // Entry used for all content marked for install-time delivery
-                settings.AddCustomAssetPack(k_InstallTimePackName, DeliveryType.InstallTime);
+                settings.AddCustomAssetPack(kInstallTimePackName, DeliveryType.InstallTime);
 
                 AssetDatabase.SaveAssets();
             }
@@ -111,4 +110,3 @@ namespace AddressablesPlayAssetDelivery.Editor
         }
     }
 }
-#endif

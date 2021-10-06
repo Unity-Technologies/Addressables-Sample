@@ -13,9 +13,6 @@ MonoBehaviour:
   m_Name: AddressableAssetSettings
   m_EditorClassIdentifier: 
   m_DefaultGroup: cc6d5f65ac05d084baf158b1c62f6e28
-  m_CachedHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -90,7 +87,8 @@ MonoBehaviour:
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 744c627c14575d740bce1c7130190bb9, type: 2}
   - {fileID: 11400000, guid: b6c3887b9974d714699312834c28f6a4, type: 2}
-  m_InitializationObjects: []
+  m_InitializationObjects:
+  - {fileID: 11400000, guid: fc03d7c3fcb9dc643abacfdfbcff3b1e, type: 2}
   m_CertificateHandlerType:
     m_AssemblyName: 
     m_ClassName: 

@@ -41,6 +41,6 @@ MonoBehaviour:
   m_AssetBundleProviderType:
     m_AssemblyName: AddressablesPlayAssetDelivery, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
-    m_ClassName: AddressablesPlayAssetDelivery.Editor.PlayAssetDeliveryAssetBundleProvider
+    m_ClassName: AddressablesPlayAssetDelivery.PlayAssetDeliveryAssetBundleProvider
   m_BundleNaming: 0
   m_AssetLoadMode: 0

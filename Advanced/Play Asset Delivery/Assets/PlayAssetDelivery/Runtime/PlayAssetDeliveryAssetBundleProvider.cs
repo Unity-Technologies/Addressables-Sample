@@ -6,7 +6,7 @@ using UnityEngine.Android;
 using UnityEngine.ResourceManagement.ResourceLocations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 
-namespace AddressablesPlayAssetDelivery.Editor
+namespace AddressablesPlayAssetDelivery
 {
     /// <summary>
     /// Ensures that the asset pack containing the AssetBundle is installed/downloaded before attemping to load the bundle.
@@ -17,19 +17,27 @@ namespace AddressablesPlayAssetDelivery.Editor
         ProvideHandle m_ProviderInterface;
         public override void Provide(ProvideHandle providerInterface)
         {
-            Reset();
 #if UNITY_ANDROID && !UNITY_EDITOR
+            m_ProviderInterface = providerInterface;
+            LoadFromAssetPack(providerInterface);
+#else
+            base.Provide(providerInterface);
+#endif
+        }
+
+        void LoadFromAssetPack(ProvideHandle providerInterface)
+        {
             string bundleName = Path.GetFileNameWithoutExtension(providerInterface.Location.InternalId);
-            if (!AddressablesInitSingleton.Instance.BundleNameToAssetPack.ContainsKey(bundleName))
+            if (!PlayAssetDeliveryRuntimeData.Instance.BundleNameToAssetPack.ContainsKey(bundleName))
             {
-                // Bundle is assigned to the streaming assets pack
+                // Bundle is either assigned to the generated asset packs, or not assigned to any asset pack
                 base.Provide(providerInterface);
             }
             else
             {
                 // Bundle is assigned to a custom fast-follow or on-demand asset pack
-                string assetPackName = AddressablesInitSingleton.Instance.BundleNameToAssetPack[bundleName].AssetPackName;
-                if (AddressablesInitSingleton.Instance.AssetPackNameToRemotePath.ContainsKey(assetPackName))
+                string assetPackName = PlayAssetDeliveryRuntimeData.Instance.BundleNameToAssetPack[bundleName].AssetPackName;
+                if (PlayAssetDeliveryRuntimeData.Instance.AssetPackNameToDownloadPath.ContainsKey(assetPackName))
                 {
                     // Asset pack is already downloaded
                     base.Provide(providerInterface);
@@ -37,23 +45,14 @@ namespace AddressablesPlayAssetDelivery.Editor
                 else
                 {
                     // Download the asset pack
-                    m_ProviderInterface = providerInterface;
                     DownloadRemoteAssetPack(assetPackName);
                 }
             }
-#else
-            base.Provide(providerInterface);
-#endif
         }
 
         public override void Release(IResourceLocation location, object asset)
         {
             base.Release(location, asset);
-            Reset();
-        }
-
-        void Reset()
-        {
             m_ProviderInterface = default;
         }
 
@@ -90,7 +89,7 @@ namespace AddressablesPlayAssetDelivery.Editor
                 if (!string.IsNullOrEmpty(assetPackPath))
                 {
                     // Asset pack was located on device. Proceed with loading the bundle.
-                    AddressablesInitSingleton.Instance.AssetPackNameToRemotePath.Add(info.name, assetPackPath);
+                    PlayAssetDeliveryRuntimeData.Instance.AssetPackNameToDownloadPath.Add(info.name, assetPackPath);
                     base.Provide(m_ProviderInterface);
                 }
                 else

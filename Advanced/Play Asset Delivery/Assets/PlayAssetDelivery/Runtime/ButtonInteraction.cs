@@ -15,9 +15,7 @@ namespace AddressablesPlayAssetDelivery
 
         public void OnButtonClicked()
         {
-            if (!AddressablesInitSingleton.Instance.HasInitialized)
-                Debug.LogError("Not finished initializing.");
-            else if (isLoading)
+            if (isLoading)
                 Debug.LogError("Loading operation currently in progress.");
             else if (!isLoading)
             {

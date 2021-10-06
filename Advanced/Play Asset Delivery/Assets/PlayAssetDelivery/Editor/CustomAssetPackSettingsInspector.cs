@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -40,7 +39,7 @@ namespace AddressablesPlayAssetDelivery.Editor
             float halfW = rect.width * 0.4f;
             CustomAssetPackEditorInfo currentAssetPack = m_Settings.CustomAssetPacks[index];
 
-            EditorGUI.BeginDisabledGroup(currentAssetPack.AssetPackName == CustomAssetPackSettings.k_InstallTimePackName);
+            EditorGUI.BeginDisabledGroup(currentAssetPack.AssetPackName == CustomAssetPackSettings.kInstallTimePackName);
 
             string oldName = currentAssetPack.AssetPackName;
             var newName = EditorGUI.DelayedTextField(new Rect(rect.x, rect.y, halfW, rect.height), oldName);
@@ -81,11 +80,10 @@ namespace AddressablesPlayAssetDelivery.Editor
 
         void OnRemoveCustomAssetPack(ReorderableList list)
         {
-            if (m_Settings.CustomAssetPacks[list.index].AssetPackName == CustomAssetPackSettings.k_InstallTimePackName)
-                Debug.LogError($"Cannot delete asset pack name '{CustomAssetPackSettings.k_InstallTimePackName}'. It represents the streaming assets pack which will contain all install-time content.");
+            if (m_Settings.CustomAssetPacks[list.index].AssetPackName == CustomAssetPackSettings.kInstallTimePackName)
+                Debug.LogError($"Cannot delete asset pack name '{CustomAssetPackSettings.kInstallTimePackName}'. It represents the generated asset packs which will contain all install-time content.");
             else
                 m_Settings.RemovePackAtIndex(list.index);
         }
     }
 }
-#endif
