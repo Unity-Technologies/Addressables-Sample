@@ -268,7 +268,7 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
             }
         }
 
-        if (assetGroup.HasSchema<BundledAssetGroupSchema>())
+        if (!schema.IncludeSourceTextureInBuild && assetGroup.HasSchema<BundledAssetGroupSchema>())
         {
             var bundledSchema = assetGroup.GetSchema<BundledAssetGroupSchema>();
             m_SourceGroupToIncludeInBuildFlag.Add(assetGroup, bundledSchema.IncludeInBuild);
@@ -338,7 +338,7 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
             if (schema == null)
                 continue;
             
-            if (pair.Key.HasSchema<BundledAssetGroupSchema>())
+            if (!schema.IncludeSourceTextureInBuild && pair.Key.HasSchema<BundledAssetGroupSchema>())
                 pair.Key.GetSchema<BundledAssetGroupSchema>().IncludeInBuild = pair.Value;
 
             foreach (var entry in pair.Key.entries)

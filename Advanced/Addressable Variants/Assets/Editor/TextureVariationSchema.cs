@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.AddressableAssets.Settings;
@@ -30,5 +30,13 @@ public class TextureVariationSchema : AddressableAssetGroupSchema
         public float textureScale = 0.5f;
         public string label;
     }
-    
+
+    [SerializeField]
+    [Tooltip("If true, the source texture and its variants will be included in the build. Otherwise only the variants will be included.")]
+    bool m_IncludeSourceTextureInBuild = false;
+    public bool IncludeSourceTextureInBuild
+    {
+        get { return m_IncludeSourceTextureInBuild; }
+        set { m_IncludeSourceTextureInBuild = value; }
+    }
 }
