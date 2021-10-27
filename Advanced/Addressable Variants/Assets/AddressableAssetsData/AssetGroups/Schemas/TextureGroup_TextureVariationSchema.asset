@@ -19,3 +19,4 @@ MonoBehaviour:
     label: HD
   - textureScale: 0.4
     label: SD
+  m_IncludeSourceTextureInBuild: 0
