@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: TextureGroup_TextureVariationSchema
   m_EditorClassIdentifier: 
   m_Group: {fileID: 11400000, guid: bac4dc0ea5af4fe47b04555b9b99b764, type: 2}
+  m_IncludeSourceTextureInBuild: 0
   m_BaselineLabel: HD
   m_Variations:
   - textureScale: 1
     label: HD
   - textureScale: 0.4
     label: SD
-  m_IncludeSourceTextureInBuild: 0

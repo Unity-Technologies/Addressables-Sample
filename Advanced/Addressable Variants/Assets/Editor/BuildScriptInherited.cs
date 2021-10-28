@@ -36,24 +36,26 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
 
     protected override string ProcessGroup(AddressableAssetGroup assetGroup, AddressableAssetsBuildContext aaContext)
     {
-        if (assetGroup.HasSchema<TextureVariationSchema>())
+        if (assetGroup.HasSchema<BundledAssetGroupSchema>() && assetGroup.GetSchema<BundledAssetGroupSchema>().IncludeInBuild)
         {
-            var errorString = ProcessTextureScaler(assetGroup.GetSchema<TextureVariationSchema>(), assetGroup, aaContext);
-            if (!string.IsNullOrEmpty(errorString))
-                return errorString;
-        }
+            if (assetGroup.HasSchema<TextureVariationSchema>())
+            {
+                var errorString = ProcessTextureScaler(assetGroup.GetSchema<TextureVariationSchema>(), assetGroup, aaContext);
+                if (!string.IsNullOrEmpty(errorString))
+                    return errorString;
+            }
 
-        if (assetGroup.HasSchema<PrefabTextureVariantSchema>())
-        {
-            var errorString = ProcessVariants(assetGroup.GetSchema<PrefabTextureVariantSchema>(), assetGroup, aaContext);
-            if (!string.IsNullOrEmpty(errorString))
-                return errorString;
+            if (assetGroup.HasSchema<PrefabTextureVariantSchema>())
+            {
+                var errorString = ProcessVariants(assetGroup.GetSchema<PrefabTextureVariantSchema>(), assetGroup, aaContext);
+                if (!string.IsNullOrEmpty(errorString))
+                    return errorString;
+            }
         }
-
         return base.ProcessGroup(assetGroup, aaContext);
     }
 
-    Dictionary<AddressableAssetGroup, bool> m_SourceGroupToIncludeInBuildFlag = new Dictionary<AddressableAssetGroup, bool>();
+    List<AddressableAssetGroup> m_SourceGroupList = new List<AddressableAssetGroup>();
     Dictionary<string, AddressableAssetGroup> m_GeneratedGroups = new Dictionary<string, AddressableAssetGroup>();
 
     
@@ -134,6 +136,12 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
                 entry.address = mainEntry.address;
                 entry.SetLabel(variant.Label, true, true, false);
             }
+        }
+
+        if (!schema.IncludeSourcePrefabInBuild)
+        {
+            group.GetSchema<BundledAssetGroupSchema>().IncludeInBuild = false;
+            m_SourceGroupList.Add(group);
         }
 
         return string.Empty;
@@ -268,14 +276,10 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
             }
         }
 
-        if (!schema.IncludeSourceTextureInBuild && assetGroup.HasSchema<BundledAssetGroupSchema>())
-        {
-            var bundledSchema = assetGroup.GetSchema<BundledAssetGroupSchema>();
-            m_SourceGroupToIncludeInBuildFlag.Add(assetGroup, bundledSchema.IncludeInBuild);
-            bundledSchema.IncludeInBuild = false;
-        }
-        else
-            m_SourceGroupToIncludeInBuildFlag.Add(assetGroup, false);
+        if (!schema.IncludeSourceTextureInBuild)
+            assetGroup.GetSchema<BundledAssetGroupSchema>().IncludeInBuild = false;
+        m_SourceGroupList.Add(assetGroup); // need to reset labels for every texture variant group
+
         return string.Empty;
     }
 
@@ -332,22 +336,21 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
         m_DirectoriesInUse.Clear();
         m_GeneratedGroups.Clear();
 
-        foreach (KeyValuePair<AddressableAssetGroup, bool> pair in m_SourceGroupToIncludeInBuildFlag)
+        foreach (AddressableAssetGroup group in m_SourceGroupList)
         {
-            var schema = pair.Key.GetSchema<TextureVariationSchema>();
+            group.GetSchema<BundledAssetGroupSchema>().IncludeInBuild = true;
+
+            var schema = group.GetSchema<TextureVariationSchema>();
             if (schema == null)
                 continue;
-            
-            if (!schema.IncludeSourceTextureInBuild && pair.Key.HasSchema<BundledAssetGroupSchema>())
-                pair.Key.GetSchema<BundledAssetGroupSchema>().IncludeInBuild = pair.Value;
 
-            foreach (var entry in pair.Key.entries)
+            foreach (var entry in group.entries)
             {
                 entry.labels.Remove(schema.BaselineLabel);
             }
         }
         
-        m_SourceGroupToIncludeInBuildFlag.Clear();
+        m_SourceGroupList.Clear();
     }
 
     [SerializeField]
