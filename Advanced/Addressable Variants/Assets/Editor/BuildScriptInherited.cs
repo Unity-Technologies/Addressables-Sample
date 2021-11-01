@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEditor.AddressableAssets.Build;
 using UnityEditor.AddressableAssets.Build.DataBuilders;
 using UnityEditor.AddressableAssets.Settings;
+using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.ResourceManagement.Util;
@@ -35,20 +36,22 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
 
     protected override string ProcessGroup(AddressableAssetGroup assetGroup, AddressableAssetsBuildContext aaContext)
     {
-        if (assetGroup.HasSchema<TextureVariationSchema>())
+        if (assetGroup.HasSchema<BundledAssetGroupSchema>() && assetGroup.GetSchema<BundledAssetGroupSchema>().IncludeInBuild)
         {
-            var errorString = ProcessTextureScaler(assetGroup.GetSchema<TextureVariationSchema>(), assetGroup, aaContext);
-            if (!string.IsNullOrEmpty(errorString))
-                return errorString;
-        }
+            if (assetGroup.HasSchema<TextureVariationSchema>())
+            {
+                var errorString = ProcessTextureScaler(assetGroup.GetSchema<TextureVariationSchema>(), assetGroup, aaContext);
+                if (!string.IsNullOrEmpty(errorString))
+                    return errorString;
+            }
 
-        if (assetGroup.HasSchema<PrefabTextureVariantSchema>())
-        {
-            var errorString = ProcessVariants(assetGroup.GetSchema<PrefabTextureVariantSchema>(), assetGroup, aaContext);
-            if (!string.IsNullOrEmpty(errorString))
-                return errorString;
+            if (assetGroup.HasSchema<PrefabTextureVariantSchema>())
+            {
+                var errorString = ProcessVariants(assetGroup.GetSchema<PrefabTextureVariantSchema>(), assetGroup, aaContext);
+                if (!string.IsNullOrEmpty(errorString))
+                    return errorString;
+            }
         }
-
         return base.ProcessGroup(assetGroup, aaContext);
     }
 
@@ -135,6 +138,12 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
             }
         }
 
+        if (!schema.IncludeSourcePrefabInBuild)
+        {
+            group.GetSchema<BundledAssetGroupSchema>().IncludeInBuild = false;
+            m_SourceGroupList.Add(group);
+        }
+
         return string.Empty;
     }
 
@@ -218,8 +227,6 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
         AddressableAssetGroup assetGroup,
         AddressableAssetsBuildContext aaContext)
     {
-        m_SourceGroupList.Add(assetGroup);
-
         var entries = new List<AddressableAssetEntry>(assetGroup.entries);
         foreach (var entry in entries)
         {
@@ -268,6 +275,10 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
                 entry.SetLabel(schema.BaselineLabel, true);
             }
         }
+
+        if (!schema.IncludeSourceTextureInBuild)
+            assetGroup.GetSchema<BundledAssetGroupSchema>().IncludeInBuild = false;
+        m_SourceGroupList.Add(assetGroup); // need to reset labels for every texture variant group
 
         return string.Empty;
     }
@@ -325,8 +336,10 @@ public class BuildScriptInherited : BuildScriptPackedMode, ISerializationCallbac
         m_DirectoriesInUse.Clear();
         m_GeneratedGroups.Clear();
 
-        foreach (var group in m_SourceGroupList)
+        foreach (AddressableAssetGroup group in m_SourceGroupList)
         {
+            group.GetSchema<BundledAssetGroupSchema>().IncludeInBuild = true;
+
             var schema = group.GetSchema<TextureVariationSchema>();
             if (schema == null)
                 continue;
