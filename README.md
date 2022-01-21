@@ -3,6 +3,8 @@ Demo project using Addressables package
 
 These samples are broken up into projects based on high level functionality.  These are intended as jumping off points for your own development.  These have not been tested, and are not guaranteed to work in your situation.  They are just examples, to make some concepts easier to understand, or easier to replicate in your own project.  Use at your own risk.
 
+**Note**: Please report any bugs found through the regular bug submission process https://unity3d.com/unity/qa/bug-reporting. For any questions, create a new thread on the Unity Forums https://forum.unity.com/forums/addressables.156/. 
+
 ## Projects
 
 #### *Basic/Basic AssetReference*
