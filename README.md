@@ -47,14 +47,14 @@ This example creates an AssetReference that is restricted to having a specific C
 * Scenes/SampleScene
   * This scene has a Spawner game object that alternates between spawning a direct reference prefab and an addressable one.
   * Both the direct reference and the addressable ComponentReference can only be set to one of the prefabs with the component ColorChanger on it.
-* Scripts/ComponentReference - ComponentReference<TComponent>
-  * This is the class that inherits from AssetReference.  It is generic and does not specify which Components it might care about.  A concrete child of this class is required for serialization to work.
-  * At edit-time it validates that the asset set on it is a GameObject with the required Component.
-  * At runtime it can load/instantiate the GameObject, then return the desired component.  API matches base class (LoadAssetAsync & InstantiateAsync).
 * Scripts/ColorChanger - ColorChanger & ComponentReferenceColorChanger
   * The component type we chose to care about.
   * Note that this file includes a concrete version of the ComponentReference.  This is needed because if your game code just specified a ComponentReference<ColorChanger> it could not serialize or show up in the inspector.  This ComponentReferenceColorChanger is what makes serialization and the inspector UI work.
   * Releasing a ComponentReference<TComponent> should be done through `ReleaseInstance()` in the ComponentReference<TComponent> class. To release an instance directly, see our implementation of ReleaseInstance to understand the requirements.
+* Packages/Addressables/Samples/ComponentReference/Editor/ComponentReference - ComponentReference<TComponent>
+  * This is the class that inherits from AssetReference.  It is generic and does not specify which Components it might care about.  A concrete child of this class is required for serialization to work.
+  * At edit-time it validates that the asset set on it is a GameObject with the required Component.
+  * At runtime it can load/instantiate the GameObject, then return the desired component.  API matches base class (LoadAssetAsync & InstantiateAsync).
 
 #### *Basic/Sprite Land*
 *2019.3.0a11+* - Sprite demo is back.  There was an engine bug causing a crash when loading out of sprite sheets that caused us to remove this demo.  This is in 2019.3 alpha, and is being backported to 2019.2 and 2018.4.  If you use this demo, and your game crashes, or you get warnings about "gfx" not on main thread, you don't have a fixed version of the platform.
@@ -65,11 +65,18 @@ There are three sprite access methods currently demo'd in this sample.  The on-s
   * Third is accessing a sprite from within an atlas. In this case, you have to use addressables to load the sprite atlas, then use the normal atlas API to load a given sprite from it.  This example also shows extending the AssetReference<T> to provide a typed reference that Addressables doesn't come with (AssetReferenceT<SpriteAtlas> in this case).
 * All code is in Scripts/SpriteControlTest.cs
 
-#### *Basic/Space Shooter*
+#### *Basic/Space Shooter (Legacy)*
+Referenced in past Unite video(s):
+* [How to use Unity's Addressable Asset system for speed and performance - Unite LA](https://www.youtube.com/watch?v=U8-yh5nC1Mg) (2018)
+* [Unite Berlin 2018 - New Addressable Asset system for speed and performance](https://www.youtube.com/watch?v=iauWgEXjkEY) (2018)
+
 A very simple Unity tutorial that we converted to use addressables.  The main code file to look at would be Done_GameController.cs, but in general, this is just meant as a simple project to explore.
 
-#### *Advanced/Addressables Variants*
-An example project to show two use cases or workflows for creating "variants".  The new build pipeline (Scriptable Build Pipeline) upon which Addressables is built, does not support asset bundle variants.  This old mechanism was useful in many instances, so this sample is meant to show how to accomplish similar results for one of those instances.  There are other purpose for variants not shown here.  Some will be coming in future samples.
+#### *Advanced/Addressables Variants (Legacy)*
+Referenced in past Unite video(s):
+* [Addressables for live content management - Unite Copenhagen](https://www.youtube.com/watch?v=THs7h-wXHBg) (2019)
+
+An example project to show two use cases or workflows for creating "variants".  The new build pipeline (Scriptable Build Pipeline) upon which Addressables is built, does not support asset bundle variants.  This old mechanism was useful in many instances, so this sample is meant to show how to accomplish similar results for one of those instances.
 * Scenes/TextureScalerScene
   * In the scene, there's a prefab with an existing texture that can load alternate textures based on button input.  (VariationController.cs)
   * The project only has one instance of the texture in question (Texture/tree2.png).  It is marked as addressable, with the address "tree" and no labels
@@ -102,11 +109,11 @@ An example project to show two use cases or workflows for creating "variants".  
 
 #### *Advanced/Custom Analyze Rule*
 This sample shows how to create custom AnalyzeRules for use within the Analyze window.  Both rules follow the recommended pattern for adding themselves to the UI.  There are no scenes to look at in this project, just analyze code.
-* Editor/AddressHasC
+* Packages/Addressables/Samples/CustomAnalyzeRule/Editor/AddressHasC
   * This is a non-fixable rule (meaning it will not fix itself).
   * When run, it checks that all addresses have a capital C in them.  Any that do not are flagged as errors.
   * A rule like this would be useful if your studio enforced some sort of naming convention on addresses. (though it would probably be best if it could fix itself)
-* Editor/PathAddressIsPath
+* Packages/Addressables/Samples/CustomAnalyzeRule/Editor/PathAddressIsPath
   * This is a fixable rule.  Running fix on it will change addresses to comply with the rule.
   * When run, it first identifies all addresses that seem to be paths.  Of those, it makes sure that the address actually matches the path of the asset.
   * This would be useful if you primarily left the addresses of your assets as the path (which is the default when marking an asset addressable).  If the asset is moved within the project, then the address no longer maps to where it is. This rule could fix that.
@@ -114,7 +121,7 @@ This sample shows how to create custom AnalyzeRules for use within the Analyze w
 #### *Advanced/Play Asset Delivery*
 An example project that shows how to use [Unity's Play Asset Delivery API](https://docs.unity3d.com/Manual/play-asset-delivery.html) with Addressables. SampleScene (located in 'Assets/Scenes') contains 3 buttons that will load or unload an asset assigned to a specific delivery type.
 
- **Note**: [Play Asset Delivery](https://docs.unity3d.com/Manual/play-asset-delivery.html) requires Unity 2019.4+
+**Note**: [Play Asset Delivery](https://docs.unity3d.com/Manual/play-asset-delivery.html) requires Unity 2019.4+. This project uses Unity 2020.3.15f2.
 
 Use this project as a guide to make [custom asset packs](https://docs.unity3d.com/Manual/play-asset-delivery.html#custom-asset-packs). If you don't want to use custom asset packs, follow the instructions in [Play Asset Delivery](https://docs.unity3d.com/Manual/play-asset-delivery.html) to use the Play Asset Delivery API with the default Addressables configuration.
 
