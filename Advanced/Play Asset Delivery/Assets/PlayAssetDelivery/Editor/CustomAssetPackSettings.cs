@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
@@ -32,6 +33,8 @@ namespace AddressablesPlayAssetDelivery.Editor
         public static string kDefaultPackName = "AssetPack";
         public static DeliveryType kDefaultDeliveryType = DeliveryType.OnDemand;
 
+        private Regex m_ValidAssetPackName = new Regex(@"^[A-Za-z][a-zA-Z0-9_]*$", RegexOptions.Compiled);
+
         public static string kDefaultSettingsPath
         {
             get
@@ -61,6 +64,33 @@ namespace AddressablesPlayAssetDelivery.Editor
         {
             string assetPackName = GenerateUniqueName(kDefaultPackName, CustomAssetPacks.Select(p => p.AssetPackName));
             AddCustomAssetPack(assetPackName, kDefaultDeliveryType);
+        }
+
+        public void SetAssetPackName(int index, string assetPackName)
+        {
+            if (index >= 0 && index < CustomAssetPacks.Count)
+            {
+                if (!m_ValidAssetPackName.IsMatch(assetPackName))
+                {
+                    Debug.LogError($"Cannot name custom asset pack '{assetPackName}'. All characters must be alphanumeric or an underscore. " +
+                        $"Also the first character must be a letter.");
+                }
+                else
+                {
+                    string newName = GenerateUniqueName(assetPackName, CustomAssetPacks.Select(p => p.AssetPackName));
+                    CustomAssetPacks[index].AssetPackName = newName;
+                    EditorUtility.SetDirty(this);
+                }
+            }
+        }
+
+        public void SetDeliveryType(int index, DeliveryType deliveryType)
+        {
+            if (index >= 0 && index < CustomAssetPacks.Count)
+            {
+                CustomAssetPacks[index].DeliveryType = deliveryType;
+                EditorUtility.SetDirty(this);
+            }
         }
 
         internal string GenerateUniqueName(string baseName, IEnumerable<string> enumerable)

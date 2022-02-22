@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -13,8 +12,6 @@ namespace AddressablesPlayAssetDelivery.Editor
         CustomAssetPackSettings m_Settings;
         [SerializeField]
         ReorderableList m_CustomAssetPacks;
-
-        Regex m_ValidAssetPackName = new Regex(@"^[A-Za-z][a-zA-Z0-9_]*$", RegexOptions.Compiled);
 
         void OnEnable()
         {
@@ -44,23 +41,12 @@ namespace AddressablesPlayAssetDelivery.Editor
             string oldName = currentAssetPack.AssetPackName;
             var newName = EditorGUI.DelayedTextField(new Rect(rect.x, rect.y, halfW, rect.height), oldName);
             if (newName != oldName)
-            {
-                if (!m_ValidAssetPackName.IsMatch(newName))
-                {
-                    Debug.LogError($"Cannot name custom asset pack '{newName}'. All characters must be alphanumeric or an underscore. " +
-                        $"Also the first character must be a letter.");
-                }
-                else
-                {
-                    newName = m_Settings.GenerateUniqueName(newName, m_Settings.CustomAssetPacks.Select(p => p.AssetPackName));
-                    currentAssetPack.AssetPackName = newName;
-                }
-            }
+                m_Settings.SetAssetPackName(index, newName);
 
             DeliveryType oldType = currentAssetPack.DeliveryType;
             var newType = (DeliveryType)EditorGUI.EnumPopup(new Rect(rect.x + halfW, rect.y, rect.width - halfW, rect.height), new GUIContent(""), oldType, IsDeliveryTypeEnabled);
             if (oldType != newType)
-                currentAssetPack.DeliveryType = newType;
+                m_Settings.SetDeliveryType(index, newType);
 
             EditorGUI.EndDisabledGroup();
         }
