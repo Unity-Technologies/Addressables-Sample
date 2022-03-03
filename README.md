@@ -110,6 +110,9 @@ This sample shows how to create custom AnalyzeRules for use within the Analyze w
   * This is a fixable rule.  Running fix on it will change addresses to comply with the rule.
   * When run, it first identifies all addresses that seem to be paths.  Of those, it makes sure that the address actually matches the path of the asset.
   * This would be useful if you primarily left the addresses of your assets as the path (which is the default when marking an asset addressable).  If the asset is moved within the project, then the address no longer maps to where it is. This rule could fix that.
+* Packages/Addressables/Samples/CustomAnalyzeRule/Editor/CheckBundleDupeDependenciesMultiIsolatedGroups
+  * This is a fixable rule. It is similar to the "Check Duplicate Bundle Dependencies" as running fix on it will resolve duplicate bundle dependencies. However in this case duplicates will be moved to multiple isolation groups instead of just one group.
+  * Duplicates referenced by the same groups will be moved to the same isolation group.
 
 #### *Advanced/Play Asset Delivery*
 An example project that shows how to use [Unity's Play Asset Delivery API](https://docs.unity3d.com/Manual/play-asset-delivery.html) with Addressables. SampleScene (located in 'Assets/Scenes') contains 3 buttons that will load or unload an asset assigned to a specific delivery type.
