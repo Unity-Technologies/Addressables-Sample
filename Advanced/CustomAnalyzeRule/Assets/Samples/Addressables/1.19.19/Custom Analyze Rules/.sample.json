@@ -1,0 +1,4 @@
+{
+    "displayName": "Custom Analyze Rules",
+    "description": "This sample shows how to create custom AnalyzeRules for use within the Analyze window. Both rules follow the recommended pattern for adding themselves to the UI. See the Custom Analyze Rules sample project located at github.com/Unity-Technologies/Addressables-Sample"
+}
