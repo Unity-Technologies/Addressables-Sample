@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#if UNITY_EDITOR
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.AddressableAssets.Build;
@@ -7,6 +8,11 @@ using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 using UnityEngine;
 
+/// <summary>
+/// * This is a non-fixable rule (meaning it will not fix itself).
+/// * When run, it checks that all addresses have a capital C in them.  Any that do not are flagged as errors.
+/// * A rule like this would be useful if your studio enforced some sort of naming convention on addresses. (though it would probably be best if it could fix itself)
+/// </summary>
 public class AddressHasC : UnityEditor.AddressableAssets.Build.AnalyzeRules.AnalyzeRule
 {
     public override bool CanFix
@@ -51,3 +57,4 @@ class RegisterAddressHasC
         AnalyzeSystem.RegisterNewRule<AddressHasC>();
     }
 }
+#endif

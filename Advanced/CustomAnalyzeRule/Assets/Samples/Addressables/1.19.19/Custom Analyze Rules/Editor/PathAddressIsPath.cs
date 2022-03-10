@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#if UNITY_EDITOR
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -8,6 +9,11 @@ using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 using UnityEngine;
 
+/// <summary>
+/// * This is a fixable rule.  Running fix on it will change addresses to comply with the rule.
+/// * When run, it first identifies all addresses that seem to be paths.  Of those, it makes sure that the address actually matches the path of the asset.
+/// * This would be useful if you primarily left the addresses of your assets as the path (which is the default when marking an asset addressable).  If the asset is moved within the project, then the address no longer maps to where it is. This rule could fix that.
+/// </summary>
 public class PathAddressIsPath : UnityEditor.AddressableAssets.Build.AnalyzeRules.AnalyzeRule
 {
     public override bool CanFix
@@ -72,3 +78,4 @@ class RegisterPathAddressIsPath
         AnalyzeSystem.RegisterNewRule<PathAddressIsPath>();
     }
 }
+#endif
