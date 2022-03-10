@@ -1,0 +1,4 @@
+{
+    "displayName": "ComponentReference",
+    "description": "This sample creates an AssetReference that is restricted to having a specific Component. See the ComponentReference sample project located at github.com/Unity-Technologies/Addressables-Sample"
+}
