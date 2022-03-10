@@ -51,7 +51,7 @@ This example creates an AssetReference that is restricted to having a specific C
   * The component type we chose to care about.
   * Note that this file includes a concrete version of the ComponentReference.  This is needed because if your game code just specified a ComponentReference<ColorChanger> it could not serialize or show up in the inspector.  This ComponentReferenceColorChanger is what makes serialization and the inspector UI work.
   * Releasing a ComponentReference<TComponent> should be done through `ReleaseInstance()` in the ComponentReference<TComponent> class. To release an instance directly, see our implementation of ReleaseInstance to understand the requirements.
-* Packages/Addressables/Samples/ComponentReference/Editor/ComponentReference - ComponentReference<TComponent>
+* Samples/Addressables/1.19.19/ComponentReference/ComponentReference - ComponentReference<TComponent>
   * This is the class that inherits from AssetReference.  It is generic and does not specify which Components it might care about.  A concrete child of this class is required for serialization to work.
   * At edit-time it validates that the asset set on it is a GameObject with the required Component.
   * At runtime it can load/instantiate the GameObject, then return the desired component.  API matches base class (LoadAssetAsync & InstantiateAsync).
@@ -109,11 +109,11 @@ An example project to show two use cases or workflows for creating "variants".  
 
 #### *Advanced/Custom Analyze Rule*
 This sample shows how to create custom AnalyzeRules for use within the Analyze window.  Both rules follow the recommended pattern for adding themselves to the UI.  There are no scenes to look at in this project, just analyze code.
-* Packages/Addressables/Samples/CustomAnalyzeRule/Editor/AddressHasC
+* Samples/Addressables/1.19.19/Custom Analyze Rules/Editor/AddressHasC
   * This is a non-fixable rule (meaning it will not fix itself).
   * When run, it checks that all addresses have a capital C in them.  Any that do not are flagged as errors.
   * A rule like this would be useful if your studio enforced some sort of naming convention on addresses. (though it would probably be best if it could fix itself)
-* Packages/Addressables/Samples/CustomAnalyzeRule/Editor/PathAddressIsPath
+* Samples/Addressables/1.19.19/Custom Analyze Rules/Editor/PathAddressIsPath
   * This is a fixable rule.  Running fix on it will change addresses to comply with the rule.
   * When run, it first identifies all addresses that seem to be paths.  Of those, it makes sure that the address actually matches the path of the asset.
   * This would be useful if you primarily left the addresses of your assets as the path (which is the default when marking an asset addressable).  If the asset is moved within the project, then the address no longer maps to where it is. This rule could fix that.
