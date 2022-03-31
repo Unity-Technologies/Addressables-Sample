@@ -28,7 +28,7 @@ namespace AddressablesPlayAssetDelivery.Editor
         }
 
         /// <summary>
-        /// Invoked before performing a Player build. Maintains building Addressables step and processing Addressables build data.
+        /// Invoked before performing a Player build. Moves AssetBundles to their correct data location based on the build target platform.
         /// </summary>
         /// <param name="buildPlayerContext">Contains data related to the player.</param>
         public override void PrepareForBuild(BuildPlayerContext buildPlayerContext)
@@ -130,7 +130,7 @@ namespace AddressablesPlayAssetDelivery.Editor
         }
 
         ///<summary>
-        /// Initializes temporary build data.
+        /// Invoked before performing a Player build. Moves AssetBundles to their correct data location based on the build target platform.
         /// </summary>
         public void OnPreprocessBuild(BuildReport report)
         {
