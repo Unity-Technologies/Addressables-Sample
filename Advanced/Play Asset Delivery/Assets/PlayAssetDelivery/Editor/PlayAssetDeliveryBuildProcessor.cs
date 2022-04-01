@@ -60,8 +60,9 @@ namespace AddressablesPlayAssetDelivery.Editor
                         string assetsFolderPath = Path.Combine(CustomAssetPackUtility.PackContentRootDirectory, entry.AssetsSubfolderPath);
                         if (File.Exists(entry.BundleBuildPath))
                         {
+                            string metaFilePath = AssetDatabase.GetTextMetaFilePathFromAssetPath(entry.BundleBuildPath);
                             File.Move(entry.BundleBuildPath, assetsFolderPath);
-                            File.Delete(entry.BundleBuildPath + ".meta");
+                            File.Delete(metaFilePath);
                         }
                     }
                 }
@@ -95,8 +96,9 @@ namespace AddressablesPlayAssetDelivery.Editor
                         string assetsFolderPath = Path.Combine(CustomAssetPackUtility.PackContentRootDirectory, entry.AssetsSubfolderPath);
                         if (File.Exists(assetsFolderPath))
                         {
+                            string metaFilePath = AssetDatabase.GetTextMetaFilePathFromAssetPath(assetsFolderPath);
                             File.Move(assetsFolderPath, entry.BundleBuildPath);
-                            File.Delete(assetsFolderPath + ".meta");
+                            File.Delete(metaFilePath);
                         }
                     }
                 }
@@ -153,8 +155,9 @@ namespace AddressablesPlayAssetDelivery.Editor
                 {
                     if (!Directory.Exists(Application.streamingAssetsPath))
                         Directory.CreateDirectory(Application.streamingAssetsPath);
+                    string metaFilePath = AssetDatabase.GetTextMetaFilePathFromAssetPath(CustomAssetPackUtility.CustomAssetPacksDataEditorPath);
                     File.Move(CustomAssetPackUtility.CustomAssetPacksDataEditorPath, CustomAssetPackUtility.CustomAssetPacksDataRuntimePath);
-                    File.Delete(CustomAssetPackUtility.CustomAssetPacksDataEditorPath + ".meta");
+                    File.Delete(metaFilePath);
                 }
                 if (File.Exists(CustomAssetPackUtility.BuildProcessorDataPath))
                 {
@@ -166,8 +169,9 @@ namespace AddressablesPlayAssetDelivery.Editor
                         string assetsFolderPath = Path.Combine(CustomAssetPackUtility.PackContentRootDirectory, entry.AssetsSubfolderPath);
                         if (File.Exists(entry.BundleBuildPath))
                         {
+                            string metaFilePath = AssetDatabase.GetTextMetaFilePathFromAssetPath(entry.BundleBuildPath);
                             File.Move(entry.BundleBuildPath, assetsFolderPath);
-                            File.Delete(entry.BundleBuildPath + ".meta");
+                            File.Delete(metaFilePath);
                         }
                     }
                 }
@@ -193,8 +197,9 @@ namespace AddressablesPlayAssetDelivery.Editor
 
                 if (File.Exists(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath))
                 {
+                    string metaFilePath = AssetDatabase.GetTextMetaFilePathFromAssetPath(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath);
                     File.Move(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath, CustomAssetPackUtility.CustomAssetPacksDataEditorPath);
-                    File.Delete(CustomAssetPackUtility.CustomAssetPacksDataRuntimePath + ".meta");
+                    File.Delete(metaFilePath);
                     CustomAssetPackUtility.DeleteDirectory(Application.streamingAssetsPath, true);
                 }
                 if (File.Exists(CustomAssetPackUtility.BuildProcessorDataPath))
@@ -207,8 +212,9 @@ namespace AddressablesPlayAssetDelivery.Editor
                         string assetsFolderPath = Path.Combine(CustomAssetPackUtility.PackContentRootDirectory, entry.AssetsSubfolderPath);
                         if (File.Exists(assetsFolderPath))
                         {
+                            string metaFilePath = AssetDatabase.GetTextMetaFilePathFromAssetPath(assetsFolderPath);
                             File.Move(assetsFolderPath, entry.BundleBuildPath);
-                            File.Delete(assetsFolderPath + ".meta");
+                            File.Delete(metaFilePath);
                         }
                     }
                 }
