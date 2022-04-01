@@ -33,7 +33,7 @@ namespace AddressablesPlayAssetDelivery.Editor
         /// <param name="buildPlayerContext">Contains data related to the player.</param>
         public override void PrepareForBuild(BuildPlayerContext buildPlayerContext)
         {
-           if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android && EditorUserBuildSettings.buildAppBundle)
+            if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android && EditorUserBuildSettings.buildAppBundle)
                 MoveDataForAppBundleBuild(buildPlayerContext);
             else
                 MoveDataToDefaultLocation();
@@ -48,7 +48,7 @@ namespace AddressablesPlayAssetDelivery.Editor
             try
             {
                 buildPlayerContext.AddAdditionalPathToStreamingAssets(CustomAssetPackUtility.CustomAssetPacksDataEditorPath, CustomAssetPackUtility.kCustomAssetPackDataFilename);
-                
+
                 AssetDatabase.StartAssetEditing();
                 if (File.Exists(CustomAssetPackUtility.BuildProcessorDataPath))
                 {
