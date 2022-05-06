@@ -114,7 +114,7 @@ This sample shows how to create custom AnalyzeRules for use within the Analyze w
   * When run, it checks that all addresses have a capital C in them.  Any that do not are flagged as errors.
   * A rule like this would be useful if your studio enforced some sort of naming convention on addresses. (though it would probably be best if it could fix itself)
 * Samples/Addressables/1.20.0/Custom Analyze Rules/Editor/CheckBundleDupeDependenciesMultiIsolatedGroups
-  * This is a fixable rule. It is similar to the "Check Duplicate Bundle Dependencies" as running fix on it will resolve duplicate bundle dependencies. However in this case duplicates will be moved to multiple isolation groups instead of just one group. Duplicates referenced by the same groups will be moved to the same isolation group. 
+  * This is a fixable rule. It is similar to the "Check Duplicate Bundle Dependencies" as fixing the rule will resolve duplicate bundle dependencies. However in this case duplicates will be moved to multiple isolation groups. Duplicates referenced by the same groups will be moved to the same isolation group. 
   * In the sample project there are 3 groups provided to illustrate this behavior: 
     * The Ground Materials Group contains a ScriptableObject that references the materials DirtMat and GrassMat.
     * The Water Materials Group contains a ScriptableObject that references the material WaterMat.
