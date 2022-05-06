@@ -109,14 +109,20 @@ An example project to show two use cases or workflows for creating "variants".  
 
 #### *Advanced/Custom Analyze Rule*
 This sample shows how to create custom AnalyzeRules for use within the Analyze window.  Both rules follow the recommended pattern for adding themselves to the UI.  There are no scenes to look at in this project, just analyze code.
-* Samples/Addressables/1.19.19/Custom Analyze Rules/Editor/AddressHasC
+* Samples/Addressables/1.20.0/Custom Analyze Rules/Editor/AddressHasC
   * This is a non-fixable rule (meaning it will not fix itself).
   * When run, it checks that all addresses have a capital C in them.  Any that do not are flagged as errors.
   * A rule like this would be useful if your studio enforced some sort of naming convention on addresses. (though it would probably be best if it could fix itself)
-* Samples/Addressables/1.19.20/Custom Analyze Rules/Editor/CheckBundleDupeDependenciesMultiIsolatedGroups
-  * This is a fixable rule. It is similar to the "Check Duplicate Bundle Dependencies" as running fix on it will resolve duplicate bundle dependencies. However in this case duplicates will be moved to multiple isolation groups instead of just one group.
-  * Duplicates referenced by the same groups will be moved to the same isolation group.
-* Samples/Addressables/1.19.19/Custom Analyze Rules/Editor/PathAddressIsPath
+* Samples/Addressables/1.20.0/Custom Analyze Rules/Editor/CheckBundleDupeDependenciesMultiIsolatedGroups
+  * This is a fixable rule. It is similar to the "Check Duplicate Bundle Dependencies" as running fix on it will resolve duplicate bundle dependencies. However in this case duplicates will be moved to multiple isolation groups instead of just one group. Duplicates referenced by the same groups will be moved to the same isolation group. 
+  * In the sample project there are 3 groups provided to illustrate this behavior: 
+    * The Ground Materials Group contains a ScriptableObject that references the materials DirtMat and GrassMat.
+    * The Water Materials Group contains a ScriptableObject that references the material WaterMat.
+    * The All Materials Group contains a ScriptableObject that references all 3 materials DirtMat, GrassMat, and WaterMat. It shares the same bundle dependencies as the Ground and Water Materials Group.
+  * Fixing the "Check Duplicate Bundle Dependencies Multi-Isolated Groups" rule will create 2 new isolation groups:
+    * The first Duplicate Asset Isolation group contains the materials DirtMat and GrassMat.
+    * The second Duplicate Asset Isolation groups contains the material WaterMat.
+* Samples/Addressables/1.20.0/Custom Analyze Rules/Editor/PathAddressIsPath
   * This is a fixable rule.  Running fix on it will change addresses to comply with the rule.
   * When run, it first identifies all addresses that seem to be paths.  Of those, it makes sure that the address actually matches the path of the asset.
   * This would be useful if you primarily left the addresses of your assets as the path (which is the default when marking an asset addressable).  If the asset is moved within the project, then the address no longer maps to where it is. This rule could fix that.
