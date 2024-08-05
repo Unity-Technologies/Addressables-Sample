@@ -206,3 +206,35 @@ When you have configured the build settings according to the [Configure Build & 
 **Note**: You can't upload a development build to the Google Play Console. If you want to upload your App Bundle to the Google Play Console, ensure that you create a release build. For more information, see [Build Settings](https://docs.unity3d.com/Manual/BuildSettings.html).
 
 The PlayAssetDeliveryBuildProcessor will automatically move bundles to their "{asset pack name}.androidpack” directories in 'Assets/PlayAssetDelivery/Build/CustomAssetPackContent', so that they will be assigned to their corresponding custom asset pack. Then Unity will build all of the custom asset packs along with the generated asset packs.
+
+#### *Advanced/On-Demand Resources*
+An example project that shows how to use [Unity's On-Demand Resources API](https://docs.unity3d.com/Manual/ios-ondemand-resources.html) with Addressables. LoaderAdr (located in 'Assets/Scenes') contains a script that will load 12 bundles sequentially. Half are locally built and half are on-demand.
+
+The Sample sets asset pack_a to _c as normal Bundles, and the rest, _d to _l as ODR Bundles,
+
+The AdrOdrExt folder contains the files that support using Bundles from ODR.
+
+##### Basic Workflow
+In Andressables Profiles set the variable 'BuildPathODR' to where you want the ODR Bundles written.
+
+In the Groups Panel for each group you wish to be ODR
+
+1. Add the Apple ODR Schema
+2. In the Schema select the BuildPathODR variable
+3. Change the AssetBundleProvider to ODR AssetBundle Provider
+
+##### Build Addressables
+**Make sure you switch to IOS Target!**
+
+In the Addressables Group window switch choose ODR Build Script from the Build menu.
+
+##### Build the Player
+**Make sure you switch to IOS Target!**
+
+Build the player from the build menu asnormal, the ODR Data should be set up correctly.
+
+You can see it in the UnityData.xcassets file at the bottom of the project.
+ 
+ 
+ 
+ 
