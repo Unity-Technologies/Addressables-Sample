@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8c8d9191d51746859d9d961719edca4, type: 3}
+  m_Name: pack_k_AppleODRSchema
+  m_EditorClassIdentifier: 
+  m_Group: {fileID: 11400000, guid: 21f7c1256bd994cca98cf1a7cce22599, type: 2}
+  m_BuildPath:
+    m_Id: a7070c84fc67c4384b42419195dcee13
