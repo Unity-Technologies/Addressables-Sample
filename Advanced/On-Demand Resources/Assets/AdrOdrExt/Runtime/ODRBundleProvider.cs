@@ -68,7 +68,7 @@ namespace UnityEngine.ResourceManagement.ResourceProviders
         /// <inheritdoc/>
         public override Type GetDefaultType(IResourceLocation location)
         {
-            return typeof(ODRAssetBundleResource);
+            return typeof(IAssetBundleResource);
         }
 
         /// <summary>
