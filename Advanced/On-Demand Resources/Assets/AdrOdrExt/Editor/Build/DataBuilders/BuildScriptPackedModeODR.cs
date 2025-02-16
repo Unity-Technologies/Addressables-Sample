@@ -1345,7 +1345,6 @@ namespace UnityEditor.AddressableAssets.Build.DataBuilders
         static void MoveFileToDestinationWithTimestampIfDifferent(string srcPath, string destPath, IBuildLogger log)
         {
             //Debug.Log( $"{srcPath} -> {destPath}" );            
-
             if (srcPath == destPath)
                 return;
 
@@ -1362,6 +1361,7 @@ namespace UnityEditor.AddressableAssets.Build.DataBuilders
                     Directory.CreateDirectory(directory);
                 else if (File.Exists(destPath))
                     File.Delete(destPath);
+                
                 File.Move(srcPath, destPath);
             }
         }
@@ -1399,6 +1399,7 @@ namespace UnityEditor.AddressableAssets.Build.DataBuilders
                         if (outputName != null)
                             break;
                     }
+                    
                     outputBundleNames.Add(string.IsNullOrEmpty(outputName) ? builtBundleNames[i] : outputName);
                 }
             }
@@ -1447,9 +1448,18 @@ namespace UnityEditor.AddressableAssets.Build.DataBuilders
                         string reconstructedBundleName = string.Join("_", deconstructedBundleName, 1, deconstructedBundleName.Length - 1) + ".bundle";
                         outputBundleNames[i] = ConstructAssetBundleName(assetGroup, schema, info, reconstructedBundleName);
                     }
-
+                    
                     dataEntry.InternalId = dataEntry.InternalId.Remove(dataEntry.InternalId.Length - builtBundleNames[i].Length) + outputBundleNames[i];
-                    SetPrimaryKey(dataEntry, outputBundleNames[i], aaContext);
+                    
+                    
+                    string newPrimaryKey = outputBundleNames[i];
+                    if (assetGroup.GetSchema<BundledAssetGroupSchema>()?.BundleNaming ==
+                        BundledAssetGroupSchema.BundleNamingStyle.NoHash)
+                    {
+                        newPrimaryKey = StripHashFromBundleLocation(newPrimaryKey);
+                    }
+                    
+                    SetPrimaryKey(dataEntry, newPrimaryKey, aaContext);
 
                     if (!m_BundleToInternalId.ContainsKey(builtBundleNames[i]))
                         m_BundleToInternalId.Add(builtBundleNames[i], dataEntry.InternalId);
@@ -1471,6 +1481,7 @@ namespace UnityEditor.AddressableAssets.Build.DataBuilders
                 if (assetGroup.GetSchema<BundledAssetGroupSchema>()?.BundleNaming == BundledAssetGroupSchema.BundleNamingStyle.NoHash)
                     outputBundleNames[i] = StripHashFromBundleLocation(outputBundleNames[i]);
 
+                
 #if UNITY_IOS
                 var odrSchema = assetGroup.GetSchema<AppleODRSchema>();
                 if (odrSchema != null)
@@ -1480,8 +1491,18 @@ namespace UnityEditor.AddressableAssets.Build.DataBuilders
                     {
                         Debug.LogWarning($"ODR Schema build path value is null");
                     }
+                    
                     targetPath = Path.Combine(schemaPath, Path.GetFileName(targetPath));
-                    AddBundleODR(outputBundleNames[i], targetPath, outputBundleNames[i]);
+                    
+                    
+                    string odrBundlePath = targetPath;
+                    if (assetGroup.GetSchema<BundledAssetGroupSchema>()?.BundleNaming ==
+                        BundledAssetGroupSchema.BundleNamingStyle.NoHash)
+                    {
+                        odrBundlePath = StripHashFromBundleLocation(targetPath);
+                    }
+
+                    AddBundleODR(outputBundleNames[i], odrBundlePath, outputBundleNames[i]);
                 }
 #endif
 
@@ -1584,6 +1605,7 @@ namespace UnityEditor.AddressableAssets.Build.DataBuilders
 
             forLocation.Keys[0] = newPrimaryKey;
             m_PrimaryKeyToLocation.Remove(originalKey);
+
             m_PrimaryKeyToLocation.Add(newPrimaryKey, forLocation);
 
             if (!GetPrimaryKeyToDependerLocations(aaContext.locations).TryGetValue(originalKey, out var dependers))
@@ -1603,7 +1625,7 @@ namespace UnityEditor.AddressableAssets.Build.DataBuilders
                     }
                 }
             }
-
+            
             m_PrimaryKeyToDependers.Remove(originalKey);
             m_PrimaryKeyToDependers.Add(newPrimaryKey, dependers);
         }
