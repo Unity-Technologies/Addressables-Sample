@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: pack_i_AppleODRSchema
   m_EditorClassIdentifier: 
   m_Group: {fileID: 11400000, guid: 0ed893044bb394073875fa7eee1b3e70, type: 2}
+  m_prefetchCategory: 1
+  m_order: 1
   m_BuildPath:
     m_Id: a7070c84fc67c4384b42419195dcee13
