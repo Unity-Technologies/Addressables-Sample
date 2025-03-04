@@ -28,12 +28,12 @@ public class PostProcessODRBundles : IPostprocessBuildWithReport
         
         // Initial Install Tags
         var initialTags = categories[(int)AppleODRSchema.PrefetchCategory.InitialInstallTags];
-        var initialTagsValue = initialTags.Count > 0 ? string.Join(" ", initialTags) : "";
+        var initialTagsValue = string.Join(" ", initialTags);
         pbxProject.SetBuildProperty(mainTargetGuid, InitialInstallTagsKey, initialTagsValue);
         
         // Prefetched Tag Order
         var prefetchedTags = categories[(int)AppleODRSchema.PrefetchCategory.PrefetchedTagOrder];
-        var prefetchedTagsValue = prefetchedTags.Count > 0 ? string.Join(" ", prefetchedTags) : "";
+        var prefetchedTagsValue = string.Join(" ", prefetchedTags);
         pbxProject.SetBuildProperty(mainTargetGuid, PrefetchedTagOrderKey, prefetchedTagsValue);
         
         // Apply changes to the PBXProject
