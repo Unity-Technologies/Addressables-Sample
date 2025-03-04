@@ -1481,7 +1481,7 @@ namespace UnityEditor.AddressableAssets.Build.DataBuilders
                         Debug.LogWarning($"ODR Schema build path value is null");
                     }
                     targetPath = Path.Combine(schemaPath, Path.GetFileName(targetPath));
-                    AddBundleODR(outputBundleNames[i], targetPath, outputBundleNames[i]);
+                    AddBundleODR(outputBundleNames[i], targetPath, assetGroup.Name, (int)odrSchema.Category, odrSchema.Order);
                 }
 #endif
 
@@ -1664,6 +1664,8 @@ namespace UnityEditor.AddressableAssets.Build.DataBuilders
                 public string name;
                 public string path;
                 public string tag;
+                public int category;
+                public int order;
             }
 
             public List<Bundle> m_bundles = new List<Bundle>();
@@ -1677,9 +1679,9 @@ namespace UnityEditor.AddressableAssets.Build.DataBuilders
             DeleteFile(odrSettingsPath);
             m_Resources = new BundleInfoODR();
         }
-        public void AddBundleODR(string odr_name, string odr_path, string odr_tag)
+        public void AddBundleODR(string odr_name, string odr_path, string odr_tag, int odr_category, int odr_order)
         {
-            m_Resources.m_bundles.Add(new BundleInfoODR.Bundle() { name = odr_name, path = odr_path, tag = odr_tag });
+            m_Resources.m_bundles.Add(new BundleInfoODR.Bundle() { name = odr_name, path = odr_path, tag = odr_tag, category = odr_category, order = odr_order });
         }
 
         public void PreserveODRSettings(FileRegistry registry)
@@ -1721,6 +1723,32 @@ namespace UnityEditor.AddressableAssets.Build.DataBuilders
             Debug.Log($"ODR is using {m_CollectedResources.Count} bundles");
 
             return m_CollectedResources.ToArray();
+        }
+
+        public static Dictionary<int, List<string>> CollectPrefetchCategories()
+        {
+            CollectODR();
+            
+            var results = new Dictionary<int, List<string>>();
+            
+            var initialTags = m_Resources.m_bundles
+                .Where(b=> b.category == (int)AppleODRSchema.PrefetchCategory.InitialInstallTags)
+                .Select(b=>b.tag)
+                .Distinct()
+                .ToList();
+            
+            results.Add((int)AppleODRSchema.PrefetchCategory.InitialInstallTags, initialTags);
+            
+            var prefetchedTags = m_Resources.m_bundles
+                .Where(b=> b.category == (int)AppleODRSchema.PrefetchCategory.PrefetchedTagOrder)
+                .OrderBy(b=>b.order)
+                .Select(b=>b.tag)
+                .Distinct()
+                .ToList();
+            
+            results.Add((int)AppleODRSchema.PrefetchCategory.PrefetchedTagOrder, prefetchedTags);
+            
+            return results;
         }
 #endif        
     }
